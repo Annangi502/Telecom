@@ -538,7 +538,10 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
-		    	detail = new NetworkLocationDetail(rs.getString(1), rs.getInt(2),rs.getString(3),rs.getInt(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), rs.getString(11), rs.getString(12),rs.getString(13),rs.getString(14));
+		    	detail = new NetworkLocationDetail(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
+						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+						rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14),
+						rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(18), rs.getString(19));
 		    }
 		}catch (SQLException e) {
 			log.error("SQL Exception in getNetworkLocationDetail() method {"+e.getMessage()+"}");

@@ -9,6 +9,65 @@
                   <div class="x_content">
                     <br>
                     <form wicket:id="form" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+                    
+                    <div class="row"> <!-- row 2 starts here -->
+              <div class="col-sm-6"> <!-- col 2 starts here -->  
+                <div class="form-group">
+                  <label for="inputMT" class="col-sm-4 control-label"><strong> Circle <span class="required">*</span></strong></label>
+                  <div class="col-sm-8">
+                    <select class="form-control"  wicket:id="circle">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                    <span class="text-danger" wicket:id="circlefeedback"></span>
+                  </div>
+                </div>
+              </div> <!-- col 2 ends here -->
+
+              <div class="col-sm-6"> <!-- col 3 starts here -->  
+                <div class="form-group">
+                  <label for="inputMV" class="col-sm-4 control-label"><strong>Division <span class="required">*</span></strong></label>
+                  <div class="col-sm-8">
+                  
+                  <select class="form-control" wicket:id="division">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                  <span class="text-danger" wicket:id="divisionfeedback"></span>
+                  </div>
+                </div>
+              </div> <!-- col 3 ends here -->
+            </div> <!-- row 2 ends here -->
+
+
+ <div class="row"> <!-- row 2 starts here -->
+              <div class="col-sm-6"> <!-- col 2 starts here -->  
+                <div class="form-group">
+                  <label for="inputMT" class="col-sm-4 control-label"><strong> Sub- Division <span class="required">*</span></strong></label>
+                  <div class="col-sm-8">
+                    <select class="form-control"  wicket:id="subdivision">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                    <span class="text-danger" wicket:id="subdivisionfeedback"></span>
+                  </div>
+                </div>
+              </div> <!-- col 2 ends here -->
+
+              <div class="col-sm-6"> <!-- col 3 starts here -->  
+                <div class="form-group">
+                  <label for="inputMV" class="col-sm-4 control-label"><strong>Section <span class="required">*</span></strong></label>
+                  <div class="col-sm-8">
+                  
+                  <select class="form-control" wicket:id="section">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                  <span class="text-danger" wicket:id="sectionfeedback"></span>
+                  </div>
+                </div>
+              </div> <!-- col 3 ends here -->
+            </div> <!-- row 2 ends here -->
 
                                <div class="row"> <!-- row 2 starts here -->
               <div class="col-sm-6"> <!-- col 2 starts here -->  
@@ -88,9 +147,9 @@
             <div class="row"> <!-- row 1 starts here -->
               <div class="col-sm-6"> <!-- col 1 starts here -->
                 <div class="form-group">
-                  <label for="inputBN" class="col-sm-4 control-label"><strong>Office Description <span class="required">*</span></strong></label>
+                  <label for="inputBN" class="col-sm-4 control-label"><strong>Merge Location <span class="required">*</span></strong></label>
                   <div class="col-sm-8">
-                    <input type="text" wicket:id="ofcdesc" class="form-control" id="inputBookNo" placeholder="Enter Office Description">
+                    <input type="text" wicket:id="ofcdesc" class="form-control" id="inputBookNo" placeholder="Enter Merge Location">
                   <span class="text-danger" wicket:id="ofcdescfeedback"></span>
                   </div>
                 </div>
@@ -112,7 +171,8 @@
                 <div class="form-group">
                   <label for="inputSubject" class="col-sm-2 control-label"><strong>Office Address <span class="required">*</span></strong></label>
                   <div class="col-sm-10">
-                    <input type="text" wicket:id="ofcaddress" class="form-control" id="inputSubject" placeholder="Enter Address">
+                  <textarea wicket:id="ofcaddress" id="textarea" required="required" name="textarea" class="form-control" placeholder="Enter Address"></textarea>
+                   <!--  <input type="text"  class="form-control" id="inputSubject" placeholder="Enter Address"> -->
                   <span class="text-danger" wicket:id="ofcaddressfeedback"></span>
                   </div>
                 </div>
