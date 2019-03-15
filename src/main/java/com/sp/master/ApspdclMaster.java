@@ -1,17 +1,32 @@
 package com.sp.master;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import com.sp.SPNetworkLocation.PortSession;
+
 
 
 
 public class ApspdclMaster extends WebPage {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(ApspdclMaster.class);
 	private Header header;
 	private LeftNav leftnav;
 	private FormArea formarea;
 	public ApspdclMaster(String id)
 	{
+		log.info("In GruhOnLineMaster page param constructor");
+		if(getSession().exists() && !(getSession().isTemporary())){
+			MDC.put("userId", ((PortSession)getSession()));
+		}
+		else{
+			log.info("Session does not exist");
+			throw new RestartResponseException(Login.class);
+		}
 		add(header = new Header("header"));
 		add(leftnav = new LeftNav("leftnav"));
 		add(formarea = new FormArea("formarea"));
@@ -19,6 +34,14 @@ public class ApspdclMaster extends WebPage {
 	
 	public ApspdclMaster(final PageParameters parms){
 		super(parms);
+		log.info("In GruhOnLineMaster page param constructor");
+		if(getSession().exists() && !(getSession().isTemporary())){
+			MDC.put("userId", ((PortSession)getSession()).getEmployeename());
+		}
+		else{
+			log.info("Session does not exist");
+			throw new RestartResponseException(Login.class);
+		}
 		add(header = new Header("header"));
 		add(leftnav = new LeftNav("leftnav"));
 		add(formarea = new FormArea("formarea"));

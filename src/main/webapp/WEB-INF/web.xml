@@ -4,16 +4,13 @@
 	version="2.5">
 
 	<display-name>SPNetworkLocation</display-name>
-
-	<!--
-		There are three means to configure Wickets configuration mode and they 
-		are tested in the order given.
-		
-		1) A system property: -Dwicket.configuration 
-		2) servlet specific <init-param> 
-		3) context specific <context-param>
-
-		The value might be either "development" (reloading when templates change) or 
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
+	<!-- There are three means to configure Wickets configuration mode and they 
+		are tested in the order given. 1) A system property: -Dwicket.configuration 
+		2) servlet specific <init-param> 3) context specific <context-param> The 
+		value might be either "development" (reloading when templates change) or 
 		"deployment". If no configuration is found, "development" is the default. -->
 
 	<filter>
@@ -21,12 +18,19 @@
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>com.sp.SPNetworkLocation.WicketApplication</param-value>
+			<param-value>com.sp.SPNetworkLocation.SpNetworkLocationApplication</param-value>
 		</init-param>
 	</filter>
+
 
 	<filter-mapping>
 		<filter-name>wicket.SPNetworkLocation</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error404</location>
+	</error-page>
 </web-app>
