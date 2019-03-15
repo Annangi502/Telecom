@@ -3,6 +3,7 @@ package com.sp.location;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public class ViewNetworkLocationDetailForm extends Panel {
 	private String remark;
 	private String townname;
 	private String phase;
+	private String circle;
+    private String division;
+    private String subdivision;
+    private String section;
+    private String spcircuitcode;
 	private NetworkLocationDetail nld ;
 	
 	final int DEF_NO_OF_ROWS=9999;
@@ -63,7 +69,12 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		setDefaultModel(new CompoundPropertyModel<ViewNetworkLocationDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("detailform");
 		nld = getNetworkLocationDetail(nldmodel.getObject().getSpcircuitid());
-		spcircuitid = nld.getSpcircuitid();
+		circle = nld.getCircledesc();
+        division = nld.getDivisiondesc();
+        subdivision = nld.getSubdivisiondesc();
+        section = nld.getSectiondesc();
+        spcircuitid = nld.getSpcircuitid();
+        spcircuitcode = nld.getSpciruitcode();
 		projecttypedescription = nld.getProjecttypedescription();
 		noofpointsavailable = nld.getNoofpointsavailable();
 		installationdate = nld.getInstallationdate();
@@ -101,6 +112,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		vncolumns.add(new PropertyColumn(new Model("Bandwidth"), "bandwidth"));
 		vncolumns.add(new PropertyColumn(new Model("Service Type"), "servicetype"));
 		vncolumns.add(new PropertyColumn(new Model("Interface"), "vninterface"));
+		vncolumns.add(new PropertyColumn(new Model("Media Type"), "mediatypedesc"));
 		vncolumns.add(new PropertyColumn(new Model("Circuit ID"), "circuitid"));
 		vncolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
 		DataTable table = new DataTable("vndatatable", vncolumns, ntvndataprovider, DEF_NO_OF_ROWS);
@@ -249,8 +261,12 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			}
 		};
 		edit.setVisible(((PortSession) getSession()).isAdmin());
-		
-		form.add(new Label("spcircuitid"));
+		form.add(new Label("circle") );
+        form.add(new Label("division"));
+        form.add(new Label("subdivision"));
+        form.add(new Label("section") );
+        form.add(new Label("spcircuitcode"));
+	/*	form.add(new Label("spcircuitid"));*/
 		form.add(new Label("projecttypedescription"));
 		form.add(new Label("noofpointsavailable"));
 		form.add(new Label("installationdate"));
@@ -529,12 +545,16 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		NetworkLocationDetail detail = null;
 		
 		String query = "{call sp_circuit_get_details(?,?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, circuit_id);
-		    ResultSet rs = stmt.executeQuery();
+		    rs = stmt.executeQuery();
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
@@ -547,43 +567,84 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			log.error("SQL Exception in getNetworkLocationDetail() method {"+e.getMessage()+"}");
 			e.printStackTrace();
 		}
-		
+        finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in getNetworkLocationDetail() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
 		return detail;
 		
 	}
 	
-	public List<NetworkVendorDetail> getVendors()
-	{
-		List<NetworkVendorDetail> vnlist = new ArrayList<NetworkVendorDetail>();
-		String query = "{call sp_circuit_get_vendors(?,?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
-			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
-			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
-			stmt.setString(3, spcircuitid);
-		    ResultSet rs = stmt.executeQuery();
-		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-		    while(rs.next())
-		    {
-		    	vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),rs.getString(7)));
-		    }
-		}catch (SQLException e) {
-			log.error("SQL Exception in getVendors() method {"+e.getMessage()+"}");
-			e.printStackTrace();
-		}
-		return vnlist;	
-	}
+	public List<NetworkVendorDetail> getVendors() {
+        final List<NetworkVendorDetail> vnlist = new ArrayList<NetworkVendorDetail>();
+        final String query = "{call sp_circuit_get_vendors(?,?,?)}";
+        Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
+            stmt.setString(1, ((PortSession)this.getSession()).getEmployeeid());
+            stmt.setInt(2, ((PortSession)this.getSession()).getSessionid());
+            stmt.setString(3, this.spcircuitid);
+            rs = stmt.executeQuery();
+            ViewNetworkLocationDetailForm.log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
+            while (rs.next()) {
+                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)));
+            }
+        }
+        catch (SQLException e) {
+           log.error((Object)("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
+            e.printStackTrace();
+            return vnlist;
+        }
+        finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+               if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in getVendors() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
+        return vnlist;
+    }
 	
 	public List<NetworkEquipmentDetail> getEquipments()
 	{
 		List<NetworkEquipmentDetail> vnlist = new ArrayList<NetworkEquipmentDetail>();
 		String query = "{call sp_circuit_get_equipments(?,?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
-		    ResultSet rs = stmt.executeQuery();
+		    rs = stmt.executeQuery();
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
@@ -592,7 +653,23 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		}catch (SQLException e) {
 			log.error("SQL Exception in getEquipments() method {"+e.getMessage()+"}");
 			e.printStackTrace();
-		}
+		} finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
 		return vnlist;	
 	}
 	
@@ -600,12 +677,16 @@ public class ViewNetworkLocationDetailForm extends Panel {
 	{
 		List<NetworkUPSDetail> upslist = new ArrayList<NetworkUPSDetail>();
 		String query = "{call sp_circuit_get_ups(?,?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
-		    ResultSet rs = stmt.executeQuery();
+		    rs = stmt.executeQuery();
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
@@ -614,7 +695,23 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		}catch (SQLException e) {
 			log.error("SQL Exception in getUPS() method {"+e.getMessage()+"}");
 			e.printStackTrace();
-		}
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
 		return upslist;	
 	}
 	
@@ -622,12 +719,16 @@ public class ViewNetworkLocationDetailForm extends Panel {
 	{
 		List<NetworkInterfaceDetail> upinist = new ArrayList<NetworkInterfaceDetail>();
 		String query = "{call sp_circuit_get_interfaces(?,?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
-		    ResultSet rs = stmt.executeQuery();
+		    rs = stmt.executeQuery();
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
@@ -636,7 +737,23 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		}catch (SQLException e) {
 			log.error("SQL Exception in getInterfaces() method {"+e.getMessage()+"}");
 			e.printStackTrace();
-		}
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
 		return upinist;	
 	}
 }

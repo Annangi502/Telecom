@@ -1,3 +1,4 @@
+
 <wicket:panel>
          <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 50px;">
@@ -72,8 +73,8 @@
               <div class="col-sm-6"> <!-- col 4 starts here -->
                 <div class="form-group">
                   <label for="inputNomineeUpto" class="col-sm-4 control-label">AMC/Warranty</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter AMC/Warranty" wicket:id="amc">
+                   <div class="col-sm-8" style="padding-top: 6px;">
+                  <span class="radio-custom radio-danger " wicket:id="amc"></span><br>
                     <span class="text-danger" wicket:id="amcfeedback"></span>
                   </div>
                 </div>
@@ -85,7 +86,7 @@
                 <div class="form-group">
                   <label for="inputNomineeUpto" class="col-sm-4 control-label">No. of Batteries</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter AMC/Warranty" wicket:id="batteries">
+                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter No. of Batteries" wicket:id="batteries">
                     <span class="text-danger" wicket:id="batteriesfeedback"></span>
                   </div>
                 </div>

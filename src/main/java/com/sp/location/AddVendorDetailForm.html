@@ -1,3 +1,4 @@
+
 <wicket:panel>
   <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 50px;">
@@ -16,7 +17,7 @@
 								<label for="inputMT" class="col-sm-4 text-primary text-right"><strong>APSPDCL
 										Circuit ID</strong></label>
 								<div class="col-sm-8">
-									<label wicket:id="spcircuitid" for="input" class="col-sm-8 text-left">R-APDRP</label>
+									<label wicket:id="spcircuitcode" for="input" class="col-sm-8 text-left">R-APDRP</label>
 								</div>
 							</div>
 						</div>
@@ -86,6 +87,18 @@
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Circuit ID" wicket:id="circuitid">
                     <span class="text-danger" wicket:id="circuitidfeedback"></span>
+                  </div>
+                </div>
+              </div> <!-- col 1 ends here -->
+              <div class="col-sm-6"> <!-- col 1 starts here -->
+                <div class="form-group">
+                  <label for="inputBN" class="col-sm-4 control-label"><strong>Media Type<span class="required">*</span></strong></label>
+                  <div class="col-sm-8">
+                     <select class="form-control"  wicket:id="mediatype">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                    <span class="text-danger" wicket:id="mediatypefeedback"></span>
                   </div>
                 </div>
               </div> <!-- col 1 ends here -->
