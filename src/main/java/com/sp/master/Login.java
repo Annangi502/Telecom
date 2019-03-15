@@ -18,6 +18,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
+import com.sp.resource.AES;
 import com.sp.resource.DataBaseConnection;
 
 public class Login extends WebPage {
@@ -71,7 +72,7 @@ public class Login extends WebPage {
 	      con = new DataBaseConnection().getConnection();
 	      stmt = con.prepareCall(query);
 	      stmt.setString(1, loginname);
-	      stmt.setString(2, password);
+	      stmt.setString(2, AES.encrypt(password));
 	      log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 	      rs = stmt.executeQuery();
 	      while (rs.next())
