@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
+import com.sp.exception.SessionExpiredException;
 
 
 
@@ -25,7 +26,7 @@ public class ApspdclMaster extends WebPage {
 		}
 		else{
 			log.info("Session does not exist");
-			throw new RestartResponseException(Login.class);
+			throw new SessionExpiredException("Session has expired!");
 		}
 		add(header = new Header("header"));
 		add(leftnav = new LeftNav("leftnav"));
@@ -40,7 +41,7 @@ public class ApspdclMaster extends WebPage {
 		}
 		else{
 			log.info("Session does not exist");
-			throw new RestartResponseException(Login.class);
+			throw new SessionExpiredException("Session has expired!");
 		}
 		add(header = new Header("header"));
 		add(leftnav = new LeftNav("leftnav"));
