@@ -124,7 +124,14 @@ public class ViewAllNetworkLocationForm extends Panel {
 		table.addTopToolbar(new HeadersToolbar(table, nlprovider));
 		form.add(table);
 		
-		final DropDownChoice<Section> sectiondd = new DropDownChoice<Section>("section", sectionlist, new ChoiceRenderer("sectiondesc", "sectionid"));
+		final DropDownChoice<Section> sectiondd = new DropDownChoice<Section>("section", sectionlist, new ChoiceRenderer("sectiondesc", "sectionid"))
+				{
+				@Override
+				protected CharSequence getDefaultChoice(String selectedValue) {
+					// TODO Auto-generated method stub
+					return "";
+				}
+				};
 	    sectiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
 	    		{
 					@Override
@@ -136,18 +143,26 @@ public class ViewAllNetworkLocationForm extends Panel {
 					}
 	    	
 	    		});
-	    sectiondd.setNullValid(true);
+	    sectiondd.setNullValid(false);
 	    sectiondd.setLabel(new Model("Section"));
 	    sectiondd.setOutputMarkupId(true);
 	    form.add(sectiondd);
 	    
-	    final DropDownChoice<SubDivision> subdivisiondd = new DropDownChoice<SubDivision>("subdivision", subdivisionlist, new ChoiceRenderer("subdivisiondesc", "subdivisionid"));
+	    final DropDownChoice<SubDivision> subdivisiondd = new DropDownChoice<SubDivision>("subdivision", subdivisionlist, new ChoiceRenderer("subdivisiondesc", "subdivisionid"))
+	    {
+			@Override
+			protected CharSequence getDefaultChoice(String selectedValue) {
+				// TODO Auto-generated method stub
+				return "";
+			}
+			};
 	    subdivisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				// TODO Auto-generated method stub
 				subdivisionid = subdivision.getSubdivisionid();
+				sectionid = 0;
 				ntlclist.setList(getAllNetworkLocations());
 				section = null;
 				target.add(table);
@@ -155,18 +170,27 @@ public class ViewAllNetworkLocationForm extends Panel {
 			}
 	
 		});
-	    subdivisiondd.setNullValid(true);
+	    subdivisiondd.setNullValid(false);
 	    subdivisiondd.setLabel(new Model("Sub-Division"));
 	    subdivisiondd.setOutputMarkupId(true);
 	    
 	    
-	    final DropDownChoice<Division> divisiondd = new DropDownChoice<Division>("division", divisionlist, new ChoiceRenderer("divisiondesc", "divisionid"));
+	    final DropDownChoice<Division> divisiondd = new DropDownChoice<Division>("division", divisionlist, new ChoiceRenderer("divisiondesc", "divisionid"))
+	    {
+			@Override
+			protected CharSequence getDefaultChoice(String selectedValue) {
+				// TODO Auto-generated method stub
+				return "";
+			}
+			};
 	    divisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				// TODO Auto-generated method stub
 				divisionid = division.getDivisionid();
+				subdivisionid = 0;
+				sectionid = 0;
 				ntlclist.setList(getAllNetworkLocations());
 				section = null;
 				subdivision = null;
@@ -176,18 +200,28 @@ public class ViewAllNetworkLocationForm extends Panel {
 			}
 	
 		});
-	    divisiondd.setNullValid(true);
+	    divisiondd.setNullValid(false);
 	    divisiondd.setLabel(new Model("Division"));
 	    divisiondd.setOutputMarkupId(true);	    
 	    form.add(divisiondd);
 	    
-	    DropDownChoice<Circle> circledd = new DropDownChoice<Circle>("circle", circlelist, new ChoiceRenderer("circledes", "circleid"));
+	    DropDownChoice<Circle> circledd = new DropDownChoice<Circle>("circle", circlelist, new ChoiceRenderer("circledes", "circleid"))
+	    {
+			@Override
+			protected CharSequence getDefaultChoice(String selectedValue) {
+				// TODO Auto-generated method stub
+				return "";
+			}
+			};
 	    circledd.add(new AjaxFormComponentUpdatingBehavior("onChange")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				// TODO Auto-generated method stub
 				circleid = circle.getCircleid();
+				divisionid = 0;
+				subdivisionid = 0;
+				sectionid = 0;
 				ntlclist.setList(getAllNetworkLocations());
 				section = null;
 				subdivision = null;
@@ -199,7 +233,7 @@ public class ViewAllNetworkLocationForm extends Panel {
 			}
 	
 		});
-	    circledd.setNullValid(true);
+	    circledd.setNullValid(false);
 	    circledd.setRequired(true).setLabel(new Model("Circle"));
 	    form.add(circledd);
 	    form.add(subdivisiondd);

@@ -33,7 +33,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import com.sp.SPNetworkLocation.PortSession;
 import com.sp.master.ApspdclMaster;
 import com.sp.resource.DataBaseConnection;
@@ -128,14 +127,15 @@ public class AddNetworkLocationDetailForm extends Panel{
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[]{FeedbackMessage.ERROR};
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
-		
 		final DropDownChoice<Section> sectiondd = new DropDownChoice<Section>("section", sectionlist, new ChoiceRenderer("sectiondesc", "sectionid"));
-	    sectiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
+	    sectiondd.add(new AjaxFormComponentUpdatingBehavior("change")
 	    		{
 					@Override
 					protected void onUpdate(AjaxRequestTarget target) {
 						// TODO Auto-generated method stub
+						if(section!=null){
 						sectionid  = section.getSectionid();
+						}
 					}
 	    	
 	    		});
@@ -148,14 +148,19 @@ public class AddNetworkLocationDetailForm extends Panel{
 	    form.add(sectiondd);
 	    
 	    final DropDownChoice<SubDivision> subdivisiondd = new DropDownChoice<SubDivision>("subdivision", subdivisionlist, new ChoiceRenderer("subdivisiondesc", "subdivisionid"));
-	    subdivisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
+	    subdivisiondd.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				// TODO Auto-generated method stub
+				// TODO Auto-generated method stub.
+				if(subdivision!=null){
 				subdivisionid = subdivision.getSubdivisionid();
 				section = null;
-				target.add(sectiondd);
+				target.add(sectiondd);}
+				else{
+					section = null;
+					target.add(sectiondd);	
+				}
 			}
 	
 		});
@@ -169,16 +174,24 @@ public class AddNetworkLocationDetailForm extends Panel{
 	    
 	    
 	    final DropDownChoice<Division> divisiondd = new DropDownChoice<Division>("division", divisionlist, new ChoiceRenderer("divisiondesc", "divisionid"));
-	    divisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
+	    divisiondd.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				// TODO Auto-generated method stub
+				if(division!=null){
 				divisionid = division.getDivisionid();
 				section = null;
 				subdivision = null;
 				target.add(sectiondd);
 				target.add(subdivisiondd);
+				}else
+				{
+					section = null;
+					subdivision = null;
+					target.add(sectiondd);
+					target.add(subdivisiondd);	
+				}
 			}
 	
 		});
@@ -191,23 +204,27 @@ public class AddNetworkLocationDetailForm extends Panel{
 	    form.add(divisiondd);
 	    
 	    DropDownChoice<Circle> circledd = new DropDownChoice<Circle>("circle", circlelist, new ChoiceRenderer("circledes", "circleid"));
-	    circledd.add(new AjaxFormComponentUpdatingBehavior("onChange")
+	    circledd.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				// TODO Auto-generated method stub
-				circleid = circle.getCircleid();
+				circleid = (circle != null)?circle.getCircleid():0;
+				System.out.println(divisionid);
+				System.out.println(subdivisionid);
+				System.out.println(sectionid);
 				section = null;
 				subdivision = null;
 				division = null;
 				target.add(sectiondd);
 				target.add(subdivisiondd);
 				target.add(divisiondd);
+				
 			}
 	
 		});
-	    circledd.setNullValid(true);
-	    circledd.setRequired(true).setLabel(new Model("Circle"));
+	    circledd.setNullValid(false);
+	    circledd.setRequired(true).setLabel(new Model("Circle")); 
 	    final FeedbackLabel circleFeedbackLabel = new FeedbackLabel("circlefeedback",circledd);
         circleFeedbackLabel.setOutputMarkupId(true);
         form.add(circleFeedbackLabel);
@@ -487,7 +504,6 @@ public class AddNetworkLocationDetailForm extends Panel{
     }
 	private List<Circle> loadCircles() {
 		final List<Circle> list = new ArrayList<Circle>();
-		list.add(new Circle(0, "All", "ALL"));
 		final String query = "{call sp_get_circles(?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
@@ -527,7 +543,6 @@ public class AddNetworkLocationDetailForm extends Panel{
 
 	private List<Division> loadDivisions(final int circleid) {
 		final List<Division> list = new ArrayList<Division>();
-		list.add(new Division(0, "All", "ALL"));
 		final String query = "{call sp_circle_get_devisions(?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
@@ -568,7 +583,6 @@ public class AddNetworkLocationDetailForm extends Panel{
 
 	private List<SubDivision> loadSubDivisions(final int circleid, final int divisionid) {
 		final List<SubDivision> list = new ArrayList<SubDivision>();
-		list.add(new SubDivision(0, "All", "ALL"));
 		final String query = "{call sp_division_get_sub_divisions(?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
@@ -610,7 +624,6 @@ public class AddNetworkLocationDetailForm extends Panel{
 
 	private List<Section> loadSections(final int circleid, final int divisionid, final int subdivision) {
 		final List<Section> list = new ArrayList<Section>();
-		list.add(new Section(0, "All", "ALL"));
 		final String query = "{call sp_sub_division_get_sections(?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
