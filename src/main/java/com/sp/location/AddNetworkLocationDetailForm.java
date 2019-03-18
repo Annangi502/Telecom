@@ -210,9 +210,6 @@ public class AddNetworkLocationDetailForm extends Panel{
 			protected void onUpdate(AjaxRequestTarget target) {
 				// TODO Auto-generated method stub
 				circleid = (circle != null)?circle.getCircleid():0;
-				System.out.println(divisionid);
-				System.out.println(subdivisionid);
-				System.out.println(sectionid);
 				section = null;
 				subdivision = null;
 				division = null;
