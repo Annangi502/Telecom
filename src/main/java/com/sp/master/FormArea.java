@@ -16,5 +16,6 @@ public class FormArea extends Panel {
 		super(id);
 		add(new Label("wname", ((PortSession) getSession()).getEmployeename()));
 		add(new Label("lastlogin", ((PortSession) getSession()).getLastlogintime()));
+		add(new Label("designation", ((PortSession) getSession()).getDesignation()));
 	}
 }

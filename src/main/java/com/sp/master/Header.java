@@ -23,6 +23,11 @@ public class Header extends Panel {
 		super(id);
 		//add(new BookmarkablePageLink("logout",OLLogin.class));
 		add(new Label("name", ((PortSession) getSession()).getEmployeename()));
+		add(new Link("profile"){
+		public void onClick() {
+			setResponsePage(Profile.class);
+		};
+		});
 		add(new Link("logout")
 				{
 			@Override

@@ -303,7 +303,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		TextField<String> ofc = new TextField<String>("ofcdesc");
 		ofc.setRequired(true).setLabel(new Model("Office Description"));
 		ofc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
-		ofc.add(new StringValidator());
+		/*ofc.add(new StringValidator());*/
 		final FeedbackLabel ofcFeedbackLabel = new FeedbackLabel("ofcdescfeedback", ofc);
 		ofcFeedbackLabel.setOutputMarkupId(true);
 		form.add(ofcFeedbackLabel);

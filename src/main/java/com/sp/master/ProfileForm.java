@@ -12,6 +12,7 @@ public class ProfileForm extends Panel{
 		// TODO Auto-generated constructor stub
 		add(new Label("wname", ((PortSession) getSession()).getEmployeename()));
 		add(new Label("lastlogin", ((PortSession) getSession()).getLastlogintime()));
+		add(new Label("designation", ((PortSession) getSession()).getDesignation()));
 	}
 
 

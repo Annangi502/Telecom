@@ -8,7 +8,71 @@
                   </div>
                   <div class="x_content">
                     <br>
-                    <form wicket:id="form" id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+                    <form wicket:id="form" id="demo-form2" data-parsley-validate="" class="form-horizontal" novalidate="">
+                    
+                    <div class="row">
+                    <div class="col-sm-6">
+							<!-- col 1 starts here -->
+							<div class="form-group">
+								<label for="inputMT" class="col-sm-4 control-label text-danger text-right"><strong>APSPDCL
+										Circuit ID</strong></label>
+								<div class="col-sm-8">
+									<label wicket:id="spcircuitcode" for="input" class="col-sm-8 control-label text-primary text-left" style="text-align:left;">R-APDRP</label>
+								</div>
+							</div>
+						</div>
+						</div>
+						
+                    <div class="row">
+						<!-- row starts here -->
+						<div class="col-sm-6">
+							<!-- col 1 starts here -->
+							<div class="form-group">
+								<label for="inputMT" class="col-sm-4 control-label text-danger text-right"><strong>Circle</strong></label>
+								<div class="col-sm-8">
+									<label wicket:id="circle" for="input" class="col-sm-8 control-label text-primary text-left" style="text-align:left;">R-APDRP</label>
+								</div>
+							</div>
+						</div>
+						<!-- col 1 ends here -->
+
+						<div class="col-sm-6">
+							<!-- col 2 starts here -->
+							<div class="form-group">
+								<label for="inputMeetingType"
+									class="col-sm-4 control-label text-danger text-right"><b>Division</b></label>
+								<div class="col-sm-8">
+									<label wicket:id="division" for="input" class="col-sm-8 control-label text-primary text-left" style="text-align:left;">R-APDRP</label>
+								</div>
+							</div>
+						</div>
+						<!-- col 2 ends here -->
+					</div>
+					<div class="row">
+						<!-- row starts here -->
+						<div class="col-sm-6">
+							<!-- col 1 starts here -->
+							<div class="form-group">
+								<label for="inputMT" class="col-sm-4 control-label text-danger text-right"><strong>Sub-Division</strong></label>
+								<div class="col-sm-8">
+									<label wicket:id="subdivision" for="input" class="col-sm-8 control-label text-primary text-left" style="text-align:left;">R-APDRP</label>
+								</div>
+							</div>
+						</div>
+						<!-- col 1 ends here -->
+
+						<div class="col-sm-6">
+							<!-- col 2 starts here -->
+							<div class="form-group">
+								<label for="inputMeetingType"
+									class="col-sm-4 control-label text-danger text-right"><b>Section</b></label>
+								<div class="col-sm-8">
+									<label wicket:id="section" for="input" class="col-sm-8 control-label text-primary text-right" style="text-align:left;">R-APDRP</label>
+								</div>
+							</div>
+						</div>
+						<!-- col 2 ends here -->
+					</div>
 
                                <div class="row"> <!-- row 2 starts here -->
               <div class="col-sm-6"> <!-- col 2 starts here -->  
@@ -88,7 +152,7 @@
             <div class="row"> <!-- row 1 starts here -->
               <div class="col-sm-6"> <!-- col 1 starts here -->
                 <div class="form-group">
-                  <label for="inputBN" class="col-sm-4 text-danger control-label"><strong>Office Description <span class="required">*</span></strong></label>
+                  <label for="inputBN" class="col-sm-4 text-danger control-label"><strong>Merge Location <span class="required">*</span></strong></label>
                   <div class="col-sm-8">
                     <input type="text" wicket:id="ofcdesc" class="form-control" id="inputBookNo" placeholder="Enter Office Description">
                   <span class="text-danger" wicket:id="ofcdescfeedback"></span>
@@ -121,7 +185,7 @@
             <div class="row"> <!-- row 1 starts here -->
               <div class="col-sm-6"> <!-- col 1 starts here -->
                 <div class="form-group">
-                  <label for="inputBN" class="col-sm-4 text-danger control-label"><strong>Location Contact Person <span class="required">*</span></strong></label>
+                  <label for="inputBN" class="col-sm-4 text-danger control-label" style="padding-left: 0px;"><strong>Location Contact Person <span class="required">*</span></strong></label>
                   <div class="col-sm-8">
                     <input type="text" wicket:id="contactperson" class="form-control" id="inputBookNo" placeholder="Location Contact Person">
                  <span class="text-danger" wicket:id="contactpersonfeedback"></span>

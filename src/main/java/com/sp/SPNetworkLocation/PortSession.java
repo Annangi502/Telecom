@@ -13,6 +13,7 @@ public class PortSession extends WebSession
     private String employeename;
     private boolean admin;
     private String lastlogintime;
+    private String designation;
     
     public PortSession(final Request request) {
         super(request);
@@ -71,4 +72,12 @@ public class PortSession extends WebSession
     public void setLastlogintime(final String lastlogintime) {
         this.lastlogintime = lastlogintime;
     }
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
 }

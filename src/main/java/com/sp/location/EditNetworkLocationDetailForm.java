@@ -1,6 +1,7 @@
 package com.sp.location;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -16,6 +17,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -70,6 +72,11 @@ public class EditNetworkLocationDetailForm extends Panel{
     private String contactfeedback;
     private String remark;
     private String remarkfeedback;
+    private String circle;
+    private String division;
+    private String subdivision;
+    private String section;
+    private String spcircuitcode;
     private static String PATTERN = "yyyy-MM-dd";
 
 	IModel<? extends List<ProjectType>> projectlist = new LoadableDetachableModel<List<ProjectType>>() {
@@ -93,6 +100,11 @@ public class EditNetworkLocationDetailForm extends Panel{
 		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+		circle = nld.getCircledesc();
+        division = nld.getDivisiondesc();
+        subdivision = nld.getSubdivisiondesc();
+        section = nld.getSectiondesc();
+        spcircuitcode = nld.getSpciruitcode();
 		
 		/*projecttypes = new ProjectType(nldmodel.getObject().getProjecttypeid(), projecttypedescription);*/
 		townname = nldmodel.getObject().getTownname();
@@ -168,7 +180,7 @@ public class EditNetworkLocationDetailForm extends Panel{
         TextField<String> phase = new TextField<String>("phase");
         phase.setRequired(true).setLabel(new Model("Phase"));
         phase.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
-        phase.add(new StringValidator());
+       /* phase.add(new StringValidator());*/
 		final FeedbackLabel phaseFeedbackLabel = new FeedbackLabel("phasefeedback", phase);
 		phaseFeedbackLabel.setOutputMarkupId(true);
 		form.add(phaseFeedbackLabel);
@@ -185,7 +197,7 @@ public class EditNetworkLocationDetailForm extends Panel{
 		TextField<String> ofc = new TextField<String>("ofcdesc");
 		ofc.setRequired(true).setLabel(new Model("Office Description"));
 		ofc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
-		ofc.add(new StringValidator());
+		/*ofc.add(new StringValidator());*/
 		final FeedbackLabel ofcFeedbackLabel = new FeedbackLabel("ofcdescfeedback", ofc);
 		ofcFeedbackLabel.setOutputMarkupId(true);
 		form.add(ofcFeedbackLabel);
@@ -201,7 +213,7 @@ public class EditNetworkLocationDetailForm extends Panel{
 		TextField<String> ofcadd = new TextField<String>("ofcaddress");
 		ofcadd.setRequired(true).setLabel(new Model("Office Address"));
 		ofcadd.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 120));
-		ofcadd.add(new StringValidator());
+		/*ofcadd.add(new StringValidator());*/
 		final FeedbackLabel ofcaddFeedbackLabel = new FeedbackLabel("ofcaddressfeedback", ofcadd);
 		ofcaddFeedbackLabel.setOutputMarkupId(true);
 		form.add(ofcaddFeedbackLabel);
@@ -263,7 +275,11 @@ public class EditNetworkLocationDetailForm extends Panel{
 			}
 		}.setDefaultFormProcessing(true);
 		
-		
+		form.add(new Label("circle") );
+        form.add(new Label("division"));
+        form.add(new Label("subdivision"));
+        form.add(new Label("section") );
+        form.add(new Label("spcircuitcode"));
         form.add(projecttype);
         form.add(tname);
         form.add(instaldate);
@@ -290,11 +306,15 @@ public class EditNetworkLocationDetailForm extends Panel{
 	{
 		List<ProjectType> list = new ArrayList<ProjectType>();
 		String query = "{call sp_get_project_types(?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
-		    ResultSet rs = stmt.executeQuery();
+		    rs = stmt.executeQuery();
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
@@ -309,15 +329,35 @@ public class EditNetworkLocationDetailForm extends Panel{
 		}catch (SQLException e) {
 			log.error("SQL Exception in loadProjectTypes() method {"+e.getMessage()+"}");
 			e.printStackTrace();
-		}
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+               log.error("SQL Exception in loadProjectTypes() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
 		return list;
 	}
 	
 	private boolean editNetworkLocationDetails()
 	{
 		String query = "{call sp_circuit_edit_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-		try {
-			CallableStatement stmt = new DataBaseConnection().getConnection().prepareCall(query);
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setInt(3,projecttypes.getProjecttypeid());
@@ -334,8 +374,7 @@ public class EditNetworkLocationDetailForm extends Panel{
 			stmt.setString(14, townname);
 			stmt.setString(15, spcircuitid);
 			log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-			
-		    ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 		    while(rs.next())
 		    {
 		    	log.info("Circuit Detail Edited Successfully With ID :"+rs.getString(1));
@@ -344,6 +383,22 @@ public class EditNetworkLocationDetailForm extends Panel{
 			log.error("SQL Exception in editNetworkLocationDetails() method {"+e.getMessage()+"}");
 			e.printStackTrace();
 			return false;
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+               log.error("SQL Exception in editNetworkLocationDetails() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
 		}
 		return true;
 	}

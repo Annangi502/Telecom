@@ -82,6 +82,7 @@ public class Login extends WebPage {
 	        ((PortSession)getSession()).setSessionid(rs.getInt(2));
 	        ((PortSession)getSession()).setLastlogintime(rs.getString(3));
 	        ((PortSession)getSession()).setEmployeename(rs.getString(4));
+	        ((PortSession)getSession()).setDesignation(rs.getString(6));
 	        boolean isadmin = rs.getInt(5) != 0;
 	        ((PortSession)getSession()).setAdmin(isadmin);
 	        log.info("Successfully loaded application session details");
