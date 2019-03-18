@@ -39,6 +39,7 @@ public class SpNetworkLocationApplication extends WebApplication
     mountPage("error404", ErrorPage404.class);
     mountPackage("/addequipment", AddNetworkLocationDetail.class);
     mountPackage("/master", ApspdclMaster.class);
+    mountPackage("/master", Login.class);
   }
   
 
