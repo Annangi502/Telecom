@@ -14,10 +14,10 @@
 						<div class="col-sm-6">
 							<!-- col 1 starts here -->
 							<div class="form-group">
-								<label for="inputMT" class="col-sm-4 text-primary text-right"><strong>APSPDCL
+								<label for="inputMT" class="col-sm-4 text-danger text-right"><strong>APSPDCL
 										Circuit ID</strong></label>
 								<div class="col-sm-8">
-									<label wicket:id="spcircuitid" for="input" class="col-sm-8 text-left">R-APDRP</label>
+									<label wicket:id="spciruitcode" for="input" class="col-sm-8 text-primary text-left">R-APDRP</label>
 								</div>
 							</div>
 						</div>
@@ -27,10 +27,10 @@
 							<!-- col 2 starts here -->
 							<div class="form-group">
 								<label for="inputMeetingType"
-									class="col-sm-4  text-primary text-right"><b>Project
+									class="col-sm-4  text-danger text-right"><b>Project
 										Type</b></label>
 								<div class="col-sm-8">
-									<label wicket:id="projecttypedescription" for="input" class="col-sm-8  text-left">R-APDRP</label>
+									<label wicket:id="projecttypedescription" for="input" class="col-sm-8 text-primary text-left">R-APDRP</label>
 								</div>
 							</div>
 						</div>
@@ -39,7 +39,7 @@
           <div class="row"> <!-- row 2 starts here -->
               <div class="col-sm-6"> <!-- col 2 starts here -->  
                 <div class="form-group">
-                  <label for="inputMT" class="col-sm-4 control-label">Equipment</label>
+                  <label for="inputMT" class="col-sm-4 text-danger control-label">Equipment<span class="required">*</span></label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Equipment" wicket:id="equipment">
                     <span class="text-danger" wicket:id="equipmentfeedback"></span>
@@ -49,7 +49,7 @@
 
               <div class="col-sm-6"> <!-- col 3 starts here -->  
                 <div class="form-group">
-                  <label for="inputMV" class="col-sm-4 control-label">Interface</label>
+                  <label for="inputMV" class="col-sm-4 text-danger control-label">Interface<span class="required">*</span></label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Interface" wicket:id="ntinterface">
                     <span class="text-danger" wicket:id="ntinterfacefeedback"></span>
@@ -61,7 +61,7 @@
           <div class="row"> <!-- row 2 starts here -->
               <div class="col-sm-6"> <!-- col 3 starts here -->
                 <div class="form-group">
-                  <label for="inputNomineeFrom" class="col-sm-4 control-label">IP Address</label>
+                  <label for="inputNomineeFrom" class="col-sm-4 text-danger control-label">IP Address<span class="required">*</span></label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter IP Address" wicket:id="ipaddress">
                     <span class="text-danger" wicket:id="ipaddressfeedback"></span>
@@ -71,7 +71,7 @@
 
               <div class="col-sm-6"> <!-- col 4 starts here -->
                 <div class="form-group">
-                  <label for="inputNomineeUpto" class="col-sm-4 control-label">SubNet Mask</label>
+                  <label for="inputNomineeUpto" class="col-sm-4 text-danger control-label">SubNet Mask<span class="required">*</span></label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter SubNet Mask" wicket:id="subnetmask">
                     <span class="text-danger" wicket:id="subnetmaskfeedback"></span>
@@ -83,7 +83,7 @@
             <div class="row"> <!-- row 1 starts here -->
             <div class="col-sm-6"> <!-- col 1 starts here -->
                 <div class="form-group">
-                  <label for="inputBN" class="col-sm-4 control-label">Vendor</label>
+                  <label for="inputBN" class="col-sm-4 text-danger control-label">Vendor<span class="required">*</span></label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Vendor" wicket:id="vendor">
                     <span class="text-danger" wicket:id="vendorfeedback"></span>
@@ -92,7 +92,7 @@
               </div> <!-- col 1 ends here -->
               <div class="col-sm-6"> <!-- col 1 starts here -->
                 <div class="form-group">
-                  <label for="inputBN" class="col-sm-4 control-label">Remark</label>
+                  <label for="inputBN" class="col-sm-4 text-danger control-label">Remark</label>
                   <div class="col-sm-8">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Remark" wicket:id="remark">
                     <span class="text-danger" wicket:id="remarkfeedback"></span>

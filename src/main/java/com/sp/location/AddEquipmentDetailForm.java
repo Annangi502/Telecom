@@ -31,6 +31,7 @@ import com.sp.validators.StringValidator;
 public class AddEquipmentDetailForm extends Panel{
 	private static final Logger log = Logger.getLogger(AddEquipmentDetailForm.class);
 	private String spcircuitid;
+	private String spcircuitcode;
 	private String projecttypedescription;
 	private String make;
 	private String makefeedback;
@@ -54,6 +55,7 @@ public class AddEquipmentDetailForm extends Panel{
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
 		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
+		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
 		
 		TextField<String> make = new TextField<String>("make");
@@ -131,7 +133,7 @@ public class AddEquipmentDetailForm extends Panel{
 				}
 			}
 		}.setDefaultFormProcessing(true);
-		form.add(new Label("spcircuitid"));
+		form.add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
 		form.add(make);
 		form.add(model);

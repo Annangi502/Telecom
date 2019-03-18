@@ -28,6 +28,7 @@ import com.sp.validators.StringValidator;
 public class AddInterfaceDetailForm extends Panel {
 	private static final Logger log = Logger.getLogger(AddInterfaceDetailForm.class);
 	private String spcircuitid;
+	private String spciruitcode;
 	private String projecttypedescription;
 	private String equipment;
 	private String equipmentfeedback;
@@ -53,6 +54,7 @@ public class AddInterfaceDetailForm extends Panel {
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
 
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
+		spciruitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
 
 		TextField<String> equipment = new TextField<String>("equipment");
@@ -135,7 +137,7 @@ public class AddInterfaceDetailForm extends Panel {
 			}
 		}.setDefaultFormProcessing(true);
 
-		form.add(new Label("spcircuitid"));
+		form.add(new Label("spciruitcode"));
 		form.add(new Label("projecttypedescription"));
 		form.add(equipment);
 		form.add(ntinterface);
