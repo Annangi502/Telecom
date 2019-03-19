@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -51,12 +54,46 @@ public class AddVendorDetailForm extends Panel {
 	private MediaType mediatype;
 	private String mediatypefeedback;
 	private String spcircuitcode;
+	private Vendor vendornamedd;
+	private String vendornameddfeedback;
+	private boolean vendornameflag;
+	private Bandwidth bandwidthdd;
+	private String bandwidthddfeedback;	
+	private boolean bandwidthflag;
+	private UnitType unittype;
+	private String unittypefeedback;
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
 
 		@Override
 		protected List<MediaType> load() {
 			// TODO Auto-generated method stub
 			return loadMediaTypes();
+		}
+	};
+	IModel<? extends List<Vendor>> vendorlist = new LoadableDetachableModel<List<Vendor>>() {
+
+		@Override
+		protected List<Vendor> load() {
+			// TODO Auto-generated method stub
+			return loadVendors();
+		}
+	};
+	
+	IModel<? extends List<Bandwidth>> bandwidthlist = new LoadableDetachableModel<List<Bandwidth>>() {
+
+		@Override
+		protected List<Bandwidth> load() {
+			// TODO Auto-generated method stub
+			return loadBandwidths();
+		}
+	};
+	
+	IModel<? extends List<UnitType>> unittypelist = new LoadableDetachableModel<List<UnitType>>() {
+
+		@Override
+		protected List<UnitType> load() {
+			// TODO Auto-generated method stub
+			return loadUnitTypes();
 		}
 	};
 
@@ -72,21 +109,108 @@ public class AddVendorDetailForm extends Panel {
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
 
+		WebMarkupContainer vendortfdiv = new WebMarkupContainer("vendortextfileddivision") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return vendornameflag;
+			}
+		};
+		;
+		vendortfdiv.setOutputMarkupId(true);
 		TextField<String> vendorname = new TextField<String>("vendorname");
-		vendorname.setRequired(true).setLabel(new Model("Name of Vendor"));
+		vendorname.setRequired(true).setLabel(new Model("Vendor Name"));
 		vendorname.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 120));
 		vendorname.add(new StringValidator());
 		final FeedbackLabel vendornameFeedbackLabel = new FeedbackLabel("vendornamefeedback", vendorname);
 		vendornameFeedbackLabel.setOutputMarkupId(true);
-		form.add(vendornameFeedbackLabel);
+		vendortfdiv.add(vendornameFeedbackLabel);
+		vendortfdiv.add(vendorname);
 
-		TextField<String> bandwidth = new TextField<String>("bandwidth");
-		bandwidth.setRequired(true).setLabel(new Model("Bandwidth"));
-		bandwidth.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 120));
+		final DropDownChoice<Vendor> vendor = new DropDownChoice<Vendor>("vendornamedd", vendorlist,
+				new ChoiceRenderer("vendorname")) {
+			@Override
+			protected boolean wantOnSelectionChangedNotifications() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
+			@Override
+			protected void onSelectionChanged(Vendor newSelection) {
+				// TODO Auto-generated method stub
+				if(vendornamedd != null){
+				if (vendornamedd.getVendorid() == 100) {
+					vendornameflag = true;
+				} else {
+					vendornameflag = false;
+				}
+				}
+			}
+		};
+		vendor.setNullValid(true);		 
+		vendor.setRequired(true).setLabel(new Model("Vendor"));
+		final FeedbackLabel vendorFeedbackLabel = new FeedbackLabel("vendornameddfeedback", vendor);
+		vendorFeedbackLabel.setOutputMarkupId(true);
+		form.add(vendorFeedbackLabel);
+		
+		final DropDownChoice<Bandwidth> bandwidth = new DropDownChoice<Bandwidth>("bandwidthdd", bandwidthlist,
+				new ChoiceRenderer("bandwidthdesc")) {
+			@Override
+			protected boolean wantOnSelectionChangedNotifications() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
+			@Override
+			protected void onSelectionChanged(Bandwidth newSelection) {
+				// TODO Auto-generated method stub
+				if(bandwidthdd != null){
+				if (bandwidthdd.getBandwidthid() == 100) {
+					bandwidthflag = true;
+				} else {
+					bandwidthflag = false;
+				}
+				}
+			}
+		};
+		bandwidth.setNullValid(true);		 
+		bandwidth.setRequired(true).setLabel(new Model("Vendor"));
+		final FeedbackLabel bandwidthddFeedbackLabel = new FeedbackLabel("bandwidthddfeedback", bandwidth);
+		bandwidthddFeedbackLabel.setOutputMarkupId(true);
+		form.add(bandwidthddFeedbackLabel);
+
+		WebMarkupContainer bandwidthfdiv = new WebMarkupContainer("bandwidthfileddivision") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return bandwidthflag;
+			}
+		};
+		
+		TextField<String> bandwidthtf = new TextField<String>("bandwidth");
+		bandwidthtf.setRequired(true).setLabel(new Model("Bandwidth"));
+		bandwidthtf.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 120));
 		/* bandwidth.add(new StringValidator()); */
-		final FeedbackLabel bandwidthFeedbackLabel = new FeedbackLabel("bandwidthfeedback", bandwidth);
+		final FeedbackLabel bandwidthFeedbackLabel = new FeedbackLabel("bandwidthfeedback", bandwidthtf);
 		bandwidthFeedbackLabel.setOutputMarkupId(true);
-		form.add(bandwidthFeedbackLabel);
+		bandwidthfdiv.add(bandwidthFeedbackLabel);
+		bandwidthfdiv.add(bandwidthtf);
+		
+		
+		final DropDownChoice<UnitType> unittype = new DropDownChoice<UnitType>("unittype", unittypelist,
+				new ChoiceRenderer("unittypedesc"))
+				{
+			@Override
+			 protected String  getNullValidDisplayValue() {
+			    return "Select Unit Type";
+			 }
+				};
+		unittype.setNullValid(true);
+		unittype.setRequired(true).setLabel(new Model("Unit Type"));
+		final FeedbackLabel unittypeFeedbackLabel = new FeedbackLabel("unittypefeedback", unittype);
+		unittypeFeedbackLabel.setOutputMarkupId(true);
+		bandwidthfdiv.add(unittypeFeedbackLabel);
+		bandwidthfdiv.add(unittype);
 
 		TextField<String> servicetype = new TextField<String>("servicetype");
 		servicetype.setRequired(true).setLabel(new Model("Service Type"));
@@ -124,7 +248,7 @@ public class AddVendorDetailForm extends Panel {
 				new ChoiceRenderer("mediatypedesc"));
 		mediatypes.setNullValid(false);
 		mediatypes.setRequired(true).setLabel(new Model("Media Type"));
-		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback",mediatypes);
+		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback", mediatypes);
 		mediatypeFeedbackLabel.setOutputMarkupId(true);
 		form.add(mediatypeFeedbackLabel);
 		Button btncancel = new Button("btncancel") {
@@ -161,7 +285,9 @@ public class AddVendorDetailForm extends Panel {
 
 		form.add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
-		form.add(vendorname);
+		form.add(vendor);
+		form.add(vendortfdiv);
+		form.add(bandwidthfdiv);
 		form.add(bandwidth);
 		form.add(servicetype);
 		form.add(ntinterface);
@@ -174,55 +300,55 @@ public class AddVendorDetailForm extends Panel {
 		form.add(feedback);
 		add(form);
 	}
-
-	 private boolean addNetworkVendorDetail() {
-	        final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?)}";
-	        Connection con = null;
-	        CallableStatement stmt = null;
-	        ResultSet rs = null;
-	        try {
-	            con = new DataBaseConnection().getConnection();
-	            stmt = con.prepareCall(query);
-	            stmt.setString(1, ((PortSession)this.getSession()).getEmployeeid());
-	            stmt.setInt(2, ((PortSession)this.getSession()).getSessionid());
-	            stmt.setString(3, this.spcircuitid);
-	            stmt.setString(4, this.vendorname);
-	            stmt.setString(5, this.bandwidth);
-	            stmt.setString(6, this.servicetype);
-	            stmt.setString(7, this.ntinterface);
-	            stmt.setInt(8, Integer.parseInt(this.circuitid));
-	            stmt.setInt(9, this.mediatype.getMediatypeid());
-	            stmt.setString(10, this.remark);
-	            log.info("Executing Stored Procedure { " + stmt.toString() + " }");
-	            rs = stmt.executeQuery();
-	            while (rs.next()) {
-	                log.info("Network Vendor Detail Added Successfully With ID :" + rs.getInt(1));
-	            }
-	        }
-	        catch (SQLException e) {
-	            log.error("SQL Exception in addNetworkVendorDetail() method {" + e.getMessage() + "}");
-	            e.printStackTrace();
-	            return false;
-	        }
-	        finally {
-	            try {
-	                if (rs != null) {
-	                    rs.close();
-	                }
-	                if (stmt != null) {
-	                    stmt.close();
-	                }
-	                if (con != null) {
-	                    con.close();
-	                }
-	            }
-	            catch (SQLException e2) {
-	                log.error("SQL Exception in addNetworkVendorDetail() method {" + e2.getMessage() + "}");
-	                e2.printStackTrace();
-	            }
-	        }
-	        return true;
-	    }
+private boolean addNetworkVendorDetail() {
+		final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			stmt.setString(3, spcircuitid);
+			stmt.setInt(4, vendornamedd.getVendorid());
+			stmt.setString(5, (vendornamedd.getVendorid()==100)?vendorname:vendornamedd.getVendorname());
+			stmt.setInt(6, bandwidthdd.getBandwidthid());
+			stmt.setString(7, (bandwidthdd.getBandwidthid()==100)? bandwidth+" "+unittype.getUnittypedesc():bandwidthdd.getBandwidthdesc());
+			stmt.setInt(8,(bandwidthdd.getBandwidthid()==100)? Integer.parseInt(bandwidth):bandwidthdd.getBandwidth());
+			stmt.setInt(9, (bandwidthdd.getBandwidthid()==100)?unittype.getUnittypeid():bandwidthdd.getBandwidthunittypeid());
+			stmt.setString(10, servicetype);
+			stmt.setString(11, ntinterface);
+			stmt.setInt(12, Integer.parseInt(this.circuitid));
+			stmt.setInt(13, mediatype.getMediatypeid());
+			stmt.setString(14, remark);
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				log.info("Network Vendor Detail Added Successfully With ID :" + rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in addNetworkVendorDetail() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in addNetworkVendorDetail() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return true;
+	}
 
 	private List<MediaType> loadMediaTypes() {
 		final List<MediaType> list = new ArrayList<MediaType>();
@@ -236,7 +362,7 @@ public class AddVendorDetailForm extends Panel {
 			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
 			rs = stmt.executeQuery();
-			AddVendorDetailForm.log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
 				list.add(new MediaType(rs.getInt(1), rs.getString(2)));
 			}
@@ -257,6 +383,126 @@ public class AddVendorDetailForm extends Panel {
 				}
 			} catch (SQLException e2) {
 				log.error("SQL Exception in addNetworkLocationDetails() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+
+	private List<Vendor> loadVendors() {
+		final List<Vendor> list = new ArrayList<Vendor>();
+		final String query = "{call sp_get_vendors(?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			rs = stmt.executeQuery();
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			while (rs.next()) {
+				list.add(new Vendor(rs.getInt(1), rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in loadVendors() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+			return list;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in loadVendors() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+	
+	private List<Bandwidth> loadBandwidths() {
+		final List<Bandwidth> list = new ArrayList<Bandwidth>();
+		final String query = "{call sp_get_bandwidths(?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			rs = stmt.executeQuery();
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			while (rs.next()) {
+				list.add(new Bandwidth(rs.getInt(1), rs.getString(2),rs.getInt(3),rs.getInt(4),rs.getInt(5)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in loadBandwidths() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+			return list;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in loadBandwidths() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+	
+	private List<UnitType> loadUnitTypes() {
+		final List<UnitType> list = new ArrayList<UnitType>();
+		final String query = "{call sp_get_unittypes(?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			rs = stmt.executeQuery();
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			while (rs.next()) {
+				list.add(new UnitType(rs.getInt(1), rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in loadUnitTypes() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+			return list;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in loadUnitTypes() method {" + e2.getMessage() + "}");
 				e2.printStackTrace();
 			}
 		}

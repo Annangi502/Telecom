@@ -39,10 +39,17 @@
           <div class="row"> <!-- row 2 starts here -->
               <div class="col-sm-6"> <!-- col 2 starts here -->  
                 <div class="form-group">
-                  <label for="inputMT" class="col-sm-4 text-danger control-label"><strong>Name of Vendor<span class="required">*</span></strong></label>
+                  <label for="inputMT" class="col-sm-4 text-danger control-label"><strong>Vendor<span class="required">*</span></strong></label>
                   <div class="col-sm-8">
+                   <select class="form-control"  wicket:id="vendornamedd">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                    <span class="text-danger" wicket:id="vendornameddfeedback"></span>
+                     <div wicket:id="vendortextfileddivision">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Vendor Name" wicket:id="vendorname">
                     <span class="text-danger" wicket:id="vendornamefeedback"></span>
+                    </div>
                   </div>
                 </div>
               </div> <!-- col 2 ends here -->
@@ -51,8 +58,20 @@
                 <div class="form-group">
                   <label for="inputMV" class="col-sm-4 text-danger control-label"><strong>Bandwidth<span class="required">*</span></strong></label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Bandwidth" wicket:id="bandwidth">
-                    <span class="text-danger" wicket:id="bandwidthfeedback"></span>
+                  <select class="form-control"  wicket:id="bandwidthdd">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                    <span class="text-danger" wicket:id="bandwidthddfeedback"></span>
+                    <div wicket:id="bandwidthfileddivision" class="input-group" id="unified-inputs">
+                    <input type="text" class="form-control" id="2" placeholder="Enter Bandwidth" wicket:id="bandwidth">
+                     <select class="form-control" wicket:id="unittype" id="1">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                    <span class="text-danger" wicket:id="bandwidthfeedback"></span><br>
+                    <span class="text-danger" wicket:id="unittypefeedback"></span>
+                    </div>
                   </div>
                 </div>
               </div> <!-- col 3 ends here -->
