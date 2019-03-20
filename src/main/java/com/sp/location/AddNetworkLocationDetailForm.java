@@ -239,8 +239,8 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
 		TextField<String> tname = new TextField<String>("townname");
 		tname.setRequired(true).setLabel(new Model("Town Name"));
-		tname.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
-		tname.add(new StringValidator());
+		tname.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		/*tname.add(new StringValidator());*/
 		final FeedbackLabel townnameFeedbackLabel = new FeedbackLabel("townnamefeedback", tname);
 		townnameFeedbackLabel.setOutputMarkupId(true);
 		form.add(townnameFeedbackLabel);

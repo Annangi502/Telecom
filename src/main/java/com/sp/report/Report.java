@@ -1,4 +1,4 @@
-package com.sp.location;
+package com.sp.report;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 

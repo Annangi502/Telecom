@@ -3,6 +3,7 @@ package com.sp.SPNetworkLocation;
 import com.sp.location.AddNetworkLocationDetail;
 import com.sp.master.ApspdclMaster;
 import com.sp.master.ErrorPage404;
+import com.sp.report.Report;
 import com.sp.master.Login;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
@@ -40,6 +41,7 @@ public class SpNetworkLocationApplication extends WebApplication
     mountPackage("/addequipment", AddNetworkLocationDetail.class);
     mountPackage("/master", ApspdclMaster.class);
     mountPackage("/master", Login.class);
+    mountPackage("/report", Report.class);
   }
   
 
