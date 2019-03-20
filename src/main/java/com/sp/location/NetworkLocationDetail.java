@@ -23,8 +23,38 @@ public class NetworkLocationDetail implements Serializable
     private String divisiondesc;
     private String subdivisiondesc;
     private String sectiondesc;
-    
-    public NetworkLocationDetail() {
+    private String vendorname;
+    private String bandwidth;
+	public NetworkLocationDetail(String spcircuitid, int projecttypeid, String projecttypedescription,
+			int noofpointsavailable, String installationdate, String dateofconnected, String officedescription,
+			String officecontactno, String officeaddress, String locationcontactperson, String loactioncontactno,
+			String remark, String townname, String phase, String spciruitcode, String circledesc, String divisiondesc,
+			String subdivisiondesc, String sectiondesc, String vendorname, String bandwidth) {
+		super();
+		this.spcircuitid = spcircuitid;
+		this.projecttypeid = projecttypeid;
+		this.projecttypedescription = projecttypedescription;
+		this.noofpointsavailable = noofpointsavailable;
+		this.installationdate = installationdate;
+		this.dateofconnected = dateofconnected;
+		this.officedescription = officedescription;
+		this.officecontactno = officecontactno;
+		this.officeaddress = officeaddress;
+		this.locationcontactperson = locationcontactperson;
+		this.loactioncontactno = loactioncontactno;
+		this.remark = remark;
+		this.townname = townname;
+		this.phase = phase;
+		this.spciruitcode = spciruitcode;
+		this.circledesc = circledesc;
+		this.divisiondesc = divisiondesc;
+		this.subdivisiondesc = subdivisiondesc;
+		this.sectiondesc = sectiondesc;
+		this.vendorname = vendorname;
+		this.bandwidth = bandwidth;
+	}
+
+	public NetworkLocationDetail() {
     }
     
     public NetworkLocationDetail(final String spcircuitid, final int projecttypeid, final String projecttypedescription, final int noofpointsavailable, final String installationdate, final String dateofconnected, final String officedescription, final String officecontactno, final String officeaddress, final String locationcontactperson, final String loactioncontactno, final String remark, final String townname, final String phase, final String spciruitcode, final String circledesc, final String divisiondesc, final String subdivisiondesc, final String sectiondesc) {
@@ -200,4 +230,20 @@ public class NetworkLocationDetail implements Serializable
     public void setSectiondesc(final String sectiondesc) {
         this.sectiondesc = sectiondesc;
     }
+    public String getVendorname() {
+		return vendorname;
+	}
+
+	public void setVendorname(String vendorname) {
+		this.vendorname = vendorname;
+	}
+
+	public String getBandwidth() {
+		return bandwidth;
+	}
+
+	public void setBandwidth(String bandwidth) {
+		this.bandwidth = bandwidth;
+	}
+
 }

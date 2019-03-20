@@ -3,6 +3,7 @@ package com.sp.SPNetworkLocation;
 import com.sp.location.AddNetworkLocationDetail;
 import com.sp.master.ApspdclMaster;
 import com.sp.master.ErrorPage404;
+import com.sp.master.Index;
 import com.sp.report.Report;
 import com.sp.master.Login;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -20,7 +21,7 @@ public class SpNetworkLocationApplication extends WebApplication
   
   public Class<? extends org.apache.wicket.Page> getHomePage()
   {
-    return Login.class;
+    return Index.class;
   }
   
   protected void init()

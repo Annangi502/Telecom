@@ -203,5 +203,11 @@
         $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
     });
 </script>
+<script>
+$.extend(true, $.fn.dataTable.defaults, { 
+    lengthMenu: [[10, 25, 50, 250, -1], [10, 25, 50, 250, "All"]]
+});
+
+</script>
 </body>
 </html>
