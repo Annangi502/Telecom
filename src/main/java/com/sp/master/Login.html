@@ -20,6 +20,46 @@
 
     <!-- Custom Theme Style -->
     <link href="assets/build/css/custom.min.css" rel="stylesheet">
+    <style>
+    .customwell{
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+    }
+    .loginbtn {
+    background: #01396a;
+    width: 100%;
+    padding: 1px;
+    font-size: 18px;
+    border: 0;
+    border-radius: 7.5px;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 6px; 
+/*     background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition: 0.3s; */
+    
+}
+    
+.loginbtn:hover {
+  background-color: #0aa7e0;
+  color: white;
+}
+/* .loginbtn:hover {
+    background-color: #ff9800;
+} */
+    </style>
   </head>
 
   <body class="login">
@@ -28,13 +68,10 @@
       <a class="hiddenanchor" id="signin"></a>
 
       <div class="login_wrapper">
-        <div class="well animate form login_form">
-          <section class="login_content">
+        <div class="customwell animate form login_form">
+          <section class="login_content" style="padding-top: 0px;">
             <form wicket:id="loginform">
-            <div>
-                  <h1>APSPDCL</h1>
-                  
-                </div>
+                  <a href="./master/Index" ><img class="img-responsive" src="logo1.jpg" alt="..." ></a>
               <h1>Login Form</h1>
               <span wicket:id="errormessage" style="font-size:16px;" class="text-danger" ></span>
               <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
@@ -46,7 +83,8 @@
                 <span class="fa fa-key form-control-feedback left" aria-hidden="true"></span>
               </div>
               <div class="form-group">
-				<input type="submit" class="btn btn-primary btn-block"  value="Login" />
+<!-- 				<input type="submit" class="loginbtn btn-block"  value="Login" /> -->
+				<button class="loginbtn" type="submit" style="vertical-align:middle">Login</button>
 			</div>
 
 

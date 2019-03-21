@@ -92,6 +92,7 @@ public class Login extends WebPage {
 	      errormessage = e.getMessage();
 	      log.error("SQL Exception in doLogin() method {" + e.getMessage() + "}");
 	      e.printStackTrace();
+	      return false;
 	    }
 	    finally {}
 	    try
