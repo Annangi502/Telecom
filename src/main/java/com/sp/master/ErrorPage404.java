@@ -10,6 +10,6 @@ public class ErrorPage404 extends WebPage
     private static final long serialVersionUID = 1L;
     
     public ErrorPage404(final PageParameters parameters) {
-        add(new BookmarkablePageLink("home", Login.class));
+        add(new BookmarkablePageLink("home", Index.class));
     }
 }
