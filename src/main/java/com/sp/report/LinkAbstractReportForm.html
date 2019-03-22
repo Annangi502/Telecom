@@ -1,0 +1,59 @@
+<wicket:panel>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>Link Abstract Report</h2>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+				<div class="row"> <!-- row 2 starts here -->
+              <div class="col-sm-12"> <!-- col 2 starts here -->  
+                <div class="form-group">
+                  <label for="inputMT" class="col-sm-4 text-danger text-right control-label"style="padding-top: 8px;"><strong> Circle</strong></label>
+                  <div class="col-sm-4 text-left">
+                    <select class="form-control"  wicket:id="circle">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                  </div>
+                </div>
+              </div> <!-- col 2 ends here -->
+              </div>
+              <br>
+				<div class="row">
+				
+					<table class="table table-striped table-bordered text-center">
+						<thead>
+							<tr class="bg-primary">
+								<th class="text-center">VENDOR</th>
+								<th class="text-center"  wicket:id="projecttypes"><span wicket:id="projectname"></span></th>
+								<th class="text-center">TOTAL</th>
+							</tr>
+						</thead>
+						<tr wicket:id="vendors">
+							<td style="font-weight: 600;" wicket:id="vendorname"></td>
+							<td wicket:id="vendorprojects"><span wicket:id="count"></span></td>
+							<td  wicket:id="total"></td>
+						</tr>
+						<tr>
+							<td style="font-weight: 600;"><span>TOTAL</span></td>
+							<td style="font-weight: 600;" wicket:id="ttllist"><span wicket:id="projecttotal"></span></td>
+							<td style="font-weight: 600;"><span wicket:id="grandtotal"></span></td>
+						</tr>
+
+					</table>
+					<div class="ln_solid">
+                     <!--  <span class="text-danger" wicket:id="feedback" ></span> -->
+                      </div>
+						<div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                        <a href="./report/Report" class="btn btn-primary">Back</a>                        
+                        </div>
+                      </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</wicket:panel>
