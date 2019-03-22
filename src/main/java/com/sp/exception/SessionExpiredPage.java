@@ -12,6 +12,6 @@ public class SessionExpiredPage extends WebPage
     
     public SessionExpiredPage(final PageParameters params) {
         super(params);
-        add(new BookmarkablePageLink("login",Login.class) );
+        add(new BookmarkablePageLink("login",Index.class) );
     }
 }

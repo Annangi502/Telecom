@@ -44,7 +44,7 @@ public class Header extends Panel {
 				}
 				MDC.put("userId","");
 				getSession().invalidate();
-				setResponsePage(Login.class);
+				setResponsePage(Index.class);
 				
 			}
 				});
