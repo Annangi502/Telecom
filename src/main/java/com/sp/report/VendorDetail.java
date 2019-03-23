@@ -11,6 +11,11 @@ public class VendorDetail  implements Serializable {
 	public VendorDetail() {
 		// TODO Auto-generated constructor stub
 	}
+	public VendorDetail(int vendorid, String vendorname) {
+		super();
+		this.vendorid = vendorid;
+		this.vendorname = vendorname;
+	}
 	public VendorDetail(int vendorid, String vendorname, List<ProjectDetail> project) {
 		super();
 		this.vendorid = vendorid;

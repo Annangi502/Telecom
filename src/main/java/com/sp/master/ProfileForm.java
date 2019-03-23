@@ -13,6 +13,7 @@ public class ProfileForm extends Panel{
 		add(new Label("wname", ((PortSession) getSession()).getEmployeename()));
 		add(new Label("lastlogin", ((PortSession) getSession()).getLastlogintime()));
 		add(new Label("designation", ((PortSession) getSession()).getDesignation()));
+		add(new Label("wing", ((PortSession) getSession()).getWing()));
 	}
 
 

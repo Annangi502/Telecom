@@ -14,6 +14,7 @@ public class PortSession extends WebSession
     private boolean admin;
     private String lastlogintime;
     private String designation;
+    private String wing;
     
     public PortSession(final Request request) {
         super(request);
@@ -79,5 +80,13 @@ public class PortSession extends WebSession
 
 	public void setDesignation(String designation) {
 		this.designation = designation;
+	}
+
+	public String getWing() {
+		return wing;
+	}
+
+	public void setWing(String wing) {
+		this.wing = wing;
 	}
 }
