@@ -87,6 +87,7 @@ public class EditNetworkLocationDetailForm extends Panel{
 			return loadProjectTypes();
 		}
 	};
+	private List<String> phaselist = Arrays.asList("Phase 1","Phase 2");
 	private NetworkLocationDetail nld ;
 	public EditNetworkLocationDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
@@ -176,8 +177,8 @@ public class EditNetworkLocationDetailForm extends Panel{
         condate.add(datePicker1);
         form.add(connfeedback);
         
-        
-        TextField<String> phase = new TextField<String>("phase");
+        DropDownChoice<String> phase = new DropDownChoice<String>("phase", phaselist);
+      /*  TextField<String> phase = new TextField<String>("phase");*/
         phase.setRequired(true).setLabel(new Model("Phase"));
         phase.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
        /* phase.add(new StringValidator());*/

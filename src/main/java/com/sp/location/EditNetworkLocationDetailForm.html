@@ -131,7 +131,11 @@
                 <div class="form-group">
                   <label for="inputBN" class="col-sm-4 text-danger control-label"><strong>Phase <span class="required">*</span></strong></label>
                   <div class="col-sm-8">
-                    <input type="text" wicket:id="phase" class="form-control" id="inputBookNo" placeholder="Enter Phase">
+                  <select class="form-control"  wicket:id="phase">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+               <!--      <input type="text" wicket:id="phase" class="form-control" id="inputBookNo" placeholder="Enter Phase"> -->
  						<span class="text-danger" wicket:id="phasefeedback"></span>                 
                   </div>
                 </div>
