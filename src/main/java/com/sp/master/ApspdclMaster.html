@@ -212,5 +212,37 @@ $.extend(true, $.fn.dataTable.defaults, {
 });
 
 </script>
+<!-- Thsi script for  Password Validations in Change Password Page -->	
+<script>
+$('#confirm_password').on('keyup', function () {
+    if ($(this).val() == $('#password').val()) {
+        $('#message').html('* Matching').css('color', 'green');
+    } else $('#message').html('* Not Matching').css('color', 'red');
+});
+</script>
+  
+ <script>
+$('#password').on('keyup', function () {
+    if ($(this).val() == $('#oldpassword').val()) {
+        $('#message1').html('* Same password').css('color', 'red');
+    } else $('#message1').html('').css('color', 'red');
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+		localStorage.setItem('activeTab', $(e.target).attr('href'));
+	});
+	var activeTab = localStorage.getItem('activeTab');
+	if(activeTab){
+		$('#myTab a[href="' + activeTab + '"]').tab('show');
+	}
+});
+</script>
+<script>
+$(document).ready(function(){
+localStorage.removeItem("activeTab");
+});
+</script>
 </body>
 </html>

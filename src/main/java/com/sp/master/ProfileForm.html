@@ -1,77 +1,209 @@
 <wicket:panel>
-<div class="x_panel">
-<div class="x_title">
-<h2><i class="fa fa-bars"></i> Profile </h2>
-<div class="clearfix"></div>
-</div>
-<div class="x_content">
-<div class="" role="tabpanel" data-example-id="togglable-tabs">
-<ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-<li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Personal Details</a>
-</li>
-<li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Contact Details</a>
-</li>
-<li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Change Password</a>
-</li>
-</ul>
-<div id="myTabContent" class="tab-content">
-<div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
-<div class="row">
-		<div class="col-md-12 col-sm-12 col-xs-12">
-			<div class="x_panel">
-	<div data-example-id="simple-jumbotron"
-		>
-		<div
-			class="col-md-6 col-sm-6  col-xs-12">
-			<div class="row">
-				<div class="col-md-6 col-sm-6  col-xs-12 text-right">
-					<label class="text-danger" >Name</label>
-				</div>
-				<div class="col-md-6 col-sm-6  col-xs-12">
-					<label class="text-primary" wicket:id="wname">Mr. Stalin Anudeep</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6 col-sm-6  col-xs-12 text-right">
-					<label class="text-danger">Designation</label>
-				</div>
-				<div class="col-md-6 col-sm-6  col-xs-12">
-					<label class="text-primary" wicket:id="designation">AD</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6 col-sm-6  col-xs-12 text-right">
-					<label class="text-danger">Wing</label>
-				</div>
-				<div class="col-md-6 col-sm-6  col-xs-12">
-					<label class="text-primary" wicket:id="wing">TELECOME & IT</label>
-				</div>
-			</div> 
-			<div class="row">
-				<div class="col-md-6 col-sm-6  col-xs-12 text-right">
-					<label class="text-danger">Last Login</label>
-				</div>
-				<div class="col-md-6 col-sm-6  col-xs-12">
-					<label wicket:id="lastlogin" class="text-primary">12 Fed, 2019 12:12 PM</label>
+	<div class="x_panel">
+		<div class="x_title">
+			<h2>
+				<i class="fa fa-bars"></i> Profile
+			</h2>
+			<div class="clearfix"></div>
+		</div>
+		<div class="x_content">
+			<div class="" role="tabpanel" data-example-id="togglable-tabs">
+				<ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#tab_content1"
+						id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Personal
+							Details</a></li>
+					<li role="presentation" class=""><a href="#tab_content2"
+						role="tab" id="profile-tab" data-toggle="tab"
+						aria-expanded="false">Contact Details</a></li>
+					<li role="presentation" class=""><a href="#tab_content3"
+						role="tab" id="profile-tab2" data-toggle="tab"
+						aria-expanded="false">Change Password</a></li>
+				</ul>
+				<div id="myTabContent" class="tab-content">
+					<div role="tabpanel" class="tab-pane fade active in"
+						id="tab_content1" aria-labelledby="home-tab">
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel">
+									<div data-example-id="simple-jumbotron">
+										<div class="col-md-6 col-sm-6  col-xs-12">
+											<div class="row">
+												<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+													<label class="text-danger">Name</label>
+												</div>
+												<div class="col-md-6 col-sm-6  col-xs-12">
+													<label class="text-primary" wicket:id="wname">Mr.
+														Stalin Anudeep</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+													<label class="text-danger">Designation</label>
+												</div>
+												<div class="col-md-6 col-sm-6  col-xs-12">
+													<label class="text-primary" wicket:id="designation">AD</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+													<label class="text-danger">Wing</label>
+												</div>
+												<div class="col-md-6 col-sm-6  col-xs-12">
+													<label class="text-primary" wicket:id="wing">TELECOME
+														& IT</label>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+													<label class="text-danger">Last Login</label>
+												</div>
+												<div class="col-md-6 col-sm-6  col-xs-12">
+													<label wicket:id="lastlogin" class="text-primary">12
+														Fed, 2019 12:12 PM</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane fade" id="tab_content2"
+						aria-labelledby="profile-tab">
+						<div data-example-id="simple-jumbotron">
+							<div class="col-md-6 col-sm-6  col-xs-12">
+								<div class="row">
+									<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+										<label class="text-danger">Mobile 1</label>
+									</div>
+									<div class="col-md-6 col-sm-6  col-xs-12">
+										<label class="text-primary" wicket:id="mobile1">Mr.
+											Stalin Anudeep</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+										<label class="text-danger">Mobile 2</label>
+									</div>
+									<div class="col-md-6 col-sm-6  col-xs-12">
+										<label class="text-primary" wicket:id="mobile2">Mr.
+											Stalin Anudeep</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+										<label class="text-danger">Email 1</label>
+									</div>
+									<div class="col-md-6 col-sm-6  col-xs-12">
+										<label class="text-primary" wicket:id="email1">Mr.
+											Stalin Anudeep</label>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6 col-sm-6  col-xs-12 text-right">
+										<label class="text-danger">Email 2</label>
+									</div>
+									<div class="col-md-6 col-sm-6  col-xs-12">
+										<label class="text-primary" wicket:id="email2">Mr.
+											Stalin Anudeep</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div role="tabpanel" class="tab-pane fade" id="tab_content3"
+						aria-labelledby="profile-tab">
+						<div class="x_content">
+							<br>
+							<form id="demo-form2" wicket:id="changepassword"
+								data-parsley-validate="" class="form-horizontal form-label-left"
+								novalidate="">
+
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12"
+										for="first-name">Old Password <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="password" id="oldpassword" required="required"
+											wicket:id="oldpassword"
+											class="form-control col-md-7 col-xs-12"
+											placeholder="Old Password"> <span class="text-danger"
+											wicket:id="oldpasswordfeedback"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12"
+										for="last-name">New Password <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="password" id="password" name="last-name"
+											wicket:id="newpassword" required="required"
+											placeholder="New Password"
+											class="form-control col-md-7 col-xs-12"> <span
+											class="text-danger" wicket:id="newpasswordfeedback"></span>
+									</div>
+									<span class="col-sm-2" id="message1"></span>
+								</div>
+								<div class="form-group">
+									<label for="middle-name"
+										class="control-label col-md-4 col-sm-3 col-xs-12">Confirm
+										Password <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input id="confirm_password" wicket:id="confirmpassword"
+											class="form-control col-md-7 col-xs-12"
+											placeholder="Confirm Password" type="password"
+											name="middle-name"> <span class="text-danger"
+											wicket:id="confirmpasswordfeedback"></span>
+									</div>
+									<span class="col-sm-2" id="message"></span>
+								</div>
+								<span class="text-danger" wicket:id="feedback"></span> <span
+									class="text-danger" wicket:id="infofeedback"></span>
+								<div class="ln_solid"></div>
+								<div class="form-group">
+									<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+										<button class="btn btn-primary" type="reset">Reset</button>
+										<button type="submit" class="btn btn-success"
+											wicket:id="btnchangepassword">Change Password</button>
+									</div>
+								</div>
+								
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-		</div>
-	</div>
-</div>
-<div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-booth letterpress, commodo enim craft beer mlkshk aliquip</p>
-</div>
-<div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
-<p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-booth letterpress, commodo enim craft beer mlkshk </p>
-</div>
-</div>
-</div>
-</div>
-</div>
-	
+
+<!-- Modal -->
+								<div class="modal show" id="myModal" role="dialog"
+									wicket:id="successmodel">
+									<div class="modal-dialog">
+
+										<!-- Modal content-->
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title text-primary text-center">
+													<i class="fa fa-check-circle-o fa-3x" aria-hidden="true"></i>
+												</h4>
+											</div>
+											<div class="modal-body text-center">
+												<h2>Your Password has been Changed Successfully</h2>
+												<br>
+												<a href="./master/Profile" class="btn btn-primary" data-dismiss="modal">OK</a>
+											</div>
+
+
+
+										</div>
+
+									</div>
+								</div>
+
+
 </wicket:panel>

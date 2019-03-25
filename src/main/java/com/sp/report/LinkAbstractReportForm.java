@@ -198,7 +198,7 @@ public class LinkAbstractReportForm extends Panel {
 					con.close();
 				}
 			} catch (SQLException e2) {
-				log.error("SQL Exception in addNetworkLocationDetails() method {" + e2.getMessage() + "}");
+				log.error("SQL Exception in loadProjectTypes() method {" + e2.getMessage() + "}");
 				e2.printStackTrace();
 			}
 		}
