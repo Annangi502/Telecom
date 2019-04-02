@@ -12,16 +12,22 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.Component;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -35,6 +41,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import com.sp.SPNetworkLocation.PortSession;
 import com.sp.master.ApspdclMaster;
+import com.sp.resource.CustomRadioChoice;
 import com.sp.resource.DataBaseConnection;
 import com.sp.resource.ErrorLevelsFeedbackMessageFilter;
 import com.sp.resource.FeedbackLabel;
@@ -81,8 +88,17 @@ public class AddNetworkLocationDetailForm extends Panel{
     private int sectionid;
     private Section section;
     private String sectionfeedback;
+    private String mergedesc;
+    private String mergedescfeedback;
+    private String latitude;
+    private String latitudefeedback;
+    private String longitude;
+    private String longitudefeedback;
     private NetworkLocationDetail nlcd = new NetworkLocationDetail();
     private static String PATTERN = "yyyy-MM-dd";
+    private static final List<String> TYPES = Arrays.asList("Yes", "No");
+    private boolean mrgdescdivflag;
+    private Category cat1;
     IModel<? extends List<Circle>> circlelist=new LoadableDetachableModel<List<Circle>>() {
 		@Override
 		protected List<Circle> load() {
@@ -120,10 +136,28 @@ public class AddNetworkLocationDetailForm extends Panel{
 		}
 	};
 	
+	IModel<? extends List<Category>> catonelist = new LoadableDetachableModel<List<Category>>() {
+
+		@Override
+		protected List<Category> load() {
+			// TODO Auto-generated method stub
+			return loadCategory(1);
+		}
+	};
+	
+	/*IModel<? extends List<Category>> cattwolist = new LoadableDetachableModel<List<Category>>() {
+
+		@Override
+		protected List<Category> load() {
+			// TODO Auto-generated method stub
+			return loadCategory(2);
+		}
+	};*/
 	private List<String> phaselist = Arrays.asList("Phase 1","Phase 2");
 	public AddNetworkLocationDetailForm(String id) {
 		super(id);
 		setDefaultModel(new CompoundPropertyModel<AddNetworkLocationDetailForm>(this));
+		ofcdesc = "No";
 		StatelessForm<Form> form = new StatelessForm<Form>("form");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[]{FeedbackMessage.ERROR};
@@ -280,10 +314,12 @@ public class AddNetworkLocationDetailForm extends Panel{
         condate.add(datePicker1);
         form.add(connfeedback);
         
+        
+        
         DropDownChoice<String> phase = new DropDownChoice<String>("phase", phaselist);
        /* TextField<String> phase = new TextField<String>("phase");*/
         phase.setRequired(true).setLabel(new Model("Phase"));
-        phase.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
+       /* phase.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));*/
       /*  phase.add(new StringValidator());*/
 		final FeedbackLabel phaseFeedbackLabel = new FeedbackLabel("phasefeedback", phase);
 		phaseFeedbackLabel.setOutputMarkupId(true);
@@ -298,7 +334,49 @@ public class AddNetworkLocationDetailForm extends Panel{
 		form.add(pointsFeedbackLabel);
 		
 		
-		TextField<String> ofc = new TextField<String>("ofcdesc");
+		final WebMarkupContainer mrgdescdiv = new WebMarkupContainer("mrgdescdiv");
+		mrgdescdiv.setEnabled(false);
+		mrgdescdiv.setOutputMarkupId(true);
+        final TextField<String> mrgdesc = new TextField<String>("mergedesc");
+        mrgdesc.setOutputMarkupId(true);
+        mrgdesc.setRequired(false).setLabel(new Model("Merge Description"));
+        mrgdesc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+		/*tname.add(new StringValidator());*/
+		final FeedbackLabel mrgdescFeedbackLabel = new FeedbackLabel("mergedescfeedback", mrgdesc);
+		mrgdescFeedbackLabel.setOutputMarkupId(true);
+		mrgdescdiv.add(mrgdesc);
+		mrgdescdiv.add(mrgdescFeedbackLabel);
+		form.add(mrgdescdiv);
+		
+		final RadioChoice<String> ofc = new RadioChoice("ofcdesc",TYPES)
+				{
+			@Override
+			public String getSuffix() {
+				// TODO Auto-generated method stub
+				return "&emsp;&emsp;&emsp;&emsp;";
+			}
+				};
+				ofc.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+
+					  @Override
+					  protected void onUpdate(AjaxRequestTarget target) {
+						  if(ofcdesc.equals("Yes"))
+							{
+								mrgdescdiv.setEnabled(true);
+								mrgdesc.setRequired(true).setLabel(new Model("Merge Description"));
+							}
+							else{
+								mrgdescdiv.setEnabled(false);
+								mrgdesc.setRequired(false).setLabel(new Model("Merge Description"));
+							}
+						  target.add(mrgdesc);
+						  target.add(mrgdescdiv);
+					  }
+
+					});
+				
+		
+		/*TextField<String> ofc = new TextField<String>("ofcdesc");*/
 		ofc.setRequired(true).setLabel(new Model("Office Description"));
 		ofc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
 		/*ofc.add(new StringValidator());*/
@@ -346,6 +424,27 @@ public class AddNetworkLocationDetailForm extends Panel{
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
 		form.add(remarkFeedbackLabel);
+		
+		
+		TextField<String> latitude = new TextField<String>("latitude");
+		latitude.setRequired(true).setLabel(new Model("Latitude"));
+		final FeedbackLabel latitudeFeedbackLabel = new FeedbackLabel("latitudefeedback", latitude);
+		latitudeFeedbackLabel.setOutputMarkupId(true);
+		form.add(latitudeFeedbackLabel);
+		
+		
+		TextField<String> longitude = new TextField<String>("longitude");
+		longitude.setRequired(true).setLabel(new Model("Longitude"));	
+		final FeedbackLabel longitudeFeedbackLabel = new FeedbackLabel("longitudefeedback", longitude);
+		longitudeFeedbackLabel.setOutputMarkupId(true);
+		form.add(longitudeFeedbackLabel);
+		
+		
+		 DropDownChoice<Category> cat1 = new DropDownChoice<Category>("cat1", catonelist,new ChoiceRenderer("catdesc") );
+		 cat1.setRequired(true).setLabel(new Model("Category"));
+		 
+		/* DropDownChoice<Category> cat2 = new DropDownChoice<Category>("cat2", cattwolist,new ChoiceRenderer("catdesc") );
+		 phase.setRequired(true).setLabel(new Model("Category"));*/
 		
 		Button btncancel = new Button("btncancel")
 		{
@@ -396,7 +495,10 @@ public class AddNetworkLocationDetailForm extends Panel{
 		form.add(btncancel);
 		form.add(btnreset);
 		form.add(btnsubmit);
-		
+		form.add(latitude);
+		form.add(longitude);
+		form.add(cat1);
+		/*form.add(cat2);*/
 		add(form);
 		
 		// TODO Auto-generated constructor stub
@@ -436,13 +538,53 @@ public class AddNetworkLocationDetailForm extends Panel{
                 }
             }
             catch (SQLException e2) {
-                log.error("SQL Exception in addNetworkLocationDetails() method {" + e2.getMessage() + "}");
+                log.error("SQL Exception in loadProjectTypes() method {" + e2.getMessage() + "}");
                 e2.printStackTrace();
             }
 		}
 		return list;
 	}
-	
+	private List<Category> loadCategory(int catid)
+	{
+		List<Category> list = new ArrayList<Category>();
+		String query = "{call sp_get_categories(?,?,?)}";
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
+			stmt.setInt(3, catid);
+		    rs = stmt.executeQuery();
+		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
+		    while(rs.next())
+		    {
+		    	list.add(new Category(rs.getInt(1),rs.getString(2)));
+		    }
+		}catch (SQLException e) {
+			log.error("SQL Exception in loadCategory()  method {"+e.getMessage()+"}");
+			e.printStackTrace();
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in loadCategory() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+		}
+		return list;
+	}
 	private boolean addNetworkLocationDetails() {
         final String query = "{call sp_circuit_add_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
