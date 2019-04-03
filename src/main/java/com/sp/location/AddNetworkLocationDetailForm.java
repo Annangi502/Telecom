@@ -64,8 +64,8 @@ public class AddNetworkLocationDetailForm extends Panel{
     private String phasefeedback;
     private String noofpoints;
     private String noofpointsfeedback;
-    private String ofcdesc;
-    private String ofcdescfeedback;
+    private String ismergelocation;
+    private String ismergelocationfeedback;
     private String ofccontact;
     private String ofccontactfeedback;
     private String ofcaddress;
@@ -157,7 +157,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 	public AddNetworkLocationDetailForm(String id) {
 		super(id);
 		setDefaultModel(new CompoundPropertyModel<AddNetworkLocationDetailForm>(this));
-		ofcdesc = "No";
+		ismergelocation = "No";
 		StatelessForm<Form> form = new StatelessForm<Form>("form");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[]{FeedbackMessage.ERROR};
@@ -348,7 +348,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		mrgdescdiv.add(mrgdescFeedbackLabel);
 		form.add(mrgdescdiv);
 		
-		final RadioChoice<String> ofc = new RadioChoice("ofcdesc",TYPES)
+		final RadioChoice<String> ismergelocationrc = new RadioChoice("ismergelocation",TYPES)
 				{
 			@Override
 			public String getSuffix() {
@@ -356,11 +356,11 @@ public class AddNetworkLocationDetailForm extends Panel{
 				return "&emsp;&emsp;&emsp;&emsp;";
 			}
 				};
-				ofc.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+				ismergelocationrc.add(new AjaxFormChoiceComponentUpdatingBehavior() {
 
 					  @Override
 					  protected void onUpdate(AjaxRequestTarget target) {
-						  if(ofcdesc.equals("Yes"))
+						  if(ismergelocation.equals("Yes"))
 							{
 								mrgdescdiv.setEnabled(true);
 								mrgdesc.setRequired(true).setLabel(new Model("Merge Description"));
@@ -377,12 +377,12 @@ public class AddNetworkLocationDetailForm extends Panel{
 				
 		
 		/*TextField<String> ofc = new TextField<String>("ofcdesc");*/
-		ofc.setRequired(true).setLabel(new Model("Office Description"));
-		ofc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
+		ismergelocationrc.setRequired(true).setLabel(new Model("Merge Location"));
+		ismergelocationrc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
 		/*ofc.add(new StringValidator());*/
-		final FeedbackLabel ofcFeedbackLabel = new FeedbackLabel("ofcdescfeedback", ofc);
-		ofcFeedbackLabel.setOutputMarkupId(true);
-		form.add(ofcFeedbackLabel);
+		final FeedbackLabel ismergelocationfeedback = new FeedbackLabel("ismergelocationfeedback", ismergelocationrc);
+		ismergelocationfeedback.setOutputMarkupId(true);
+		form.add(ismergelocationfeedback);
 		
 		TextField<String> ofcno = new TextField<String>("ofccontact");
 		ofcno.setRequired(true).setLabel(new Model("Office Landline No."));
@@ -485,7 +485,7 @@ public class AddNetworkLocationDetailForm extends Panel{
         form.add(condate);
         form.add(phase);
         form.add(points);
-        form.add(ofc);
+        form.add(ismergelocationrc);
         form.add(ofcno);
         form.add(ofcadd);
         form.add(conperson);
@@ -585,8 +585,31 @@ public class AddNetworkLocationDetailForm extends Panel{
 		}
 		return list;
 	}
+/*	IN employee_id char(10),
+	IN session_id int,
+	IN project_type_id int,
+	IN location_phase varchar(32),
+	IN noofpointsava int,
+	IN installation_date datetime,
+	IN date_of_connected datetime, 
+	IN is_merge int,
+	IN mer_loc_desc varchar(128),
+	IN office_contact_no varchar(15),
+	IN office_address varchar(258),
+	IN location_contact_person varchar(64),
+	IN location_contact_no varchar(15),
+	IN remark varchar(128),
+	IN loc_name varchar(64),
+	IN lat varchar(64),
+	IN longt varchar(64),
+	IN cir_id INT,
+	IN div_id INT,
+	IN sub_div_id INT,
+	IN sec_id INT,
+	IN ero_id INT,
+	IN cat_id INT*/
 	private boolean addNetworkLocationDetails() {
-        final String query = "{call sp_circuit_add_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+        final String query = "{call sp_circuit_add_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
@@ -600,17 +623,22 @@ public class AddNetworkLocationDetailForm extends Panel{
             stmt.setInt(5, Integer.parseInt(this.noofpoints));
             stmt.setString(6, this.getFormatDate(this.installationdate));
             stmt.setString(7, this.getFormatDate(this.connecteddate));
-            stmt.setString(8, this.ofcdesc);
-            stmt.setString(9, this.ofccontact);
-            stmt.setString(10, this.ofcaddress);
-            stmt.setString(11, this.contactperson);
-            stmt.setString(12, this.contact);
-            stmt.setString(13, this.remark);
-            stmt.setString(14, this.townname);
-            stmt.setInt(15, this.circleid);
-            stmt.setInt(16, this.divisionid);
-            stmt.setInt(17, this.subdivisionid);
-            stmt.setInt(18, this.sectionid);
+            stmt.setInt(8, ismergelocation.equals("Yes")?1:0);
+            stmt.setString(9, ismergelocation.equals("Yes")?mergedesc:"");
+            stmt.setString(10, this.ofccontact);
+            stmt.setString(11, this.ofcaddress);
+            stmt.setString(12, this.contactperson);
+            stmt.setString(13, this.contact);
+            stmt.setString(14, this.remark);
+            stmt.setString(15, cat1.getCatdesc()+"-"+this.townname);
+            stmt.setString(16, latitude);
+            stmt.setString(17, longitude);
+            stmt.setInt(18, this.circleid);
+            stmt.setInt(19, this.divisionid);
+            stmt.setInt(20, this.subdivisionid);
+            stmt.setInt(21, this.sectionid);
+            stmt.setInt(22, 0);
+            stmt.setInt(23, cat1.getCatid());
             AddNetworkLocationDetailForm.log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             rs = stmt.executeQuery();
             while (rs.next()) {

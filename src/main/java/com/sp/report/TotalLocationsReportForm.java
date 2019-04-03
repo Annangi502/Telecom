@@ -123,7 +123,7 @@ public class TotalLocationsReportForm extends Panel {
 	    columns.add(new PropertyColumn(new Model("Sub-Division"), "subdivisiondesc"));
 	    columns.add(new PropertyColumn(new Model("Section"), "sectiondesc"));
 	    columns.add(new PropertyColumn(new Model("Project"), "projecttypedescription"));
-	    columns.add(new PropertyColumn(new Model("Town Name"), "townname"));
+	    columns.add(new PropertyColumn(new Model("Location Name"), "locationname"));
 	    columns.add(new PropertyColumn(new Model("Vendor Name"), "vendorname"));
 	    columns.add(new PropertyColumn(new Model("Bandwidth"), "bandwidth"));
 		final DataTable table = new DataTable("datatable", columns, nlprovider, DEF_NO_OF_ROWS);
@@ -394,10 +394,9 @@ public class TotalLocationsReportForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new NetworkLocationDetail(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
-						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
-						rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14),
-						rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(18), rs.getString(19),rs.getString(20),rs.getString(21)));
+				list.add(new NetworkLocationDetail(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4),
+						rs.getString(5), rs.getString(6), rs.getString(7),rs.getString(8),
+						rs.getString(9), rs.getString(10), rs.getString(11)));
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadProjectTypes() method {" + e.getMessage() + "}");

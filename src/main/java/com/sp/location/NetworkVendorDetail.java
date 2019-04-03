@@ -12,22 +12,42 @@ public class NetworkVendorDetail implements Serializable
     private String circuitid;
     private String remark;
     private String mediatypedesc;
+    private String phase;
     
     public NetworkVendorDetail() {
     }
     
-    public NetworkVendorDetail(final int vendorid, final String vendorname, final String bandwidth, final String servicetype, final String vninterface, final String circuitid, final String remark, final String mediatypedesc) {
-        this.vendorid = vendorid;
-        this.vendorname = vendorname;
-        this.bandwidth = bandwidth;
-        this.servicetype = servicetype;
-        this.circuitid = circuitid;
-        this.remark = remark;
-        this.vninterface = vninterface;
-        this.mediatypedesc = mediatypedesc;
-    }
     
-    public int getVendorid() {
+    
+    public NetworkVendorDetail(int vendorid, String vendorname, String bandwidth, String servicetype,
+			String vninterface, String circuitid, String remark, String mediatypedesc, String phase) {
+		super();
+		this.vendorid = vendorid;
+		this.vendorname = vendorname;
+		this.bandwidth = bandwidth;
+		this.servicetype = servicetype;
+		this.vninterface = vninterface;
+		this.circuitid = circuitid;
+		this.remark = remark;
+		this.mediatypedesc = mediatypedesc;
+		this.phase = phase;
+	}
+
+
+
+	public String getPhase() {
+		return phase;
+	}
+
+
+
+	public void setPhase(String phase) {
+		this.phase = phase;
+	}
+
+
+
+	public int getVendorid() {
         return this.vendorid;
     }
     

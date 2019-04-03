@@ -111,7 +111,7 @@ public class EditNetworkLocationDetailForm extends Panel{
 		townname = nldmodel.getObject().getTownname();
 		phase = nldmodel.getObject().getPhase();
 		noofpoints = String.valueOf(nldmodel.getObject().getNoofpointsavailable());
-		ofcdesc = nldmodel.getObject().getOfficedescription();
+		ofcdesc = /*nldmodel.getObject().getOfficedescription()*/"";
 		ofccontact = nldmodel.getObject().getOfficecontactno();
 		ofcaddress = nldmodel.getObject().getOfficeaddress();
 		contactperson = nldmodel.getObject().getLocationcontactperson();

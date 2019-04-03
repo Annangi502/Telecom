@@ -43,7 +43,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 	private int noofpointsavailable;
 	private String installationdate;
 	private String dateofconnected;
-	private String officedescription;
+	private String ismergelocation;
 	private String officecontactno;
 	private String officeaddress;
 	private String locationcontactperson;
@@ -56,6 +56,8 @@ public class ViewNetworkLocationDetailForm extends Panel {
     private String subdivision;
     private String section;
     private String spcircuitcode;
+    private String latitude;
+    private String longitude;
 	private NetworkLocationDetail nld ;
 	
 	final int DEF_NO_OF_ROWS=9999;
@@ -79,7 +81,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		noofpointsavailable = nld.getNoofpointsavailable();
 		installationdate = nld.getInstallationdate();
 		dateofconnected = nld.getDateofconnected();
-		officedescription = nld.getOfficedescription();
+		ismergelocation = nld.getIsmergelocation()==1?nld.getMergelocationdesc():"No";
 		officecontactno = nld.getOfficecontactno();
 		officeaddress = nld.getOfficeaddress();
 		locationcontactperson = nld.getLocationcontactperson();
@@ -87,6 +89,8 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		remark = nld.getRemark();
 		townname = nld.getTownname();
 		phase = nld.getPhase();
+		latitude = nld.getLatitude();
+		longitude = nld.getLongitude();
 		
 		ntvnlist.setList(getVendors());
 		NetworkVendorDataProvider ntvndataprovider = new NetworkVendorDataProvider();
@@ -114,6 +118,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		vncolumns.add(new PropertyColumn(new Model("Interface"), "vninterface"));
 		vncolumns.add(new PropertyColumn(new Model("Media Type"), "mediatypedesc"));
 		vncolumns.add(new PropertyColumn(new Model("Circuit ID"), "circuitid"));
+		vncolumns.add(new PropertyColumn(new Model("Phase"), "phase"));
 		vncolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
 		DataTable table = new DataTable("vndatatable", vncolumns, ntvndataprovider, DEF_NO_OF_ROWS);
 		table.addTopToolbar(new HeadersToolbar(table,ntvndataprovider));
@@ -271,7 +276,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		form.add(new Label("noofpointsavailable"));
 		form.add(new Label("installationdate"));
 		form.add(new Label("dateofconnected"));
-		form.add(new Label("officedescription"));
+		form.add(new Label("ismergelocation"));
 		form.add(new Label("officecontactno"));
 		form.add(new Label("officeaddress"));
 		form.add(new Label("locationcontactperson"));
@@ -279,6 +284,8 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		form.add(new Label("remark"));
 		form.add(new Label("townname"));
 		form.add(new Label("phase"));
+		form.add(new Label("latitude"));
+		form.add(new Label("longitude"));
 		form.add(btnaddvendor);
 		form.add(btnaddnetworkeqp);
 		form.add(btnaddnetworkinterface);
@@ -558,10 +565,30 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
-		    	detail = new NetworkLocationDetail(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
-						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
-						rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14),
-						rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(18), rs.getString(19));
+		   
+		    	detail = new NetworkLocationDetail(
+		    			rs.getString(1),
+		    			rs.getInt(2),
+		    			rs.getString(3),
+		    			rs.getInt(4),
+						rs.getString(5), 
+						rs.getString(6),
+						rs.getString(7), 
+						rs.getString(8), 
+						rs.getString(9),
+						rs.getString(10),
+						rs.getString(11), 
+						rs.getString(12), 
+						rs.getString(13), 
+						rs.getString(14),
+						rs.getString(15),
+						rs.getString(16), 
+						rs.getString(17), 
+						rs.getString(18), 
+						rs.getInt(19),
+						rs.getString(20),
+						rs.getString(21),
+						rs.getString(22));
 		    }
 		}catch (SQLException e) {
 			log.error("SQL Exception in getNetworkLocationDetail() method {"+e.getMessage()+"}");
@@ -603,7 +630,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
             rs = stmt.executeQuery();
             ViewNetworkLocationDetailForm.log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             while (rs.next()) {
-                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)));
+                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9)));
             }
         }
         catch (SQLException e) {

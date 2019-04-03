@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -41,7 +42,7 @@ public class AddVendorDetailForm extends Panel {
 	private String vendornamefeedback;
 	private String bandwidth;
 	private String bandwidthfeedback;
-	private String servicetype;
+	private ServiceType servicetype;
 	private String servicetypefeedback;
 	private String ntinterface;
 	private String ntinterfacefeedback;
@@ -58,10 +59,13 @@ public class AddVendorDetailForm extends Panel {
 	private String vendornameddfeedback;
 	private boolean vendornameflag;
 	private Bandwidth bandwidthdd;
-	private String bandwidthddfeedback;	
+	private String bandwidthddfeedback;
 	private boolean bandwidthflag;
 	private UnitType unittype;
 	private String unittypefeedback;
+	private String phase;
+	private String phasefeedback;
+	private List<String> phaselist = Arrays.asList("Phase 1", "Phase 2");
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
 
 		@Override
@@ -78,7 +82,7 @@ public class AddVendorDetailForm extends Panel {
 			return loadVendors();
 		}
 	};
-	
+
 	IModel<? extends List<Bandwidth>> bandwidthlist = new LoadableDetachableModel<List<Bandwidth>>() {
 
 		@Override
@@ -87,13 +91,22 @@ public class AddVendorDetailForm extends Panel {
 			return loadBandwidths();
 		}
 	};
-	
+
 	IModel<? extends List<UnitType>> unittypelist = new LoadableDetachableModel<List<UnitType>>() {
 
 		@Override
 		protected List<UnitType> load() {
 			// TODO Auto-generated method stub
 			return loadUnitTypes();
+		}
+	};
+
+	IModel<? extends List<ServiceType>> servicetypelist = new LoadableDetachableModel<List<ServiceType>>() {
+
+		@Override
+		protected List<ServiceType> load() {
+			// TODO Auto-generated method stub
+			return loadServiceTypes();
 		}
 	};
 
@@ -138,21 +151,21 @@ public class AddVendorDetailForm extends Panel {
 			@Override
 			protected void onSelectionChanged(Vendor newSelection) {
 				// TODO Auto-generated method stub
-				if(vendornamedd != null){
-				if (vendornamedd.getVendorid() == 100) {
-					vendornameflag = true;
-				} else {
-					vendornameflag = false;
-				}
+				if (vendornamedd != null) {
+					if (vendornamedd.getVendorid() == 100) {
+						vendornameflag = true;
+					} else {
+						vendornameflag = false;
+					}
 				}
 			}
 		};
-		vendor.setNullValid(true);		 
+		vendor.setNullValid(true);
 		vendor.setRequired(true).setLabel(new Model("Vendor"));
 		final FeedbackLabel vendorFeedbackLabel = new FeedbackLabel("vendornameddfeedback", vendor);
 		vendorFeedbackLabel.setOutputMarkupId(true);
 		form.add(vendorFeedbackLabel);
-		
+
 		final DropDownChoice<Bandwidth> bandwidth = new DropDownChoice<Bandwidth>("bandwidthdd", bandwidthlist,
 				new ChoiceRenderer("bandwidthdesc")) {
 			@Override
@@ -164,16 +177,16 @@ public class AddVendorDetailForm extends Panel {
 			@Override
 			protected void onSelectionChanged(Bandwidth newSelection) {
 				// TODO Auto-generated method stub
-				if(bandwidthdd != null){
-				if (bandwidthdd.getBandwidthid() == 100) {
-					bandwidthflag = true;
-				} else {
-					bandwidthflag = false;
-				}
+				if (bandwidthdd != null) {
+					if (bandwidthdd.getBandwidthid() == 100) {
+						bandwidthflag = true;
+					} else {
+						bandwidthflag = false;
+					}
 				}
 			}
 		};
-		bandwidth.setNullValid(true);		 
+		bandwidth.setNullValid(true);
 		bandwidth.setRequired(true).setLabel(new Model("Vendor"));
 		final FeedbackLabel bandwidthddFeedbackLabel = new FeedbackLabel("bandwidthddfeedback", bandwidth);
 		bandwidthddFeedbackLabel.setOutputMarkupId(true);
@@ -186,7 +199,7 @@ public class AddVendorDetailForm extends Panel {
 				return bandwidthflag;
 			}
 		};
-		
+
 		TextField<String> bandwidthtf = new TextField<String>("bandwidth");
 		bandwidthtf.setRequired(true).setLabel(new Model("Bandwidth"));
 		bandwidthtf.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 120));
@@ -195,16 +208,14 @@ public class AddVendorDetailForm extends Panel {
 		bandwidthFeedbackLabel.setOutputMarkupId(true);
 		bandwidthfdiv.add(bandwidthFeedbackLabel);
 		bandwidthfdiv.add(bandwidthtf);
-		
-		
+
 		final DropDownChoice<UnitType> unittype = new DropDownChoice<UnitType>("unittype", unittypelist,
-				new ChoiceRenderer("unittypedesc"))
-				{
+				new ChoiceRenderer("unittypedesc")) {
 			@Override
-			 protected String  getNullValidDisplayValue() {
-			    return "Select Unit Type";
-			 }
-				};
+			protected String getNullValidDisplayValue() {
+				return "Select Unit Type";
+			}
+		};
 		unittype.setNullValid(true);
 		unittype.setRequired(true).setLabel(new Model("Unit Type"));
 		final FeedbackLabel unittypeFeedbackLabel = new FeedbackLabel("unittypefeedback", unittype);
@@ -212,9 +223,14 @@ public class AddVendorDetailForm extends Panel {
 		bandwidthfdiv.add(unittypeFeedbackLabel);
 		bandwidthfdiv.add(unittype);
 
-		TextField<String> servicetype = new TextField<String>("servicetype");
+		DropDownChoice<ServiceType> servicetype = new DropDownChoice<ServiceType>("servicetype", servicetypelist,
+				new ChoiceRenderer("servicetypedesc"));
+		// TextField<String> servicetype = new TextField<String>("servicetype");
 		servicetype.setRequired(true).setLabel(new Model("Service Type"));
-		servicetype.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 120));
+		/*
+		 * servicetype.add(org.apache.wicket.validation.validator.
+		 * StringValidator.lengthBetween(1, 120));
+		 */
 		/* servicetype.add(new StringValidator()); */
 		final FeedbackLabel servicetypeFeedbackLabel = new FeedbackLabel("servicetypefeedback", servicetype);
 		servicetypeFeedbackLabel.setOutputMarkupId(true);
@@ -251,6 +267,13 @@ public class AddVendorDetailForm extends Panel {
 		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback", mediatypes);
 		mediatypeFeedbackLabel.setOutputMarkupId(true);
 		form.add(mediatypeFeedbackLabel);
+
+		DropDownChoice<String> phase = new DropDownChoice<String>("phase", phaselist);
+		phase.setRequired(true).setLabel(new Model("Phase"));
+		final FeedbackLabel phaseFeedbackLabel = new FeedbackLabel("phasefeedback", phase);
+		phaseFeedbackLabel.setOutputMarkupId(true);
+		form.add(phaseFeedbackLabel);
+
 		Button btncancel = new Button("btncancel") {
 			@Override
 			public void onSubmit() {
@@ -298,10 +321,12 @@ public class AddVendorDetailForm extends Panel {
 		form.add(btnreset);
 		form.add(btnsubmit);
 		form.add(feedback);
+		form.add(phase);
 		add(form);
 	}
-private boolean addNetworkVendorDetail() {
-		final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+
+	private boolean addNetworkVendorDetail() {
+		final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -312,16 +337,20 @@ private boolean addNetworkVendorDetail() {
 			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
 			stmt.setInt(4, vendornamedd.getVendorid());
-			stmt.setString(5, (vendornamedd.getVendorid()==100)?vendorname:vendornamedd.getVendorname());
+			stmt.setString(5, (vendornamedd.getVendorid() == 100) ? vendorname : vendornamedd.getVendorname());
 			stmt.setInt(6, bandwidthdd.getBandwidthid());
-			stmt.setString(7, (bandwidthdd.getBandwidthid()==100)? bandwidth+" "+unittype.getUnittypedesc():bandwidthdd.getBandwidthdesc());
-			stmt.setInt(8,(bandwidthdd.getBandwidthid()==100)? Integer.parseInt(bandwidth):bandwidthdd.getBandwidth());
-			stmt.setInt(9, (bandwidthdd.getBandwidthid()==100)?unittype.getUnittypeid():bandwidthdd.getBandwidthunittypeid());
-			stmt.setString(10, servicetype);
+			stmt.setString(7, (bandwidthdd.getBandwidthid() == 100) ? bandwidth + " " + unittype.getUnittypedesc()
+					: bandwidthdd.getBandwidthdesc());
+			stmt.setInt(8,
+					(bandwidthdd.getBandwidthid() == 100) ? Integer.parseInt(bandwidth) : bandwidthdd.getBandwidth());
+			stmt.setInt(9, (bandwidthdd.getBandwidthid() == 100) ? unittype.getUnittypeid()
+					: bandwidthdd.getBandwidthunittypeid());
+			stmt.setInt(10, servicetype.getServicetypeid());
 			stmt.setString(11, ntinterface);
 			stmt.setInt(12, Integer.parseInt(this.circuitid));
 			stmt.setInt(13, mediatype.getMediatypeid());
 			stmt.setString(14, remark);
+			stmt.setString(15, phase);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -429,7 +458,7 @@ private boolean addNetworkVendorDetail() {
 
 		return list;
 	}
-	
+
 	private List<Bandwidth> loadBandwidths() {
 		final List<Bandwidth> list = new ArrayList<Bandwidth>();
 		final String query = "{call sp_get_bandwidths(?,?)}";
@@ -444,7 +473,7 @@ private boolean addNetworkVendorDetail() {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new Bandwidth(rs.getInt(1), rs.getString(2),rs.getInt(3),rs.getInt(4),rs.getInt(5)));
+				list.add(new Bandwidth(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5)));
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadBandwidths() method {" + e.getMessage() + "}");
@@ -469,7 +498,7 @@ private boolean addNetworkVendorDetail() {
 
 		return list;
 	}
-	
+
 	private List<UnitType> loadUnitTypes() {
 		final List<UnitType> list = new ArrayList<UnitType>();
 		final String query = "{call sp_get_unittypes(?,?)}";
@@ -503,6 +532,46 @@ private boolean addNetworkVendorDetail() {
 				}
 			} catch (SQLException e2) {
 				log.error("SQL Exception in loadUnitTypes() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+
+	private List<ServiceType> loadServiceTypes() {
+		final List<ServiceType> list = new ArrayList<ServiceType>();
+		final String query = "{call sp_get_service_types(?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			rs = stmt.executeQuery();
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			while (rs.next()) {
+				list.add(new ServiceType(rs.getInt(1), rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in loadServiceTypes() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+			return list;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in loadServiceTypes() method {" + e2.getMessage() + "}");
 				e2.printStackTrace();
 			}
 		}

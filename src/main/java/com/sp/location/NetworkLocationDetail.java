@@ -10,13 +10,12 @@ public class NetworkLocationDetail implements Serializable
     private int noofpointsavailable;
     private String installationdate;
     private String dateofconnected;
-    private String officedescription;
     private String officecontactno;
     private String officeaddress;
     private String locationcontactperson;
     private String loactioncontactno;
     private String remark;
-    private String townname;
+    private String locationname;
     private String phase;
     private String spciruitcode;
     private String circledesc;
@@ -25,11 +24,16 @@ public class NetworkLocationDetail implements Serializable
     private String sectiondesc;
     private String vendorname;
     private String bandwidth;
-	public NetworkLocationDetail(String spcircuitid, int projecttypeid, String projecttypedescription,
-			int noofpointsavailable, String installationdate, String dateofconnected, String officedescription,
-			String officecontactno, String officeaddress, String locationcontactperson, String loactioncontactno,
-			String remark, String townname, String phase, String spciruitcode, String circledesc, String divisiondesc,
-			String subdivisiondesc, String sectiondesc, String vendorname, String bandwidth) {
+    private int ismergelocation;
+    private String mergelocationdesc;
+    private String latitude;
+    private String longitude;
+    public NetworkLocationDetail(String spcircuitid, int projecttypeid, String projecttypedescription,
+			int noofpointsavailable, String installationdate, String dateofconnected, String officecontactno,
+			String officeaddress, String locationcontactperson, String loactioncontactno, String remark,
+			String locationname, String phase, String spciruitcode, String circledesc, String divisiondesc,
+			String subdivisiondesc, String sectiondesc, int ismergelocation,
+			String mergelocationdesc, String latitude, String longitude) {
 		super();
 		this.spcircuitid = spcircuitid;
 		this.projecttypeid = projecttypeid;
@@ -37,40 +41,70 @@ public class NetworkLocationDetail implements Serializable
 		this.noofpointsavailable = noofpointsavailable;
 		this.installationdate = installationdate;
 		this.dateofconnected = dateofconnected;
-		this.officedescription = officedescription;
 		this.officecontactno = officecontactno;
 		this.officeaddress = officeaddress;
 		this.locationcontactperson = locationcontactperson;
 		this.loactioncontactno = loactioncontactno;
 		this.remark = remark;
-		this.townname = townname;
+		this.locationname = locationname;
 		this.phase = phase;
 		this.spciruitcode = spciruitcode;
 		this.circledesc = circledesc;
 		this.divisiondesc = divisiondesc;
 		this.subdivisiondesc = subdivisiondesc;
 		this.sectiondesc = sectiondesc;
+		this.ismergelocation = ismergelocation;
+		this.mergelocationdesc = mergelocationdesc;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	public NetworkLocationDetail(String spcircuitid, String spciruitcode,String circledesc, String divisiondesc,
+			String subdivisiondesc, String sectiondesc,int projecttypeid, String projecttypedescription,String townname, String phase)
+    {
+    	this.spcircuitid = spcircuitid;
+		this.spciruitcode = spciruitcode;
+		this.circledesc = circledesc;
+		this.divisiondesc = divisiondesc;
+		this.subdivisiondesc = subdivisiondesc;
+		this.sectiondesc = sectiondesc;
+		this.projecttypeid = projecttypeid;
+		this.projecttypedescription = projecttypedescription;
+    	this.locationname = townname;
+		this.phase = phase;
+    }
+	public NetworkLocationDetail(String spcircuitid,String spciruitcode, int projecttypeid, String projecttypedescription, String locationname,
+			String vendorname, String bandwidth,String circledesc, String divisiondesc,
+			String subdivisiondesc, String sectiondesc) {
+		super();
+		this.spcircuitid = spcircuitid;
+		this.spciruitcode = spciruitcode;
+		this.projecttypeid = projecttypeid;
+		this.projecttypedescription = projecttypedescription;
+		this.locationname = locationname;
 		this.vendorname = vendorname;
 		this.bandwidth = bandwidth;
+		this.circledesc = circledesc;
+		this.divisiondesc = divisiondesc;
+		this.subdivisiondesc = subdivisiondesc;
+		this.sectiondesc = sectiondesc;
 	}
 
 	public NetworkLocationDetail() {
     }
     
-    public NetworkLocationDetail(final String spcircuitid, final int projecttypeid, final String projecttypedescription, final int noofpointsavailable, final String installationdate, final String dateofconnected, final String officedescription, final String officecontactno, final String officeaddress, final String locationcontactperson, final String loactioncontactno, final String remark, final String townname, final String phase, final String spciruitcode, final String circledesc, final String divisiondesc, final String subdivisiondesc, final String sectiondesc) {
+    public NetworkLocationDetail(final String spcircuitid, final int projecttypeid, final String projecttypedescription, final int noofpointsavailable, final String installationdate, final String dateofconnected,final String officecontactno, final String officeaddress, final String locationcontactperson, final String loactioncontactno, final String remark, final String townname, final String phase, final String spciruitcode, final String circledesc, final String divisiondesc, final String subdivisiondesc, final String sectiondesc) {
         this.spcircuitid = spcircuitid;
         this.projecttypeid = projecttypeid;
         this.projecttypedescription = projecttypedescription;
         this.noofpointsavailable = noofpointsavailable;
         this.installationdate = installationdate;
         this.dateofconnected = dateofconnected;
-        this.officedescription = officedescription;
         this.officecontactno = officecontactno;
         this.officeaddress = officeaddress;
         this.locationcontactperson = locationcontactperson;
         this.loactioncontactno = loactioncontactno;
         this.remark = remark;
-        this.townname = townname;
+        this.locationname = townname;
         this.phase = phase;
         this.spciruitcode = spciruitcode;
         this.circledesc = circledesc;
@@ -127,14 +161,6 @@ public class NetworkLocationDetail implements Serializable
         this.dateofconnected = dateofconnected;
     }
     
-    public String getOfficedescription() {
-        return this.officedescription;
-    }
-    
-    public void setOfficedescription(final String officedescription) {
-        this.officedescription = officedescription;
-    }
-    
     public String getOfficecontactno() {
         return this.officecontactno;
     }
@@ -176,11 +202,11 @@ public class NetworkLocationDetail implements Serializable
     }
     
     public String getTownname() {
-        return this.townname;
+        return this.locationname;
     }
     
     public void setTownname(final String townname) {
-        this.townname = townname;
+        this.locationname = townname;
     }
     
     public String getPhase() {
@@ -244,6 +270,36 @@ public class NetworkLocationDetail implements Serializable
 
 	public void setBandwidth(String bandwidth) {
 		this.bandwidth = bandwidth;
+	}
+	public String getLocationname() {
+		return locationname;
+	}
+	public void setLocationname(String locationname) {
+		this.locationname = locationname;
+	}
+	public int getIsmergelocation() {
+		return ismergelocation;
+	}
+	public void setIsmergelocation(int ismergelocation) {
+		this.ismergelocation = ismergelocation;
+	}
+	public String getMergelocationdesc() {
+		return mergelocationdesc;
+	}
+	public void setMergelocationdesc(String mergelocationdesc) {
+		this.mergelocationdesc = mergelocationdesc;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 
 }
