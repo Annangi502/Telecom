@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -41,13 +42,17 @@ public class AddEquipmentDetailForm extends Panel{
 	private String serialnofeedback;
 	private String amc;
 	private String amcfeedback;
+	private String replace;
+	private String replacefeedback;
 	private String remark;
     private String remarkfeedback;
+    private boolean replacedivflag;
     private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
+    private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
 	public AddEquipmentDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
-		
+		replace = "Stand By";
 		setDefaultModel(new CompoundPropertyModel<AddEquipmentDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("addeqpdetailform");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -85,11 +90,34 @@ public class AddEquipmentDetailForm extends Panel{
 		
 		final CustomRadioChoice<String> amc = new CustomRadioChoice("amc",TYPES);
 		amc.setRequired(true).setLabel(new Model("Serial No."));
-		amc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
-		amc.add(new StringValidator());
 		final FeedbackLabel amcFeedbackLabel = new FeedbackLabel("amcfeedback", amc);
 		amcFeedbackLabel.setOutputMarkupId(true);
 		form.add(amcFeedbackLabel);
+		
+		
+		final CustomRadioChoice<String> replaceradio = new CustomRadioChoice("replace",R_TYPES)
+				{
+			@Override
+			protected boolean wantOnSelectionChangedNotifications() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+			@Override
+					protected void onSelectionChanged(Object newSelection) {
+						// TODO Auto-generated method stub
+						if(replace.equals("Replace"))
+						{
+							replacedivflag = true;
+						}else
+						{
+							replacedivflag = false;
+						}
+					}
+				};
+		replaceradio.setRequired(true).setLabel(new Model("Serial No."));
+		final FeedbackLabel replaceFeedbackLabel = new FeedbackLabel("replacefeedback", replaceradio);
+		replaceFeedbackLabel.setOutputMarkupId(true);
+		form.add(replaceFeedbackLabel);
 		
 		TextField<String> remark = new TextField<String>("remark");
 		remark.setLabel(new Model("Remark"));
@@ -99,6 +127,14 @@ public class AddEquipmentDetailForm extends Panel{
 		remarkFeedbackLabel.setOutputMarkupId(true);
 		form.add(remarkFeedbackLabel);
 		
+		WebMarkupContainer repdiv = new WebMarkupContainer("replacediv")
+				{
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return replacedivflag;
+			}
+				};
 		Button btncancel = new Button("btncancel")
 		{
 			@Override
@@ -139,11 +175,13 @@ public class AddEquipmentDetailForm extends Panel{
 		form.add(model);
 		form.add(serialno);
 		form.add(amc);
+		form.add(repdiv);
 		form.add(remark);
 		form.add(feedback);
 		form.add(btncancel);
 		form.add(btnreset);
 		form.add(btnsubmit);
+		form.add(replaceradio);
 		add(form);
 	}
 	
