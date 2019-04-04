@@ -639,11 +639,11 @@ public class AddNetworkLocationDetailForm extends Panel{
             stmt.setInt(21, this.sectionid);
             stmt.setInt(22, 0);
             stmt.setInt(23, cat1.getCatid());
-            AddNetworkLocationDetailForm.log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
+            log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             rs = stmt.executeQuery();
             while (rs.next()) {
                 this.nlcd.setSpcircuitid(rs.getString(1));
-               log.info("Circuit Detail Added Successfully With ID :" + rs.getString(1));
+             log.info("Circuit Detail Added Successfully With ID :" + rs.getString(1));
             }
         }
         catch (SQLException e) {

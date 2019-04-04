@@ -47,6 +47,12 @@ public class AddEquipmentDetailForm extends Panel{
 	private String remark;
     private String remarkfeedback;
     private boolean replacedivflag;
+    private String rmake;
+	private String rmakefeedback;
+	private String rmodel;
+	private String rmodelfeedback;
+	private String rserialno;
+	private String rserialnofeedback;
     private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
     private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
 	public AddEquipmentDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
@@ -114,7 +120,7 @@ public class AddEquipmentDetailForm extends Panel{
 						}
 					}
 				};
-		replaceradio.setRequired(true).setLabel(new Model("Serial No."));
+		replaceradio.setRequired(true).setLabel(new Model("Replace/Stand By"));
 		final FeedbackLabel replaceFeedbackLabel = new FeedbackLabel("replacefeedback", replaceradio);
 		replaceFeedbackLabel.setOutputMarkupId(true);
 		form.add(replaceFeedbackLabel);
@@ -135,6 +141,35 @@ public class AddEquipmentDetailForm extends Panel{
 				return replacedivflag;
 			}
 				};
+
+				TextField<String> rmake = new TextField<String>("rmake");
+				rmake.setRequired(true).setLabel(new Model("Make"));
+				rmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+				rmake.add(new StringValidator());
+				final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("rmakefeedback", rmake);
+				rmakeFeedbackLabel.setOutputMarkupId(true);
+				repdiv.add(rmakeFeedbackLabel);
+				repdiv.add(rmake);
+				
+				TextField<String> rmodel = new TextField<String>("rmodel");
+				rmodel.setRequired(true).setLabel(new Model("Model"));
+				rmodel.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
+				/*model.add(new StringValidator());*/
+				final FeedbackLabel rmodelFeedbackLabel = new FeedbackLabel("rmodelfeedback", rmodel);
+				rmodelFeedbackLabel.setOutputMarkupId(true);
+				repdiv.add(rmodelFeedbackLabel);
+				repdiv.add(rmodel);
+				
+				
+				TextField<String> rserialno = new TextField<String>("rserialno");
+				rserialno.setRequired(true).setLabel(new Model("Serial No."));
+				rserialno.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
+				/*model.add(new StringValidator());*/
+				final FeedbackLabel rserialnoFeedbackLabel = new FeedbackLabel("rserialnofeedback", rserialno);
+				rserialnoFeedbackLabel.setOutputMarkupId(true);
+				repdiv.add(rserialnoFeedbackLabel);
+				repdiv.add(rserialno);
+				
 		Button btncancel = new Button("btncancel")
 		{
 			@Override
@@ -186,7 +221,7 @@ public class AddEquipmentDetailForm extends Panel{
 	}
 	
 	private boolean addNetworkEquipmentDetail() {
-        final String query = "{call sp_circuit_add_network_equipment_details(?,?,?,?,?,?,?,?)}";
+        final String query = "{call sp_circuit_add_network_equipment_details(?,?,?,?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
@@ -195,12 +230,16 @@ public class AddEquipmentDetailForm extends Panel{
             stmt = con.prepareCall(query);
             stmt.setString(1, ((PortSession)this.getSession()).getEmployeeid());
             stmt.setInt(2, ((PortSession)this.getSession()).getSessionid());
-            stmt.setString(3, this.spcircuitid);
-            stmt.setString(4, this.make);
-            stmt.setString(5, this.model);
-            stmt.setString(6, this.serialno);
-            stmt.setString(7, this.amc);
-            stmt.setString(8, this.remark);
+            stmt.setString(3, spcircuitid);
+            stmt.setString(4, make);
+            stmt.setString(5, model);
+            stmt.setString(6, serialno);
+            stmt.setString(7, amc);
+            stmt.setInt(8, replace.equals("Replace")?1:0);
+            stmt.setString(9, rmake);
+            stmt.setString(10,rmodel);
+            stmt.setString(11, rserialno);
+            stmt.setString(12, remark);
             log.info("Executing Stored Procedure { " + stmt.toString() + " }");
             rs = stmt.executeQuery();
             while (rs.next()) {

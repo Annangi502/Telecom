@@ -5,25 +5,31 @@ import java.io.Serializable;
 public class NetworkInterfaceDetail  implements Serializable{
 
 	private int interfaceid;
-	private String equipment;
+	private int vendorid;
+	private String vendorname;
 	private String ntinterface;
 	private String ipaddress;
 	private String subnetmask;
-	private String vendor;
+	private String spntinterface;
+	private String spipaddress;
+	private String spsubnetmask;
 	private String remark;
 	public NetworkInterfaceDetail() {
 		// TODO Auto-generated constructor stub
 	}
-	public NetworkInterfaceDetail(int interfaceid, String equipment,
-			String ntinterface, String ipaddress, String subnetmask,
-			String vendor, String remark) {
+	public NetworkInterfaceDetail(int interfaceid, int vendorid, String vendorname, String ntinterface,
+			String ipaddress, String subnetmask, String spntinterface, String spipaddress, String spsubnetmask,
+			String remark) {
 		super();
 		this.interfaceid = interfaceid;
-		this.equipment = equipment;
+		this.vendorid = vendorid;
+		this.vendorname = vendorname;
 		this.ntinterface = ntinterface;
 		this.ipaddress = ipaddress;
 		this.subnetmask = subnetmask;
-		this.vendor = vendor;
+		this.spntinterface = spntinterface;
+		this.spipaddress = spipaddress;
+		this.spsubnetmask = spsubnetmask;
 		this.remark = remark;
 	}
 	public int getInterfaceid() {
@@ -32,11 +38,17 @@ public class NetworkInterfaceDetail  implements Serializable{
 	public void setInterfaceid(int interfaceid) {
 		this.interfaceid = interfaceid;
 	}
-	public String getEquipment() {
-		return equipment;
+	public int getVendorid() {
+		return vendorid;
 	}
-	public void setEquipment(String equipment) {
-		this.equipment = equipment;
+	public void setVendorid(int vendorid) {
+		this.vendorid = vendorid;
+	}
+	public String getVendorname() {
+		return vendorname;
+	}
+	public void setVendorname(String vendorname) {
+		this.vendorname = vendorname;
 	}
 	public String getNtinterface() {
 		return ntinterface;
@@ -56,11 +68,23 @@ public class NetworkInterfaceDetail  implements Serializable{
 	public void setSubnetmask(String subnetmask) {
 		this.subnetmask = subnetmask;
 	}
-	public String getVendor() {
-		return vendor;
+	public String getSpntinterface() {
+		return spntinterface;
 	}
-	public void setVendor(String vendor) {
-		this.vendor = vendor;
+	public void setSpntinterface(String spntinterface) {
+		this.spntinterface = spntinterface;
+	}
+	public String getSpipaddress() {
+		return spipaddress;
+	}
+	public void setSpipaddress(String spipaddress) {
+		this.spipaddress = spipaddress;
+	}
+	public String getSpsubnetmask() {
+		return spsubnetmask;
+	}
+	public void setSpsubnetmask(String spsubnetmask) {
+		this.spsubnetmask = spsubnetmask;
 	}
 	public String getRemark() {
 		return remark;
@@ -68,5 +92,5 @@ public class NetworkInterfaceDetail  implements Serializable{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
+
 }

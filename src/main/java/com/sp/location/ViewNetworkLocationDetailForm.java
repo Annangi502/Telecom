@@ -29,11 +29,13 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
 import com.sp.location.ViewAllNetworkLocationForm.NetworkLocationList;
 import com.sp.resource.DataBaseConnection;
+import com.sp.resource.GClickablePropertyColumn;
 
 public class ViewNetworkLocationDetailForm extends Panel {
 	private static final Logger log = Logger.getLogger(ViewNetworkLocationDetailForm.class);
@@ -71,6 +73,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		setDefaultModel(new CompoundPropertyModel<ViewNetworkLocationDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("detailform");
 		nld = getNetworkLocationDetail(nldmodel.getObject().getSpcircuitid());
+		
 		circle = nld.getCircledesc();
         division = nld.getDivisiondesc();
         subdivision = nld.getSubdivisiondesc();
@@ -149,7 +152,13 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		eqcolumns.add(new PropertyColumn(new Model("Model"), "model"));
 		eqcolumns.add(new PropertyColumn(new Model("Serial No."), "serialnumber"));
 		eqcolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
-		eqcolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
+		eqcolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"), "isreplace") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ReplaceDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty())));
+			}
+		});
+		/*eqcolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
 		DataTable eqtable = new DataTable("eqdatatable", eqcolumns, nteqdataprovider, DEF_NO_OF_ROWS);
 		eqtable.addTopToolbar(new HeadersToolbar(eqtable,nteqdataprovider));
 		form.add(eqtable);
@@ -208,12 +217,19 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			      }
 			  });
 
-		incolumns.add(new PropertyColumn(new Model("Equipment"), "equipment"));
-		incolumns.add(new PropertyColumn(new Model("Interface"), "ntinterface"));
-		incolumns.add(new PropertyColumn(new Model("Ip Address"), "ipaddress"));
-		incolumns.add(new PropertyColumn(new Model("SubNet Mask"), "subnetmask"));
-		incolumns.add(new PropertyColumn(new Model("Vendor"), "vendor"));
-		incolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
+		incolumns.add(new PropertyColumn(new Model("Vendor Name"), "vendorname"));
+		incolumns.add(new GClickablePropertyColumn(new Model("Vendor Details"), "vendorname") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new VendorDetailColumn(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty())));
+			}
+		});
+		incolumns.add(new GClickablePropertyColumn(new Model("Spdcal Details"), "spntinterface") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new SPDetailColumn(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty())));
+			}
+		});
 		DataTable intable = new DataTable("indatatable", incolumns, ntindataprovider, DEF_NO_OF_ROWS);
 		intable.addTopToolbar(new HeadersToolbar(intable,ntindataprovider));
 		form.add(intable);
@@ -222,7 +238,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddVendorDetail av = new AddVendorDetail(parms, nldmodel);
+				AddVendorDetail av = new AddVendorDetail(parms, new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(av);
 			}
 		};
@@ -230,7 +246,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddEquipmentDetail ae = new AddEquipmentDetail(parms, nldmodel);
+				AddEquipmentDetail ae = new AddEquipmentDetail(parms,  new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(ae);
 			}
 		};
@@ -238,7 +254,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddInterfaceDetail ai = new AddInterfaceDetail(parms, nldmodel);
+				AddInterfaceDetail ai = new AddInterfaceDetail(parms,  new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(ai);
 			}
 		};
@@ -246,7 +262,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddUPSDetail av = new AddUPSDetail(parms, nldmodel);
+				AddUPSDetail av = new AddUPSDetail(parms,  new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(av);
 			}
 		};
@@ -501,7 +517,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 						NetworkInterfaceDetail arg1) {
 					// TODO Auto-generated method stub
 					int dir=getSort().isAscending()?1:-1;
-					return dir * (arg0.getEquipment().compareTo(arg1.getEquipment()));
+					return dir * (arg0.getVendorname().compareTo(arg1.getVendorname()));
 				}
 			});
 			return ntinlist.selectList((int) first, (int) count).iterator();
@@ -628,7 +644,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
             stmt.setInt(2, ((PortSession)this.getSession()).getSessionid());
             stmt.setString(3, this.spcircuitid);
             rs = stmt.executeQuery();
-            ViewNetworkLocationDetailForm.log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
+            log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             while (rs.next()) {
                 vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9)));
             }
@@ -675,7 +691,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
-		    	vnlist.add(new NetworkEquipmentDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
+		    	vnlist.add(new NetworkEquipmentDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10)));
 		    }
 		}catch (SQLException e) {
 			log.error("SQL Exception in getEquipments() method {"+e.getMessage()+"}");
@@ -759,7 +775,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
-		    	upinist.add(new NetworkInterfaceDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getString(5), rs.getString(6), rs.getString(7)));
+		    	upinist.add(new NetworkInterfaceDetail(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4),rs.getString(5), rs.getString(6), rs.getString(7),rs.getString(8), rs.getString(9),rs.getString(10) ));
 		    }
 		}catch (SQLException e) {
 			log.error("SQL Exception in getInterfaces() method {"+e.getMessage()+"}");
