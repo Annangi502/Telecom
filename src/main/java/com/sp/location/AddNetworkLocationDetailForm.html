@@ -221,7 +221,16 @@
 													<option value="AK">R-APDRP</option>
 													<option value="HI">NON-R-APDRP</option>
 												</select> -->
-												 <input wicket:id="townname" id="4" type="text"
+												<input  id="4" type="text"
+													class="form-control" placeholder="Open/Rurals/Town..etc" list="browsers" name="myBrowser" wicket:id="opentf">
+													<datalist id="browsers">
+													 <option value="Open"></option>
+													 <option value="Rurals"></option>
+													 <option value="Town"></option>
+													 <option value="Stores"></option>
+													</datalist>
+
+												 <input wicket:id="townname" id="5" type="text"
 													class="form-control" placeholder="Enter Town Name">
 												<span class="text-danger" wicket:id="townnamefeedback"></span>
 											</div>

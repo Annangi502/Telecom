@@ -94,6 +94,7 @@ public class AddNetworkLocationDetailForm extends Panel{
     private String latitudefeedback;
     private String longitude;
     private String longitudefeedback;
+    private String opentf;
     private NetworkLocationDetail nlcd = new NetworkLocationDetail();
     private static String PATTERN = "yyyy-MM-dd";
     private static final List<String> TYPES = Arrays.asList("Yes", "No");
@@ -271,7 +272,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		projecttypeFeedbackLabel.setOutputMarkupId(true);
 		form.add(projecttypeFeedbackLabel);
 		
-		
+		TextField<String> opentf = new TextField<String>("opentf");
 		TextField<String> tname = new TextField<String>("townname");
 		tname.setRequired(true).setLabel(new Model("Town Name"));
 		tname.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
@@ -441,7 +442,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
 		
 		 DropDownChoice<Category> cat1 = new DropDownChoice<Category>("cat1", catonelist,new ChoiceRenderer("catdesc") );
-		 cat1.setRequired(true).setLabel(new Model("Category"));
+		 cat1.setLabel(new Model("Category"));
 		 
 		/* DropDownChoice<Category> cat2 = new DropDownChoice<Category>("cat2", cattwolist,new ChoiceRenderer("catdesc") );
 		 phase.setRequired(true).setLabel(new Model("Category"));*/
@@ -481,6 +482,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
         form.add(projecttype);
         form.add(tname);
+        form.add(opentf);
         form.add(instaldate);
         form.add(condate);
         form.add(phase);
@@ -630,7 +632,7 @@ public class AddNetworkLocationDetailForm extends Panel{
             stmt.setString(12, this.contactperson);
             stmt.setString(13, this.contact);
             stmt.setString(14, this.remark);
-            stmt.setString(15, cat1.getCatdesc()+"-"+this.townname);
+            stmt.setString(15, cat1==null?(opentf==null?townname:opentf+"-"+townname):(opentf==null?cat1.getCatdesc()+"-"+townname:cat1.getCatdesc()+"-"+opentf+"-"+townname));
             stmt.setString(16, latitude);
             stmt.setString(17, longitude);
             stmt.setInt(18, this.circleid);
@@ -638,7 +640,7 @@ public class AddNetworkLocationDetailForm extends Panel{
             stmt.setInt(20, this.subdivisionid);
             stmt.setInt(21, this.sectionid);
             stmt.setInt(22, 0);
-            stmt.setInt(23, cat1.getCatid());
+            stmt.setInt(23, cat1==null?0:cat1.getCatid());
             log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             rs = stmt.executeQuery();
             while (rs.next()) {
@@ -805,7 +807,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 			stmt.setInt(4, divisionid);
 			stmt.setInt(5, subdivision);
 			rs = stmt.executeQuery();
-			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			log.info ("Executing Stored Procedure { " + stmt.toString() + " }");
 			while (rs.next()) {
 				list.add(new Section(rs.getInt(1), rs.getString(2), rs.getString(3)));
 			}
@@ -836,5 +838,19 @@ public class AddNetworkLocationDetailForm extends Panel{
 	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
 	    return simpleDateFormat.format(date);
 		
+	}
+	private String getLocationname(Category cat,String opnft, String locationname)
+	{
+		System.out.println("In Condition");
+		System.out.println("Main Con 1:"+ (cat==null));
+		System.out.println(cat);
+		//System.out.println("Main Con 2:"+(cat.getCatid()==100)+"::"+cat==null);
+		if(cat==null){
+			System.out.println("Condition s"+(opnft==null));
+			System.out.println("Open TF"+opnft);
+			return opnft==null?locationname:opnft+"-"+locationname;
+		}else {
+			return opnft==null?cat.getCatdesc()+"-"+locationname:cat.getCatdesc()+"-"+opnft+"-"+locationname;
+		}
 	}
 }

@@ -122,7 +122,13 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		vncolumns.add(new PropertyColumn(new Model("Media Type"), "mediatypedesc"));
 		vncolumns.add(new PropertyColumn(new Model("Circuit ID"), "circuitid"));
 		vncolumns.add(new PropertyColumn(new Model("Phase"), "phase"));
-		vncolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
+	/*	vncolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
+		vncolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+			}
+		});
 		DataTable table = new DataTable("vndatatable", vncolumns, ntvndataprovider, DEF_NO_OF_ROWS);
 		table.addTopToolbar(new HeadersToolbar(table,ntvndataprovider));
 		form.add(table);
@@ -158,6 +164,12 @@ public class ViewNetworkLocationDetailForm extends Panel {
 						new PropertyModel(rowModel, getProperty())));
 			}
 		});
+		eqcolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+			}
+		});
 		/*eqcolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
 		DataTable eqtable = new DataTable("eqdatatable", eqcolumns, nteqdataprovider, DEF_NO_OF_ROWS);
 		eqtable.addTopToolbar(new HeadersToolbar(eqtable,nteqdataprovider));
@@ -191,6 +203,12 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		upscolumns.add(new PropertyColumn(new Model("No .of Batteries"), "noofbatteries"));
 		upscolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
 		upscolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
+		upscolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+			}
+		});
 		DataTable upstable = new DataTable("upsdatatable", upscolumns, ntupsdataprovider, DEF_NO_OF_ROWS);
 		upstable.addTopToolbar(new HeadersToolbar(upstable,nteqdataprovider));
 		form.add(upstable);
@@ -224,10 +242,16 @@ public class ViewNetworkLocationDetailForm extends Panel {
 						new PropertyModel(rowModel, getProperty())));
 			}
 		});
-		incolumns.add(new GClickablePropertyColumn(new Model("Spdcal Details"), "spntinterface") {
+		incolumns.add(new GClickablePropertyColumn(new Model("Spdcl Details"), "spntinterface") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
 				item.add(new SPDetailColumn(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty())));
+			}
+		});
+		incolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
 		DataTable intable = new DataTable("indatatable", incolumns, ntindataprovider, DEF_NO_OF_ROWS);
