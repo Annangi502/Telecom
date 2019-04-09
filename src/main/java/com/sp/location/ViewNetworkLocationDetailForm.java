@@ -123,12 +123,14 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		vncolumns.add(new PropertyColumn(new Model("Circuit ID"), "circuitid"));
 		vncolumns.add(new PropertyColumn(new Model("Phase"), "phase"));
 	/*	vncolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
+		if(((PortSession) getSession()).isAdmin()){	
 		vncolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
 				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
+		}
 		DataTable table = new DataTable("vndatatable", vncolumns, ntvndataprovider, DEF_NO_OF_ROWS);
 		table.addTopToolbar(new HeadersToolbar(table,ntvndataprovider));
 		form.add(table);
@@ -164,12 +166,14 @@ public class ViewNetworkLocationDetailForm extends Panel {
 						new PropertyModel(rowModel, getProperty())));
 			}
 		});
+		if(((PortSession) getSession()).isAdmin()){	
 		eqcolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+				item.add(new ColumnEditPanelNetworkInterfaceDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
+		}
 		/*eqcolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
 		DataTable eqtable = new DataTable("eqdatatable", eqcolumns, nteqdataprovider, DEF_NO_OF_ROWS);
 		eqtable.addTopToolbar(new HeadersToolbar(eqtable,nteqdataprovider));
@@ -203,12 +207,14 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		upscolumns.add(new PropertyColumn(new Model("No .of Batteries"), "noofbatteries"));
 		upscolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
 		upscolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
+		if(((PortSession) getSession()).isAdmin()){	
 		upscolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+				item.add(new ColumnEditPanelNetworkUPSDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
+		}
 		DataTable upstable = new DataTable("upsdatatable", upscolumns, ntupsdataprovider, DEF_NO_OF_ROWS);
 		upstable.addTopToolbar(new HeadersToolbar(upstable,nteqdataprovider));
 		form.add(upstable);
@@ -248,12 +254,14 @@ public class ViewNetworkLocationDetailForm extends Panel {
 						new PropertyModel(rowModel, getProperty())));
 			}
 		});
+		if(((PortSession) getSession()).isAdmin()){			
 		incolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+				item.add(new ColumnEditPanelNetworkInterfaceDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
+		}
 		DataTable intable = new DataTable("indatatable", incolumns, ntindataprovider, DEF_NO_OF_ROWS);
 		intable.addTopToolbar(new HeadersToolbar(intable,ntindataprovider));
 		form.add(intable);
@@ -670,7 +678,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
             rs = stmt.executeQuery();
             log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             while (rs.next()) {
-                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9)));
+                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9),rs.getInt(10),rs.getString(11),rs.getInt(12),rs.getString(13),rs.getInt(14)));
             }
         }
         catch (SQLException e) {

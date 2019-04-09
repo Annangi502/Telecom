@@ -55,15 +55,34 @@ public class EditEquipmentDetailForm extends Panel{
 	private String rserialnofeedback;
     private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
     private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
-	public EditEquipmentDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
+    private NetworkEquipmentDetail ned;
+	public EditEquipmentDetailForm(String id,final IModel<NetworkEquipmentDetail> eqmodel,final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
-		replace = "Stand By";
 		setDefaultModel(new CompoundPropertyModel<EditEquipmentDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("addeqpdetailform");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[]{FeedbackMessage.ERROR};
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
+		
+		ned = eqmodel.getObject();
+		
+		make = ned.getMake();
+		model = ned.getModel();
+		serialno = ned.getSerialnumber();
+		amc = ned.getAmc();
+		replace = ned.getIsreplace()==1?"Replace":"Stand By";
+		remark = ned.getRemark();
+		if(replace.equals("Replace"))
+		{
+			replacedivflag = true;
+		}else
+		{
+			replacedivflag = false;
+		}
+		rmake = ned.getRmake();
+		rmodel = ned.getRmodel();
+		rserialno = ned.getRserialnumber();
 		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
@@ -187,7 +206,7 @@ public class EditEquipmentDetailForm extends Panel{
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				AddEquipmentDetail av = new AddEquipmentDetail(parms, nldmodel);
+				EditEquipmentDetail av = new EditEquipmentDetail(parms,eqmodel, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);
@@ -197,7 +216,7 @@ public class EditEquipmentDetailForm extends Panel{
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
-				if(addNetworkEquipmentDetail()){
+				if(editNetworkEquipmentDetail()){
 					PageParameters parms = new PageParameters();
 					ViewNetworkLocationDetail av = new ViewNetworkLocationDetail(parms, nldmodel);
 					setResponsePage(av);
@@ -220,8 +239,8 @@ public class EditEquipmentDetailForm extends Panel{
 		add(form);
 	}
 	
-	private boolean addNetworkEquipmentDetail() {
-        final String query = "{call sp_circuit_add_network_equipment_details(?,?,?,?,?,?,?,?,?,?,?,?)}";
+	private boolean editNetworkEquipmentDetail() {
+        final String query = "{call sp_circuit_edit_network_equipment_details(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
@@ -240,14 +259,15 @@ public class EditEquipmentDetailForm extends Panel{
             stmt.setString(10,rmodel);
             stmt.setString(11, rserialno);
             stmt.setString(12, remark);
+            stmt.setInt(13, ned.getEquipmentid());
             log.info("Executing Stored Procedure { " + stmt.toString() + " }");
             rs = stmt.executeQuery();
             while (rs.next()) {
-             log.info("Network Equipment Detail Added Successfully With ID :" + rs.getInt(1));
+             log.info("Network Equipment Detail Edited Successfully With ID :" + rs.getInt(1));
             }
         }
         catch (SQLException e) {
-            log.error("SQL Exception in addNetworkEquipmentDetail() method {" + e.getMessage() + "}");
+            log.error("SQL Exception in editNetworkEquipmentDetail() method {" + e.getMessage() + "}");
             e.printStackTrace();
             return false;
         }
@@ -264,7 +284,7 @@ public class EditEquipmentDetailForm extends Panel{
                 }
             }
             catch (SQLException e2) {
-               log.error("SQL Exception in addNetworkEquipmentDetail() method {" + e2.getMessage() + "}");
+               log.error("SQL Exception in editNetworkEquipmentDetail() method {" + e2.getMessage() + "}");
                 e2.printStackTrace();
             }
         }

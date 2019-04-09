@@ -13,14 +13,23 @@ public class NetworkVendorDetail implements Serializable
     private String remark;
     private String mediatypedesc;
     private String phase;
+    private int vendortypeid;
+    private String vendortypedesc;
+    private int bandwidthtypeid;
+    private String bandwidthtypedesc;
+    private int bandwidthunittypeid;
     
-    public NetworkVendorDetail() {
+
+
+	public NetworkVendorDetail() {
     }
     
     
-    
-    public NetworkVendorDetail(int vendorid, String vendorname, String bandwidth, String servicetype,
-			String vninterface, String circuitid, String remark, String mediatypedesc, String phase) {
+
+
+	public NetworkVendorDetail(int vendorid, String vendorname, String bandwidth, String servicetype,
+			String vninterface, String circuitid, String remark, String mediatypedesc, String phase, int vendortypeid,
+			String vendortypedesc, int bandwidthtypeid, String bandwidthtypedesc, int bandwidthunittypeid) {
 		super();
 		this.vendorid = vendorid;
 		this.vendorname = vendorname;
@@ -31,7 +40,13 @@ public class NetworkVendorDetail implements Serializable
 		this.remark = remark;
 		this.mediatypedesc = mediatypedesc;
 		this.phase = phase;
+		this.vendortypeid = vendortypeid;
+		this.vendortypedesc = vendortypedesc;
+		this.bandwidthtypeid = bandwidthtypeid;
+		this.bandwidthtypedesc = bandwidthtypedesc;
+		this.bandwidthunittypeid = bandwidthunittypeid;
 	}
+
 
 
 
@@ -110,4 +125,63 @@ public class NetworkVendorDetail implements Serializable
     public void setMediatypedesc(final String mediatypedesc) {
         this.mediatypedesc = mediatypedesc;
     }
+    public int getVendortypeid() {
+		return vendortypeid;
+	}
+
+
+
+	public void setVendortypeid(int vendortypeid) {
+		this.vendortypeid = vendortypeid;
+	}
+
+
+
+	public String getVendortypedesc() {
+		return vendortypedesc;
+	}
+
+
+
+	public void setVendortypedesc(String vendortypedesc) {
+		this.vendortypedesc = vendortypedesc;
+	}
+
+
+
+	public int getBandwidthtypeid() {
+		return bandwidthtypeid;
+	}
+
+
+
+	public void setBandwidthtypeid(int bandwidthtypeid) {
+		this.bandwidthtypeid = bandwidthtypeid;
+	}
+
+
+
+	public String getBandwidthtypedesc() {
+		return bandwidthtypedesc;
+	}
+
+
+
+	public void setBandwidthtypedesc(String bandwidthtypedesc) {
+		this.bandwidthtypedesc = bandwidthtypedesc;
+	}
+
+
+
+	public int getBandwidthunittypeid() {
+		return bandwidthunittypeid;
+	}
+
+
+
+	public void setBandwidthunittypeid(int bandwidthunittypeid) {
+		this.bandwidthunittypeid = bandwidthunittypeid;
+	}
+
+
 }

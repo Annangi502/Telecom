@@ -55,6 +55,7 @@ public class EditInterfaceDetailForm extends Panel {
 	private String remarkfeedback;
 	/*	private String equipment;
 	private String equipmentfeedback;*/
+	private NetworkInterfaceDetail nid;
 	 IModel<? extends List<NetworkVendorDetail>> vendorlist=new LoadableDetachableModel<List<NetworkVendorDetail>>() {
 			@Override
 			protected List<NetworkVendorDetail> load() {
@@ -62,7 +63,7 @@ public class EditInterfaceDetailForm extends Panel {
 				return getVendors();
 			}
 		};
-	public EditInterfaceDetailForm(String id, final IModel<NetworkLocationDetail> nldmodel) {
+	public EditInterfaceDetailForm(String id, final IModel<NetworkInterfaceDetail> nidmodel, final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
 
@@ -72,6 +73,15 @@ public class EditInterfaceDetailForm extends Panel {
 		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
 
+		nid = nidmodel.getObject();
+		ntinterface = nid.getNtinterface();
+		ipaddress = nid.getIpaddress();
+		subnetmask = nid.getSubnetmask();
+		spntinterface = nid.getSpntinterface();
+		spipaddress = nid.getSpipaddress();
+		spsubnetmask = nid.getSpsubnetmask();
+		remark = nid.getRemark();
+		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spciruitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
@@ -185,7 +195,7 @@ public class EditInterfaceDetailForm extends Panel {
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				AddUPSDetail av = new AddUPSDetail(parms, nldmodel);
+				EditInterfaceDetail av = new EditInterfaceDetail(parms,nidmodel, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);
@@ -194,7 +204,7 @@ public class EditInterfaceDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
-				if (addNetworkInterfaceDetail()) {
+				if (editNetworkInterfaceDetail()) {
 					PageParameters parms = new PageParameters();
 					ViewNetworkLocationDetail av = new ViewNetworkLocationDetail(parms, nldmodel);
 					setResponsePage(av);
@@ -221,8 +231,8 @@ public class EditInterfaceDetailForm extends Panel {
 
 	}
 
-	private boolean addNetworkInterfaceDetail() {
-		String query = "{call sp_circuit_add_network_interface_details(?,?,?,?,?,?,?,?,?,?,?,?)}";
+	private boolean editNetworkInterfaceDetail() {
+		String query = "{call sp_circuit_edit_network_interface_details(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -247,13 +257,14 @@ public class EditInterfaceDetailForm extends Panel {
 			stmt.setString(10, spipaddress);
 			stmt.setString(11,spsubnetmask);
 			stmt.setString(12, remark);
+			stmt.setInt(13, nid.getInterfaceid());
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				log.info("Network Interface Detail Added Successfully With ID :" + rs.getInt(1));
+				log.info("Network Interface Detail Edited Successfully With ID :" + rs.getInt(1));
 			}
 		} catch (SQLException e) {
-			log.error("SQL Exception in addNetworkInterfaceDetail() method {" + e.getMessage() + "}");
+			log.error("SQL Exception in editNetworkInterfaceDetail() method {" + e.getMessage() + "}");
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -269,7 +280,7 @@ public class EditInterfaceDetailForm extends Panel {
                 }
             }
             catch (SQLException e2) {
-               log.error("SQL Exception in addNetworkInterfaceDetail() method {" + e2.getMessage() + "}");
+               log.error("SQL Exception in editNetworkInterfaceDetail() method {" + e2.getMessage() + "}");
                 e2.printStackTrace();
             }
         }
@@ -290,7 +301,12 @@ public class EditInterfaceDetailForm extends Panel {
             rs = stmt.executeQuery();
             log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
             while (rs.next()) {
-                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9)));
+            	NetworkVendorDetail nvd = new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9),rs.getInt(10),rs.getString(11),rs.getInt(12),rs.getString(13),rs.getInt(14));
+/*            	System.out.println(nid.getVendorid()+nid.getVendorname()+" == "+nvd.getVendorid()+nvd.getVendorname());*/
+            	if(nid.getVendorid() == nvd.getVendorid()){
+            	   vendor = nvd;  
+               }
+            	vnlist.add(nvd);
             }
         }
         catch (SQLException e) {

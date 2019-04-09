@@ -65,6 +65,8 @@ public class EditVendorDetailForm extends Panel {
 	private String unittypefeedback;
 	private String phase;
 	private String phasefeedback;
+	private NetworkVendorDetail nvd;
+	private int nt_vendor_id;
 	private List<String> phaselist = Arrays.asList("Phase 1", "Phase 2");
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
 
@@ -110,14 +112,33 @@ public class EditVendorDetailForm extends Panel {
 		}
 	};
 
-	public EditVendorDetailForm(String id,final IModel<NetworkVendorDetail> nvd, final IModel<NetworkLocationDetail> nldmodel) {
+	public EditVendorDetailForm(String id,final IModel<NetworkVendorDetail> nvdmodel, final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		setDefaultModel(new CompoundPropertyModel<EditVendorDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("addvendorform");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
-
+		
+		nvd = nvdmodel.getObject();
+		nt_vendor_id = nvd.getVendorid();
+		vendorname = nvd.getVendorname();
+		if(nvd.getVendortypeid()==100){
+		vendornameflag = true;
+		} else {
+		vendornameflag = false;
+	}
+		bandwidth = nvd.getBandwidth().replace("Kbps", "").replace("Mbps", "");
+		if (nvd.getBandwidthtypeid() == 100) {
+			bandwidthflag = true;
+		} else {
+			bandwidthflag = false;
+		}
+		ntinterface = nvd.getVninterface();
+		circuitid = nvd.getCircuitid();
+		phase = nvd.getPhase();
+		remark = nvd.getRemark();
+		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
@@ -289,7 +310,7 @@ public class EditVendorDetailForm extends Panel {
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				AddVendorDetail av = new AddVendorDetail(parms, nldmodel);
+				EditVendorDetail av = new EditVendorDetail(parms,nvdmodel, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);
@@ -298,7 +319,7 @@ public class EditVendorDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
-				if (addNetworkVendorDetail()) {
+				if (editNetworkVendorDetail()) {
 					PageParameters parms = new PageParameters();
 					ViewNetworkLocationDetail av = new ViewNetworkLocationDetail(parms, nldmodel);
 					setResponsePage(av);
@@ -325,8 +346,8 @@ public class EditVendorDetailForm extends Panel {
 		add(form);
 	}
 
-	private boolean addNetworkVendorDetail() {
-		final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+	private boolean editNetworkVendorDetail() {
+		final String query = "{call sp_circuit_edit_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -351,13 +372,14 @@ public class EditVendorDetailForm extends Panel {
 			stmt.setInt(13, mediatype.getMediatypeid());
 			stmt.setString(14, remark);
 			stmt.setString(15, phase);
+			stmt.setInt(16, nt_vendor_id);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				log.info("Network Vendor Detail Added Successfully With ID :" + rs.getInt(1));
+				log.info("Network Vendor Detail Edited Successfully With ID :" + rs.getInt(1));
 			}
 		} catch (SQLException e) {
-			log.error("SQL Exception in addNetworkVendorDetail() method {" + e.getMessage() + "}");
+			log.error("SQL Exception in editNetworkVendorDetail() method {" + e.getMessage() + "}");
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -372,7 +394,7 @@ public class EditVendorDetailForm extends Panel {
 					con.close();
 				}
 			} catch (SQLException e2) {
-				log.error("SQL Exception in addNetworkVendorDetail() method {" + e2.getMessage() + "}");
+				log.error("SQL Exception in editNetworkVendorDetail() method {" + e2.getMessage() + "}");
 				e2.printStackTrace();
 			}
 		}
@@ -393,7 +415,11 @@ public class EditVendorDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new MediaType(rs.getInt(1), rs.getString(2)));
+				MediaType m = new MediaType(rs.getInt(1), rs.getString(2));
+				if(nvd.getMediatypedesc().trim().equals(rs.getString(2).trim())){
+					mediatype = m;
+				}
+				list.add(m);
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadMediaTypes() method {" + e.getMessage() + "}");
@@ -433,7 +459,11 @@ public class EditVendorDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new Vendor(rs.getInt(1), rs.getString(2)));
+				Vendor v = new Vendor(rs.getInt(1), rs.getString(2));
+				if(nvd.getVendortypeid() == rs.getInt(1)){
+				vendornamedd = v;
+				}
+				list.add(v);
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadVendors() method {" + e.getMessage() + "}");
@@ -473,7 +503,11 @@ public class EditVendorDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new Bandwidth(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5)));
+				Bandwidth b  = new Bandwidth(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
+				if(nvd.getBandwidthtypeid() == rs.getInt(1)){
+					bandwidthdd = b;
+				}
+				list.add(b);
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadBandwidths() method {" + e.getMessage() + "}");
@@ -513,7 +547,11 @@ public class EditVendorDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new UnitType(rs.getInt(1), rs.getString(2)));
+				UnitType u = new UnitType(rs.getInt(1), rs.getString(2));
+				if(nvd.getBandwidthunittypeid() == rs.getInt(1)){
+					unittype = u;
+				}
+				list.add(u);
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadUnitTypes() method {" + e.getMessage() + "}");
@@ -553,7 +591,11 @@ public class EditVendorDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new ServiceType(rs.getInt(1), rs.getString(2)));
+				ServiceType s = new ServiceType(rs.getInt(1), rs.getString(2));
+				if(nvd.getServicetype().trim().equals(rs.getString(2).trim())){
+					servicetype = s;
+				}
+				list.add(s);
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadServiceTypes() method {" + e.getMessage() + "}");

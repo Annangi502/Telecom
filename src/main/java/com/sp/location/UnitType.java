@@ -1,6 +1,8 @@
 package com.sp.location;
 
-public class UnitType {
+import java.io.Serializable;
+
+public class UnitType implements Serializable{
 private int unittypeid;
 private String unittypedesc;
 public UnitType() {

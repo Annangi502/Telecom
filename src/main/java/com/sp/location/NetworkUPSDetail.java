@@ -3,7 +3,7 @@ package com.sp.location;
 import java.io.Serializable;
 
 public class NetworkUPSDetail implements Serializable {
-	private int equipmentid;
+	private int upsid;
 	private String make;
 	private String model;
 	private String serialnumber;
@@ -16,7 +16,7 @@ public class NetworkUPSDetail implements Serializable {
 	public NetworkUPSDetail(int equipmentid, String make, String model,
 			String serialnumber, int noofbatteries, String amc, String remark) {
 		super();
-		this.equipmentid = equipmentid;
+		this.upsid = equipmentid;
 		this.make = make;
 		this.model = model;
 		this.serialnumber = serialnumber;
@@ -24,11 +24,11 @@ public class NetworkUPSDetail implements Serializable {
 		this.amc = amc;
 		this.remark = remark;
 	}
-	public int getEquipmentid() {
-		return equipmentid;
+	public int getUpsid() {
+		return upsid;
 	}
-	public void setEquipmentid(int equipmentid) {
-		this.equipmentid = equipmentid;
+	public void setUpsid(int equipmentid) {
+		this.upsid = equipmentid;
 	}
 	public String getMake() {
 		return make;

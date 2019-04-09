@@ -46,8 +46,9 @@ public class EditUPSDetailForm extends Panel{
     private String remarkfeedback;
     private String batteries;
     private String batteriesfeedback;
+    private NetworkUPSDetail nud;
     private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
-	public EditUPSDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
+	public EditUPSDetailForm(String id,final IModel<NetworkUPSDetail> upsmodel,final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
 		
@@ -56,6 +57,13 @@ public class EditUPSDetailForm extends Panel{
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[]{FeedbackMessage.ERROR};
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
+		nud = upsmodel.getObject();
+		make = nud.getMake();
+		model = nud.getModel();
+		serialno = nud.getSerialnumber();
+		amc = nud.getAmc();
+		batteries = String.valueOf(nud.getNoofbatteries());
+		remark = nud.getRemark();
 		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
@@ -127,7 +135,7 @@ public class EditUPSDetailForm extends Panel{
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				AddEquipmentDetail av = new AddEquipmentDetail(parms, nldmodel);
+				EditUPSDetail av = new EditUPSDetail(parms,upsmodel, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);
@@ -137,7 +145,7 @@ public class EditUPSDetailForm extends Panel{
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
-				if(addNetworkUPSDetail()){
+				if(editNetworkUPSDetail()){
 					PageParameters parms = new PageParameters();
 					ViewNetworkLocationDetail av = new ViewNetworkLocationDetail(parms, nldmodel);
 					setResponsePage(av);
@@ -159,9 +167,9 @@ public class EditUPSDetailForm extends Panel{
 		add(form);
 	}
 	
-	private boolean addNetworkUPSDetail()
+	private boolean editNetworkUPSDetail()
 	{
-		String query = "{call sp_circuit_add_network_ups_details(?,?,?,?,?,?,?,?,?)}";
+		String query = "{call sp_circuit_edit_network_ups_details(?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
@@ -177,14 +185,15 @@ public class EditUPSDetailForm extends Panel{
 			stmt.setString(7,amc);
 			stmt.setString(8,remark);
 			stmt.setInt(9, Integer.parseInt(batteries));
+			stmt.setInt(10, nud.getUpsid());
 			log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 			rs = stmt.executeQuery();
 		    while(rs.next())
 		    {
-		    	log.info("Network UPS Detail Added Successfully With ID :"+rs.getInt(1));
+		    	log.info("Network UPS Detail Edited Successfully With ID :"+rs.getInt(1));
 		    }
 		}catch (SQLException e) {
-			log.error("SQL Exception in addNetworkUPSDetail() method {"+e.getMessage()+"}");
+			log.error("SQL Exception in editNetworkUPSDetail() method {"+e.getMessage()+"}");
 			e.printStackTrace();
 			return false;
 		}finally {
@@ -200,7 +209,7 @@ public class EditUPSDetailForm extends Panel{
                 }
             }
             catch (SQLException e2) {
-               log.error("SQL Exception in addNetworkUPSDetail() method {" + e2.getMessage() + "}");
+               log.error("SQL Exception in editNetworkUPSDetail() method {" + e2.getMessage() + "}");
                 e2.printStackTrace();
             }
         }

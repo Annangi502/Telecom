@@ -7,10 +7,10 @@ import com.sp.master.ApspdclMaster;
 
 public class EditInterfaceDetail extends ApspdclMaster {
 
-	public EditInterfaceDetail(PageParameters parms,final IModel model) {
+	public EditInterfaceDetail(PageParameters parms,final IModel imodel,final IModel model) {
 		super(parms);
 		// TODO Auto-generated constructor stub
-		replace(new EditInterfaceDetailForm("formarea",model));
+		replace(new EditInterfaceDetailForm("formarea",imodel,model));
 	}
 
 }
