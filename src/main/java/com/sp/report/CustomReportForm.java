@@ -65,7 +65,7 @@ public class CustomReportForm extends Panel {
 		final NetworkLocationDataProvider nlprovider = new NetworkLocationDataProvider();
 
 		final List<IColumn> columns = new ArrayList<IColumn>();
-		columns.add(new AbstractColumn(new Model("Sr. No.")) {
+	columns.add(new AbstractColumn(new Model("Sr. No.")) {
 			public void populateItem(Item cell, String compId, IModel rowModel) {
 				int pageNumber, noRows;
 				DataTable tbl = (DataTable) get("datatable");
@@ -77,7 +77,7 @@ public class CustomReportForm extends Panel {
 					noRows = 0;
 				}
 				int rowNumber = (pageNumber * noRows) + ((Item) cell.getParent().getParent()).getIndex() + 1;
-				cell.add(new Label(compId, rowNumber));
+				cell.add(new Label(compId, ""));
 			}
 		});
 		columns.add(p1);
@@ -249,6 +249,7 @@ public class CustomReportForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
+				for(int i=0;i<max(rs.getString(1));i++)
 				list.add(new NetworkLocationDetail(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
 						rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9),
 						rs.getString(10)));
@@ -282,5 +283,53 @@ public class CustomReportForm extends Panel {
 		temptable.addTopToolbar(new HeadersToolbar(table, nlprovider));
 		table.replaceWith(temptable);
 		table = temptable;
+	}
+	public  int max(String circuitid) {
+		int vc = 0;
+		int ec = 0;
+		int ic = 0;
+		int uc = 0;
+		final String query = "{call sp_circuit_get_count(?,?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
+			stmt.setString(3, circuitid);
+			rs = stmt.executeQuery();
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			while (rs.next()) {
+				vc = rs.getInt(1); ec = rs.getInt(2); ic = rs.getInt(3); uc = rs.getInt(4);
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in max() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in loadProjectTypes() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+	    int max = vc;
+	    if (ec > max)
+	        max = ec;
+	    if (ic > max)
+	        max = ic;
+	    if (uc > max)
+	        max = uc;
+	     return max;
 	}
 }

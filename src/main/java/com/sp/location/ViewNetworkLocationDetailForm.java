@@ -169,7 +169,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		if(((PortSession) getSession()).isAdmin()){	
 		eqcolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkInterfaceDetail(componentId, rowModel,
+				item.add(new ColumnEditPanelNetworkEquipmentDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
@@ -829,6 +829,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
                 e2.printStackTrace();
             }
         }
+        System.out.println("SIZE"+upinist);
 		return upinist;	
 	}
 }

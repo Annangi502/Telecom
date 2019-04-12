@@ -105,6 +105,7 @@
 thead{
 color: #fff;
     background-color: #337ab7;}
+
 </style>
 </head>
 
@@ -253,5 +254,24 @@ $(document).ready(function(){
 localStorage.removeItem("activeTab");
 });
 </script>
+<!-- <script>
+function removeDuplicateRows($table){
+    function getVisibleRowText($row){
+        return $row.find('td:visible').text().toLowerCase();
+    }
+    
+    $table.find('tr').each(function(index, row){
+        var $row = $(row);
+    
+        $row.nextAll('tr').each(function(index, next){
+            var $next = $(next);
+            console.log(getVisibleRowText($row), getVisibleRowText($next))
+            if(getVisibleRowText($next) == getVisibleRowText($row))
+                $next.remove();
+        })
+    });
+}
+removeDuplicateRows($('table'));
+</script> -->
 </body>
 </html>

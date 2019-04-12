@@ -1,3 +1,22 @@
+<wicket:head>
+<style>
+body
+{
+    counter-reset: Serial;           /* Set the Serial counter to 0 */
+}
+
+table
+{
+    border-collapse: separate;
+}
+
+tr td:first-child:before
+{
+  counter-increment: Serial;      /* Increment the Serial counter */
+  content: counter(Serial); /* Display the counter */
+}
+</style>
+</wicket:head>
 <wicket:panel>
 <div class="x_panel">
                   <div class="x_title">
@@ -156,4 +175,5 @@
 					</div>
 					</div>
 					</div>
+
 </wicket:panel>
