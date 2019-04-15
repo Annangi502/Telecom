@@ -157,6 +157,12 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			  });
 
 		eqcolumns.add(new PropertyColumn(new Model("Make"), "make"));
+		eqcolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"), "isreplace") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ColumnClickPanelNetworkEquipmentDetail(componentId, new CompoundPropertyModel<NetworkLocationDetail>(nld),
+						new PropertyModel(rowModel, getProperty())));
+			}
+		});
 		eqcolumns.add(new PropertyColumn(new Model("Model"), "model"));
 		eqcolumns.add(new PropertyColumn(new Model("Serial No."), "serialnumber"));
 		eqcolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
@@ -723,7 +729,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
-		    	vnlist.add(new NetworkEquipmentDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10)));
+		    	vnlist.add(new NetworkEquipmentDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6),rs.getString(7)));
 		    }
 		}catch (SQLException e) {
 			log.error("SQL Exception in getEquipments() method {"+e.getMessage()+"}");
@@ -829,7 +835,6 @@ public class ViewNetworkLocationDetailForm extends Panel {
                 e2.printStackTrace();
             }
         }
-        System.out.println("SIZE"+upinist);
 		return upinist;	
 	}
 }

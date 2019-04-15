@@ -18,7 +18,7 @@ public class NetworkEquipmentDetail implements Serializable {
 	}
 
 	public NetworkEquipmentDetail(int equipmentid, String make, String model, String serialnumber, String amc,
-			int isreplace, String rmake, String rmodel, String rserialnumber, String remark) {
+			int isreplace, String remark) {
 		super();
 		this.equipmentid = equipmentid;
 		this.make = make;
@@ -26,9 +26,6 @@ public class NetworkEquipmentDetail implements Serializable {
 		this.serialnumber = serialnumber;
 		this.amc = amc;
 		this.isreplace = isreplace;
-		this.rmake = rmake;
-		this.rmodel = rmodel;
-		this.rserialnumber = rserialnumber;
 		this.remark = remark;
 	}
 
