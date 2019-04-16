@@ -7,10 +7,10 @@ import com.sp.master.ApspdclMaster;
 
 public class ViewEquipmentDetail extends ApspdclMaster {
 
-	public ViewEquipmentDetail(PageParameters parms,final IModel model) {
+	public ViewEquipmentDetail(PageParameters parms,final IModel model,final IModel nldmodel) {
 		super(parms);
 		// TODO Auto-generated constructor stub
-		replace(new ViewEquipmentDetailForm("formarea",model));
+		replace(new ViewEquipmentDetailForm("formarea",model,nldmodel));
 	}
 
 }

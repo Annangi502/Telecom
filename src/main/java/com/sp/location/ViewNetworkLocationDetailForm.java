@@ -156,11 +156,11 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			      }
 			  });
 
-		eqcolumns.add(new PropertyColumn(new Model("Make"), "make"));
-		eqcolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"), "isreplace") {
+/*		eqcolumns.add(new PropertyColumn(new Model("Make"), "make"));*/
+		eqcolumns.add(new GClickablePropertyColumn(new Model("Make"), "make") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnClickPanelNetworkEquipmentDetail(componentId, new CompoundPropertyModel<NetworkLocationDetail>(nld),
-						new PropertyModel(rowModel, getProperty())));
+				item.add(new ColumnClickPanelNetworkEquipmentDetail(componentId,rowModel ,
+						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
 		eqcolumns.add(new PropertyColumn(new Model("Model"), "model"));

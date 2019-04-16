@@ -15,7 +15,7 @@ public class ColumnClickPanelNetworkEquipmentDetail extends Panel{
 	private Link lnk;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ColumnClickPanelNetworkEquipmentDetail(String id, final IModel rowModel,IModel labelModel ) {
+	public ColumnClickPanelNetworkEquipmentDetail(String id, final IModel rowModel,IModel labelModel,final IModel nldmodel ) {
 		super(id);
 		lnk = new Link("link",rowModel){
 			private static final long serialVersionUID = 1L;
@@ -25,7 +25,7 @@ public class ColumnClickPanelNetworkEquipmentDetail extends Panel{
 				PageParameters params = new PageParameters();
 				ViewEquipmentDetail vad;
 				
-				vad = new ViewEquipmentDetail(params,rowModel);
+				vad = new ViewEquipmentDetail(params,rowModel,nldmodel);
 					setResponsePage(vad);
 				
 				
