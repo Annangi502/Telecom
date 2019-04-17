@@ -42,14 +42,15 @@ import com.sp.resource.CustomRadioChoice;
 import com.sp.resource.DataBaseConnection;
 import com.sp.resource.ErrorLevelsFeedbackMessageFilter;
 import com.sp.resource.FeedbackLabel;
+import com.sp.validators.NumberValidator;
 import com.sp.validators.StringValidator;
 
-public class ViewEquipmentDetailForm extends Panel {
-	private static final Logger log = Logger.getLogger(ViewEquipmentDetailForm.class);
+public class ViewUPSDetailForm extends Panel {
+	private static final Logger log = Logger.getLogger(ViewUPSDetailForm.class);
 	private String spcircuitid;
 	private String spcircuitcode;
 	private String projecttypedescription;
-	private NetworkEquipmentDetail ned;
+	private NetworkUPSDetail nupsd;
 	private String make;
 	private String model;
 	private String serialno;
@@ -64,32 +65,36 @@ public class ViewEquipmentDetailForm extends Panel {
 	final int DEF_NO_OF_ROWS = 9999;
 	private boolean mymodalflag;
 	private String replacelbl;
-	private NetworkEquipmentReplaceList ntvnlist = new NetworkEquipmentReplaceList();
+	private String noofbatteries;
+	private String addbatteriesfeedback;
+	private String addbatteries;
+	private NetworkUPSReplaceList ntvnlist = new NetworkUPSReplaceList();
 
-	public ViewEquipmentDetailForm(String id, final IModel<NetworkEquipmentDetail> nedmodel,
+	public ViewUPSDetailForm(String id, final IModel<NetworkUPSDetail> nedmodel,
 			final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
-		setDefaultModel(new CompoundPropertyModel<ViewEquipmentDetailForm>(this));
+		setDefaultModel(new CompoundPropertyModel<ViewUPSDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("addreplacedetails");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
-		ned = nedmodel.getObject();
+		nupsd = nedmodel.getObject();
 
 		ntvnlist.setList(getReplaceHistory());
-		NetworkEquipmentProvider replaceprovider = new NetworkEquipmentProvider();
+		NetworkUPSProvider replaceprovider = new NetworkUPSProvider();
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
-		make = ned.getMake();
-		model = ned.getModel();
-		serialno = ned.getSerialnumber();
-		amc = ned.getAmc();
-		remark = ned.getRemark();
-		replacelbl = ned.getIsreplace()==1?"Replace":"Stand By";
+		make = nupsd.getMake();
+		model = nupsd.getModel();
+		serialno = nupsd.getSerialnumber();
+		amc = nupsd.getAmc();
+		remark = nupsd.getRemark();
+		replacelbl = nupsd.getIsreplace()==1?"Replace":"Stand By";
+		noofbatteries = String.valueOf(nupsd.getNoofbatteries());
 		WebMarkupContainer replacediv = new WebMarkupContainer("replacediv");
-		replacediv.setVisible(ned.getIsreplace()==1?true:false);
+		replacediv.setVisible(nupsd.getIsreplace()==1?true:false);
 		form.add(replacediv);
 		
 		List<IColumn> columns = new ArrayList<IColumn>();
@@ -111,6 +116,7 @@ public class ViewEquipmentDetailForm extends Panel {
 		columns.add(new PropertyColumn(new Model("Make"), "rmake"));
 		columns.add(new PropertyColumn(new Model("Model"), "rmodel"));
 		columns.add(new PropertyColumn(new Model("Serial No."), "rserialnumber"));
+		columns.add(new PropertyColumn(new Model("No. of Batteries"), "noofbatteries"));
 		columns.add(new PropertyColumn(new Model("Status"), "status"));
 		final DataTable table = new DataTable("datatable", columns, replaceprovider, DEF_NO_OF_ROWS);
 		table.setOutputMarkupId(true);
@@ -125,6 +131,7 @@ public class ViewEquipmentDetailForm extends Panel {
 		form.add(new Label("amc"));
 		form.add(new Label("remark"));
 		form.add(new Label("replacelbl"));
+		form.add(new Label("noofbatteries"));
 
 		WebMarkupContainer mymodal = new WebMarkupContainer("mymodal") {
 			@Override
@@ -156,13 +163,21 @@ public class ViewEquipmentDetailForm extends Panel {
 		final FeedbackLabel serialnoFeedbackLabel = new FeedbackLabel("addserialnofeedback", serialno);
 		serialnoFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(serialnoFeedbackLabel);
+		
+		TextField<String> batteries = new TextField<String>("addbatteries");
+		batteries.setRequired(true).setLabel(new Model("No.Of Batteries"));
+		batteries.add(new NumberValidator());
+		final FeedbackLabel batteriesFeedbackLabel = new FeedbackLabel("addbatteriesfeedback", batteries);
+		batteriesFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(batteriesFeedbackLabel);
 
+		
 		Button btnback = new Button("back") {
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters params = new PageParameters();
-				ViewEquipmentDetail vad = new ViewEquipmentDetail(params, nedmodel, nldmodel);
+				ViewUPSDetail vad = new ViewUPSDetail(params, nedmodel, nldmodel);
 				setResponsePage(vad);
 
 			}
@@ -174,7 +189,7 @@ public class ViewEquipmentDetailForm extends Panel {
 				// TODO Auto-generated method stub
 				if (networkEquipmentAddReplaceDetails()) {
 					PageParameters params = new PageParameters();
-					ViewEquipmentDetail vad = new ViewEquipmentDetail(params, nedmodel, nldmodel);
+					ViewUPSDetail vad = new ViewUPSDetail(params, nedmodel, nldmodel);
 					setResponsePage(vad);
 				}
 			}
@@ -184,13 +199,14 @@ public class ViewEquipmentDetailForm extends Panel {
 		mymodal.add(rmake);
 		mymodal.add(model);
 		mymodal.add(serialno);
+		mymodal.add(batteries);
 		Button replace = (Button) new Button("replace") {
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				mymodalflag = true;
 			}
-		}.setVisible(ned.getIsreplace()==1?true:false);;
+		}.setVisible(nupsd.getIsreplace()==1?true:false);;
 		Button pback = new Button("pback") {
 			@Override
 			public void onSubmit() {
@@ -208,9 +224,9 @@ public class ViewEquipmentDetailForm extends Panel {
 
 	}
 
-	public class NetworkEquipmentProvider extends SortableDataProvider implements Serializable {
+	public class NetworkUPSProvider extends SortableDataProvider implements Serializable {
 
-		public NetworkEquipmentProvider() {
+		public NetworkUPSProvider() {
 			// TODO Auto-generated constructor stub
 			setSort("spcircuidid", SortOrder.ASCENDING);
 		}
@@ -218,10 +234,10 @@ public class ViewEquipmentDetailForm extends Panel {
 		@Override
 		public Iterator iterator(long first, long count) {
 			// TODO Auto-generated method stub
-			Collections.sort(ntvnlist.getList(), new Comparator<EquipmentReplaceHistory>() {
+			Collections.sort(ntvnlist.getList(), new Comparator<UPSReplaceHistory>() {
 
 				@Override
-				public int compare(EquipmentReplaceHistory arg0, EquipmentReplaceHistory arg1) {
+				public int compare(UPSReplaceHistory arg0, UPSReplaceHistory arg1) {
 					// TODO Auto-generated method stub
 					int dir = getSort().isAscending() ? 1 : -1;
 					return dir * (arg0.getRmake().compareTo(arg1.getRmake()));
@@ -233,7 +249,7 @@ public class ViewEquipmentDetailForm extends Panel {
 		@Override
 		public IModel model(Object arg0) {
 			// TODO Auto-generated method stub
-			EquipmentReplaceHistory nld = (EquipmentReplaceHistory) arg0;
+			UPSReplaceHistory nld = (UPSReplaceHistory) arg0;
 			return new Model((Serializable) nld);
 		}
 
@@ -245,15 +261,15 @@ public class ViewEquipmentDetailForm extends Panel {
 
 	}
 
-	public class NetworkEquipmentReplaceList implements Serializable {
-		private List<EquipmentReplaceHistory> list;
+	public class NetworkUPSReplaceList implements Serializable {
+		private List<UPSReplaceHistory> list;
 
-		public NetworkEquipmentReplaceList() {
+		public NetworkUPSReplaceList() {
 			// TODO Auto-generated constructor stub
-			list = new ArrayList<EquipmentReplaceHistory>();
+			list = new ArrayList<UPSReplaceHistory>();
 		}
 
-		public void addItem(EquipmentReplaceHistory t) {
+		public void addItem(UPSReplaceHistory t) {
 			list.add(t);
 		}
 
@@ -262,7 +278,7 @@ public class ViewEquipmentDetailForm extends Panel {
 			return list;
 		}
 
-		public void setList(List<EquipmentReplaceHistory> l) {
+		public void setList(List<UPSReplaceHistory> l) {
 			list = l;
 		}
 
@@ -272,9 +288,9 @@ public class ViewEquipmentDetailForm extends Panel {
 		}
 	}
 
-	public List<EquipmentReplaceHistory> getReplaceHistory() {
-		final List<EquipmentReplaceHistory> vnlist = new ArrayList<EquipmentReplaceHistory>();
-		final String query = "{call sp_circuit_equipment_get_all_replacements(?,?,?)}";
+	public List<UPSReplaceHistory> getReplaceHistory() {
+		final List<UPSReplaceHistory> vnlist = new ArrayList<UPSReplaceHistory>();
+		final String query = "{call sp_circuit_ups_get_all_replacements(?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -283,11 +299,11 @@ public class ViewEquipmentDetailForm extends Panel {
 			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
-			stmt.setInt(3, ned.getEquipmentid());
+			stmt.setInt(3, nupsd.getUpsid());
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				vnlist.add(new EquipmentReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4)));
+				vnlist.add(new UPSReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getInt(4),rs.getString(5)));
 			}
 		} catch (SQLException e) {
 			log.error((Object) ("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
@@ -313,7 +329,7 @@ public class ViewEquipmentDetailForm extends Panel {
 	}
 
 	private boolean networkEquipmentAddReplaceDetails() {
-		final String query = "{call sp_circuit_network_equipment_add_replace_details(?,?,?,?,?,?)}";
+		final String query = "{call sp_circuit_network_ups_add_replace_details(?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -322,10 +338,11 @@ public class ViewEquipmentDetailForm extends Panel {
 			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
-			stmt.setInt(3, ned.getEquipmentid());
+			stmt.setInt(3, nupsd.getUpsid());
 			stmt.setString(4, addmake);
 			stmt.setString(5, addmodel);
 			stmt.setString(6, addserialno);
+			stmt.setInt(7, Integer.parseInt(addbatteries));
 
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();

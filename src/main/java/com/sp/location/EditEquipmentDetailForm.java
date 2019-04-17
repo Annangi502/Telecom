@@ -80,9 +80,7 @@ public class EditEquipmentDetailForm extends Panel{
 		{
 			replacedivflag = false;
 		}
-		rmake = ned.getRmake();
-		rmodel = ned.getRmodel();
-		rserialno = ned.getRserialnumber();
+		getReplaceDetails();
 		
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
@@ -290,5 +288,47 @@ public class EditEquipmentDetailForm extends Panel{
         }
         return true;
     }
+	public boolean getReplaceDetails()
+	{
+		String query = "{call sp_circuit_equipment_get_replace_details(?,?,?)}";
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
+			stmt.setInt(3, ned.getEquipmentid());
+		    rs = stmt.executeQuery();
+		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
+		    while(rs.next())
+		    {
+		    	rmake = rs.getString(1);
+		    	rmodel = rs.getString(2);
+		    	rserialno = rs.getString(3);
+		    }
+		}catch (SQLException e) {
+			log.error("SQL Exception in getReplaceDetails() method {"+e.getMessage()+"}");
+			e.printStackTrace();
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in getReplaceDetails() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+        }
+		return true;	
+	}
 
 }

@@ -207,11 +207,23 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			      }
 			  });
 
-		upscolumns.add(new PropertyColumn(new Model("Make"), "make"));
+		/*upscolumns.add(new PropertyColumn(new Model("Make"), "make"));*/
+		upscolumns.add(new GClickablePropertyColumn(new Model("Make"), "make") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new ColumnClickPanelNetworkUPSDetail(componentId,rowModel ,
+						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+			}
+		});
 		upscolumns.add(new PropertyColumn(new Model("Model"), "model"));
 		upscolumns.add(new PropertyColumn(new Model("Serial No."), "serialnumber"));
 		upscolumns.add(new PropertyColumn(new Model("No .of Batteries"), "noofbatteries"));
 		upscolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
+		upscolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"), "isreplace") {
+			public void populateItem(Item item, String componentId, IModel rowModel) {
+				item.add(new UPSReplaceDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty())));
+			}
+		});
 		upscolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
 		if(((PortSession) getSession()).isAdmin()){	
 		upscolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
@@ -771,7 +783,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
 		    while(rs.next())
 		    {
-		    	upslist.add(new NetworkUPSDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getInt(5), rs.getString(6), rs.getString(7)));
+		    	upslist.add(new NetworkUPSDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getInt(5), rs.getString(6), rs.getString(7),rs.getInt(9)));
 		    }
 		}catch (SQLException e) {
 			log.error("SQL Exception in getUPS() method {"+e.getMessage()+"}");

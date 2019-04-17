@@ -10,11 +10,12 @@ public class NetworkUPSDetail implements Serializable {
 	private int noofbatteries;
 	private String amc;
 	private String remark;
+	private int isreplace;
 	public NetworkUPSDetail() {
 		// TODO Auto-generated constructor stub
 	}
 	public NetworkUPSDetail(int equipmentid, String make, String model,
-			String serialnumber, int noofbatteries, String amc, String remark) {
+			String serialnumber, int noofbatteries, String amc, String remark,int isreplace) {
 		super();
 		this.upsid = equipmentid;
 		this.make = make;
@@ -23,6 +24,7 @@ public class NetworkUPSDetail implements Serializable {
 		this.noofbatteries = noofbatteries;
 		this.amc = amc;
 		this.remark = remark;
+		this.isreplace = isreplace;
 	}
 	public int getUpsid() {
 		return upsid;
@@ -65,6 +67,12 @@ public class NetworkUPSDetail implements Serializable {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public int getIsreplace() {
+		return isreplace;
+	}
+	public void setIsreplace(int isreplace) {
+		this.isreplace = isreplace;
 	}
 	
 }

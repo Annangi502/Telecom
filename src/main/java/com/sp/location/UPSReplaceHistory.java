@@ -2,19 +2,21 @@ package com.sp.location;
 
 import java.io.Serializable;
 
-public class EquipmentReplaceHistory implements Serializable {
+public class UPSReplaceHistory implements Serializable {
 private String rmake;
 private String rmodel;
 private String rserialnumber;
+private int noofbatteries;
 private String status;
-public EquipmentReplaceHistory() {
+public UPSReplaceHistory() {
 	// TODO Auto-generated constructor stub
 }
-public EquipmentReplaceHistory(String rmake, String rmodel, String rserialnumber,String status) {
+public UPSReplaceHistory(String rmake, String rmodel, String rserialnumber,int noofbatteries,String status) {
 	super();
 	this.rmake = rmake;
 	this.rmodel = rmodel;
 	this.rserialnumber = rserialnumber;
+	this.noofbatteries = noofbatteries;
 	this.status = status;
 }
 public String getRmake() {
@@ -40,6 +42,12 @@ public String getStatus() {
 }
 public void setStatus(String status) {
 	this.status = status;
+}
+public int getNoofbatteries() {
+	return noofbatteries;
+}
+public void setNoofbatteries(int noofbatteries) {
+	this.noofbatteries = noofbatteries;
 }
 
 
