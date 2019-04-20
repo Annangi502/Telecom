@@ -5,14 +5,18 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -26,6 +30,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.StatelessForm;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -33,6 +38,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
@@ -68,6 +74,12 @@ public class ViewUPSDetailForm extends Panel {
 	private String noofbatteries;
 	private String addbatteriesfeedback;
 	private String addbatteries;
+	private Date installationdate;
+	private String installfeedback;
+	private String rremark;
+	private String remarkfeedback;
+	private String locationname;
+	private static String PATTERN = "yyyy-MM-dd";
 	private NetworkUPSReplaceList ntvnlist = new NetworkUPSReplaceList();
 
 	public ViewUPSDetailForm(String id, final IModel<NetworkUPSDetail> nedmodel,
@@ -86,6 +98,7 @@ public class ViewUPSDetailForm extends Panel {
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+		locationname = nldmodel.getObject().getLocationname();
 		make = nupsd.getMake();
 		model = nupsd.getModel();
 		serialno = nupsd.getSerialnumber();
@@ -117,6 +130,8 @@ public class ViewUPSDetailForm extends Panel {
 		columns.add(new PropertyColumn(new Model("Model"), "rmodel"));
 		columns.add(new PropertyColumn(new Model("Serial No."), "rserialnumber"));
 		columns.add(new PropertyColumn(new Model("No. of Batteries"), "noofbatteries"));
+		columns.add(new PropertyColumn(new Model("Replacement Date"), "replacedate"));
+		columns.add(new PropertyColumn(new Model("Remark"), "remark"));
 		columns.add(new PropertyColumn(new Model("Status"), "status"));
 		final DataTable table = new DataTable("datatable", columns, replaceprovider, DEF_NO_OF_ROWS);
 		table.setOutputMarkupId(true);
@@ -125,6 +140,7 @@ public class ViewUPSDetailForm extends Panel {
 
 		form.add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
 		form.add(new Label("make"));
 		form.add(new Label("model"));
 		form.add(new Label("serialno"));
@@ -171,6 +187,36 @@ public class ViewUPSDetailForm extends Panel {
 		batteriesFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(batteriesFeedbackLabel);
 
+		CustromDatePicker datePicker = new CustromDatePicker();
+        datePicker.setShowOnFieldClick(true);
+        datePicker.setAutoHide(false);
+		
+        
+        DateTextField instaldate = new DateTextField("installationdate",new PropertyModel<Date>(
+		            this, "installationdate"),new PatternDateConverter("dd MMM, yyyy", true));
+		
+		/*DateTextField instaldate = new DateTextField("installationdate","dd-mm-yyy")
+		{
+			  protected String getInputType()
+	            {
+	                return "date";
+	            }  
+	        };*/
+        instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+        final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+        instaldate.setOutputMarkupId(true);
+        instaldate.add(datePicker);
+        mymodal.add(insfeedback);
+        mymodal.add(instaldate);
+        
+        TextArea<String> remark = new TextArea<String>("rremark");
+		remark.setLabel(new Model("Remark"));
+		//remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		/*remark.add(new StringValidator());*/
+		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
+		remarkFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(remarkFeedbackLabel);
+		mymodal.add(remark);
 		
 		Button btnback = new Button("back") {
 			@Override
@@ -187,7 +233,7 @@ public class ViewUPSDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
-				if (networkEquipmentAddReplaceDetails()) {
+				if (networkUPSAddReplaceDetails()) {
 					PageParameters params = new PageParameters();
 					ViewUPSDetail vad = new ViewUPSDetail(params, nedmodel, nldmodel);
 					setResponsePage(vad);
@@ -303,7 +349,7 @@ public class ViewUPSDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				vnlist.add(new UPSReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getInt(4),rs.getString(5)));
+				vnlist.add(new UPSReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getInt(4),rs.getString(5),rs.getString(6),rs.getString(7)));
 			}
 		} catch (SQLException e) {
 			log.error((Object) ("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
@@ -328,8 +374,8 @@ public class ViewUPSDetailForm extends Panel {
 		return vnlist;
 	}
 
-	private boolean networkEquipmentAddReplaceDetails() {
-		final String query = "{call sp_circuit_network_ups_add_replace_details(?,?,?,?,?,?,?)}";
+	private boolean networkUPSAddReplaceDetails() {
+		final String query = "{call sp_circuit_network_ups_add_replace_details(?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -343,6 +389,8 @@ public class ViewUPSDetailForm extends Panel {
 			stmt.setString(5, addmodel);
 			stmt.setString(6, addserialno);
 			stmt.setInt(7, Integer.parseInt(addbatteries));
+			stmt.setString(8,getFormatDate(installationdate));
+			stmt.setString(9, rremark);
 
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
@@ -370,5 +418,11 @@ public class ViewUPSDetailForm extends Panel {
 			}
 		}
 		return true;
+	}
+	private String getFormatDate(Date date)
+	{
+	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+	    return simpleDateFormat.format(date);
+		
 	}
 }

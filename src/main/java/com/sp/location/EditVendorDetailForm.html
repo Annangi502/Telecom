@@ -6,6 +6,7 @@
 			<div class="x_panel">
 				<div class="x_title">
 					<h2>Edit Vendor Details</h2>
+					<label class="panel_toolbox">Location ID : <strong class="text-danger" wicket:id="spcircuitcode">VJA1230078</strong></label>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -15,11 +16,12 @@
 							<div class="col-sm-6">
 								<!-- col 1 starts here -->
 								<div class="form-group">
-									<label for="inputMT" class="col-sm-4 control-label text-danger text-right"><strong>APSPDCL
-											Circuit ID</strong></label>
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Location Name</strong></label>
 									<div class="col-sm-8">
-										<label wicket:id="spcircuitcode" for="input"
-											class="col-sm-8 form-control text-primary text-left" style="background-color: #e5e5e5;">R-APDRP</label>
+										<label wicket:id="locationname" for="input"
+											class="col-sm-8 form-control text-primary text-left"
+											style="background-color: #e5e5e5;">R-APDRP</label>
 									</div>
 								</div>
 							</div>
@@ -33,7 +35,8 @@
 											Type</b></label>
 									<div class="col-sm-8">
 										<label wicket:id="projecttypedescription" for="input"
-											class="col-sm-8 form-control text-primary text-left" style="background-color: #e5e5e5;">R-APDRP</label>
+											class="col-sm-8 form-control text-primary text-left"
+											style="background-color: #e5e5e5;">R-APDRP</label>
 									</div>
 								</div>
 							</div>
@@ -90,7 +93,7 @@
 
 						<div class="row">
 							<!-- row 2 starts here -->
-							<div class="col-sm-6">
+							<div class="col-sm-6" wicket:id="servicetypediv">
 								<!-- col 3 starts here -->
 								<div class="form-group">
 									<label for="inputNomineeFrom"
@@ -104,7 +107,20 @@
 								</div>
 							</div>
 							<!-- col 3 ends here -->
-
+							<div class="col-sm-6" wicket:id="mediatypediv">
+								<!-- col 1 starts here -->
+								<div class="form-group">
+									<label for="inputBN" class="col-sm-4 text-danger control-label"><strong>Media
+											Type<span class="required">*</span>
+									</strong></label>
+									<div class="col-sm-8">
+										<select class="form-control" wicket:id="mediatype">
+											<option value="AK">R-APDRP</option>
+											<option value="HI">NON-R-APDRP</option>
+										</select> <span class="text-danger" wicket:id="mediatypefeedback"></span>
+									</div>
+								</div>
+							</div>
 							<div class="col-sm-6">
 								<!-- col 4 starts here -->
 								<div class="form-group">
@@ -137,28 +153,7 @@
 									</div>
 								</div>
 							</div>
-							<!-- col 1 ends here -->
-							<div class="col-sm-6">
-								<!-- col 1 starts here -->
-								<div class="form-group">
-									<label for="inputBN" class="col-sm-4 text-danger control-label"><strong>Media
-											Type<span class="required">*</span>
-									</strong></label>
-									<div class="col-sm-8">
-										<select class="form-control" wicket:id="mediatype">
-											<option value="AK">R-APDRP</option>
-											<option value="HI">NON-R-APDRP</option>
-										</select> <span class="text-danger" wicket:id="mediatypefeedback"></span>
-									</div>
-								</div>
-							</div>
-							<!-- col 1 ends here -->
-						</div>
-						<!-- row 1 ends here -->
-
-						<div class="row">
-							<!-- row 2 starts here -->
-
+							
 							<div class="col-sm-6">
 								<!-- col 1 starts here -->
 								<div class="form-group">
@@ -175,6 +170,16 @@
 									</div>
 								</div>
 							</div>
+							<!-- col 1 ends here -->
+
+							<!-- col 1 ends here -->
+						</div>
+						<!-- row 1 ends here -->
+
+						<div class="row">
+							<!-- row 2 starts here -->
+
+							
 
 							<div class="col-sm-6">
 								<!-- col 3 starts here -->

@@ -6,7 +6,8 @@
 			style="margin-bottom: 50px;">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>Add Network UPS Details</h2>
+					<h2>View Network UPS Details</h2>
+					<label class="panel_toolbox">Location ID : <strong class="text-danger" wicket:id="spcircuitcode">VJA1230078</strong></label>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -17,10 +18,9 @@
 								<!-- col 1 starts here -->
 								<div class="form-group">
 									<label for="inputMT"
-										class="col-sm-4 control-label text-danger text-right"><strong>APSPDCL
-											Circuit ID</strong></label>
+										class="col-sm-4 control-label text-danger text-right"><strong>Location Name</strong></label>
 									<div class="col-sm-8">
-										<label wicket:id="spcircuitcode" for="input"
+										<label wicket:id="locationname" for="input"
 											class="col-sm-8 form-control text-primary text-left"
 											style="background-color: #e5e5e5;">R-APDRP</label>
 									</div>
@@ -197,7 +197,7 @@
               <div class="col-sm-12"> <!-- col 2 starts here -->  
                 <div class="form-group">
                   <label for="inputMT" class="col-sm-4 text-danger control-label text-right" >Make<span class="required">*</span></label>
-                  <div class="col-sm-5">
+                  <div class="col-sm-7">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Make" wicket:id="addmake">
                     <span class="text-danger" wicket:id="addmakefeedback"></span>
                   </div>
@@ -208,7 +208,7 @@
               <div class="col-sm-12"> <!-- col 3 starts here -->  
                 <div class="form-group">
                   <label for="inputMV" class="col-sm-4 text-danger control-label text-right">Model<span class="required">*</span></label>
-                  <div class="col-sm-5">
+                  <div class="col-sm-7">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Model" wicket:id="addmodel">
                     <span class="text-danger" wicket:id="addmodelfeedback"></span>
                   </div>
@@ -219,7 +219,7 @@
               <div class="col-sm-12"> <!-- col 3 starts here -->  
                 <div class="form-group">
                   <label for="inputMV" class="col-sm-4 text-danger control-label text-right">Serial NO<span class="required">*</span></label>
-                  <div class="col-sm-5">
+                  <div class="col-sm-7">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Serial NO" wicket:id="addserialno">
                     <span class="text-danger" wicket:id="addserialnofeedback"></span>
                   </div>
@@ -230,14 +230,51 @@
               <div class="col-sm-12"> <!-- col 3 starts here -->  
                 <div class="form-group">
                   <label for="inputMV" class="col-sm-4 text-danger control-label text-right">No. of Batteries<span class="required">*</span></label>
-                  <div class="col-sm-5">
+                  <div class="col-sm-7">
                     <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Serial NO" wicket:id="addbatteries">
                     <span class="text-danger" wicket:id="addbatteriesfeedback"></span>
                   </div>
                 </div>
               </div> <!-- col 3 ends here -->
             </div> <!-- row 2 ends here -->
-             
+             <div class="row">
+							<!-- row 2 starts here -->
+							<div class="col-sm-12">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputNomineeFrom"
+										class="col-sm-4 text-danger control-label"><strong>Replacement
+											Date <span class="required">*</span>
+									</strong></label>
+
+									<div class="col-sm-7">
+										<span class="fa fa-calendar form-control-feedback right"></span>
+										<input type="text" wicket:id="installationdate"
+											class="form-control" data-plugin="datepicker"
+											id="installationdate" placeholder="Click to select date"
+											autocomplete="off"> <span class="text-danger"
+											wicket:id="installfeedback"></span>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="row">
+								<!-- row 2 starts here -->
+								<div class="col-sm-12">
+									<!-- col 3 starts here -->
+									<div class="form-group">
+										<label for="inputSubject"
+											class="col-sm-4 text-danger control-label"><strong>Remak</strong></label>
+										<div class="col-sm-7">
+											<textarea rows="3"  wicket:id="rremark" class="form-control"
+												id="inputSubject" placeholder="Enter Remark"></textarea> <span
+												class="text-danger" wicket:id="remarkfeedback"></span>
+										</div>
+									</div>
+								</div>
+								<!-- col 3 ends here -->
+							</div>
             
         </div>
         <div class="text-center">

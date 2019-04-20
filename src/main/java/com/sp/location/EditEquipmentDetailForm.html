@@ -1,153 +1,263 @@
 <wicket:panel>
-         <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 50px;">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Edit Network Equipment Details</h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <br>
-        <form class="form-horizontal" wicket:id="addeqpdetailform"> 
-        <div class="row">
-						<!-- row starts here -->
-						<div class="col-sm-6">
-							<!-- col 1 starts here -->
-							<div class="form-group">
-								<label for="inputMT" class="col-sm-4 control-label text-danger text-right"><strong>APSPDCL
-										Circuit ID</strong></label>
-								<div class="col-sm-8">
-									<label wicket:id="spcircuitcode" for="input" class="col-sm-8 form-control text-primary text-left" style="background-color: #e5e5e5;">R-APDRP</label>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12"
+			style="margin-bottom: 50px;">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>Add Network Equipment Details</h2>
+					<label class="panel_toolbox">Location ID : <strong class="text-danger" wicket:id="spcircuitcode">VJA1230078</strong></label>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<br>
+					<form class="form-horizontal" wicket:id="addeqpdetailform">
+						<div class="row">
+							<!-- row starts here -->
+							<div class="col-sm-6">
+								<!-- col 1 starts here -->
+								<div class="form-group">
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Location Name</strong></label>
+									<div class="col-sm-8">
+										<label wicket:id="locationname" for="input"
+											class="col-sm-8 form-control text-primary text-left"
+											style="background-color: #e5e5e5;">R-APDRP</label>
+									</div>
 								</div>
 							</div>
-						</div>
-						<!-- col 1 ends here -->
+							<!-- col 1 ends here -->
 
-						<div class="col-sm-6">
-							<!-- col 2 starts here -->
-							<div class="form-group">
-								<label for="inputMeetingType"
-									class="col-sm-4 control-label text-danger text-right"><b>Project
-										Type</b></label>
-								<div class="col-sm-8">
-									<label wicket:id="projecttypedescription" for="input" class="col-sm-8 form-control text-primary text-left" style="background-color: #e5e5e5;">R-APDRP</label>
+							<div class="col-sm-6">
+								<!-- col 2 starts here -->
+								<div class="form-group">
+									<label for="inputMeetingType"
+										class="col-sm-4 control-label text-danger text-right"><b>Project
+											Type</b></label>
+									<div class="col-sm-8">
+										<label wicket:id="projecttypedescription" for="input"
+											class="col-sm-8 form-control text-primary text-left"
+											style="background-color: #e5e5e5;">R-APDRP</label>
+									</div>
 								</div>
 							</div>
+							<!-- col 2 ends here -->
 						</div>
-						<!-- col 2 ends here -->
-					</div>
-          <div class="row"> <!-- row 2 starts here -->
-              <div class="col-sm-6"> <!-- col 2 starts here -->  
-                <div class="form-group">
-                  <label for="inputMT" class="col-sm-4 text-danger control-label">Make<span class="required">*</span></label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Make" wicket:id="make">
-                    <span class="text-danger" wicket:id="makefeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 2 ends here -->
+						<div class="row">
+							<!-- row 2 starts here -->
+							<div class="col-sm-6">
+								<!-- col 2 starts here -->
+								<div class="form-group">
+									<label for="inputMT" class="col-sm-4 text-danger control-label"><strong>
+											Equipment Type <span class="required">*</span>
+									</strong></label>
+									<div class="col-sm-8">
+										<select class="form-control" wicket:id="equipmenttype">
+											<option value="AK">R-APDRP</option>
+											<option value="HI">NON-R-APDRP</option>
+										</select> <span class="text-danger" wicket:id="equipmenttypefeedback"></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<!-- col 2 starts here -->
+								<div class="form-group">
+									<label for="inputMT" class="col-sm-4 text-danger control-label">Make<span
+										class="required">*</span></label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" id="inputBookNo"
+											placeholder="Enter Make" wicket:id="make"> <span
+											class="text-danger" wicket:id="makefeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 2 ends here -->
+						</div>
+						<div class="row">
+							<!-- row 2 starts here -->
 
-              <div class="col-sm-6"> <!-- col 3 starts here -->  
-                <div class="form-group">
-                  <label for="inputMV" class="col-sm-4 text-danger control-label">Model<span class="required">*</span></label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Model" wicket:id="model">
-                    <span class="text-danger" wicket:id="modelfeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 3 ends here -->
-            </div> <!-- row 2 ends here -->
-          
-          <div class="row"> <!-- row 2 starts here -->
-              <div class="col-sm-6"> <!-- col 3 starts here -->
-                <div class="form-group">
-                  <label for="inputNomineeFrom" class="col-sm-4 text-danger control-label">Serial NO<span class="required">*</span></label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Serial NO" wicket:id="serialno">
-                    <span class="text-danger" wicket:id="serialnofeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 3 ends here -->
 
-              <div class="col-sm-6"> <!-- col 4 starts here -->
-                <div class="form-group">
-                  <label for="inputNomineeUpto" class="col-sm-4 text-danger control-label">AMC/Warranty<span class="required">*</span></label>
-                  <div class="col-sm-8" style="padding-top: 6px;">
-                  <span class="radio-custom radio-danger " wicket:id="amc"></span><br>
-                    <span class="text-danger" wicket:id="amcfeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 4 ends here -->
-            </div> <!-- row 2 ends here -->
-            <div class="row"> <!-- row 2 starts here -->
-              <div class="col-sm-12"> <!-- col 3 starts here -->
-                <div class="form-group">
-                  <label for="inputSubject" class="col-sm-2 text-danger control-label"><strong>Remak<span class="required">*</span></strong></label>
-                  <div class="col-sm-10">
-                    <input type="text" wicket:id="remark" class="form-control" id="inputSubject" placeholder="Enter Remark">
-                  <span class="text-danger" wicket:id="remarkfeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 3 ends here -->
-            </div>
-            <div class="row"> <!-- row 2 starts here -->
-              <div class="col-sm-6"> <!-- col 4 starts here -->
-                <div class="form-group">
-                  <label for="inputNomineeUpto" class="col-sm-4 text-danger control-label">Replace/Stand By</label>
-                  <div class="col-sm-8" style="padding-top: 6px;">
-                  <span class="radio-custom radio-danger " wicket:id="replace"></span><br>
-                    <span class="text-danger" wicket:id="replacefeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 4 ends here -->
-            </div> <!-- row 2 ends here -->
-             <div class="row" style="padding-left: 70px;" wicket:id="replacediv"> <!-- row 2 starts here -->
-              <div class="col-sm-4"> <!-- col 2 starts here -->  
-                <div class="form-group">
-                  <label for="inputMT" class="col-sm-4 text-danger control-label">Make<span class="required">*</span></label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Make" wicket:id="rmake">
-                    <span class="text-danger" wicket:id="rmakefeedback" ></span>
-                  </div>
-                </div>
-              </div> <!-- col 2 ends here -->
+							<div class="col-sm-6">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputMV" class="col-sm-4 text-danger control-label">Model<span
+										class="required">*</span></label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" id="inputBookNo"
+											placeholder="Enter Model" wicket:id="model"> <span
+											class="text-danger" wicket:id="modelfeedback"></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputNomineeFrom"
+										class="col-sm-4 text-danger control-label">Serial NO<span
+										class="required">*</span></label>
+									<div class="col-sm-8">
+										<input type="text" class="form-control" id="inputBookNo"
+											placeholder="Enter Serial NO" wicket:id="serialno"> <span
+											class="text-danger" wicket:id="serialnofeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 3 ends here -->
+						</div>
+						<!-- row 2 ends here -->
 
-              <div class="col-sm-4"> <!-- col 3 starts here -->  
-                <div class="form-group">
-                  <label for="inputMV" class="col-sm-4 text-danger control-label">Model<span class="required">*</span></label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Model"  wicket:id="rmodel">
-                    <span class="text-danger" wicket:id="rmodelfeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 3 ends here -->
-              
-               <div class="col-sm-4"> <!-- col 3 starts here -->
-                <div class="form-group">
-                  <label for="inputNomineeFrom" class="col-sm-4 text-danger control-label">Serial NO<span class="required">*</span></label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputBookNo" placeholder="Enter Serial NO" wicket:id="rserialno">
-                    <span class="text-danger" wicket:id="rserialnofeedback"></span>
-                  </div>
-                </div>
-              </div> <!-- col 3 ends here -->
-            </div> <!-- row 2 ends here -->
-             <div class="ln_solid">
-                   <span class="text-danger" wicket:id="feedback" ></span> 
-                      </div>
-                      <div class="form-group">
-                        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                          <button class="btn btn-primary" type="submit" wicket:id="btncancel">Back</button>
-						  <button class="btn btn-primary" type="submit" wicket:id="btnreset">Reset</button>
-                          <button type="submit" class="btn btn-success" wicket:id="btnsubmit">Submit</button>
-                        </div>
-                      </div>
-            </form>
-            </div>
-                </div>
-                <br>
-                <br>
-              </div>
-            </div>
-            
+						<div class="row">
+							<!-- row 2 starts here -->
+							
+							<!-- col 3 ends here -->
+
+							<div class="col-sm-6">
+								<!-- col 4 starts here -->
+								<div class="form-group">
+									<label for="inputNomineeUpto"
+										class="col-sm-4 text-danger control-label">AMC/Warranty<span
+										class="required">*</span></label>
+									<div class="col-sm-8" style="padding-top: 6px;">
+										<span class="radio-custom radio-danger " wicket:id="amc"></span><br>
+										<span class="text-danger" wicket:id="amcfeedback"></span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputSubject"
+										class="col-sm-4 text-danger control-label"><strong>Remak</strong></label>
+									<div class="col-sm-8">
+										<input type="text" wicket:id="remark" class="form-control"
+											id="inputSubject" placeholder="Enter Remark"> <span
+											class="text-danger" wicket:id="remarkfeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 4 ends here -->
+						</div>
+						<div class="row">
+							<!-- row 2 starts here -->
+							<div class="col-sm-6">
+								<!-- col 4 starts here -->
+								<div class="form-group">
+									<label for="inputNomineeUpto"
+										class="col-sm-4 text-danger control-label">Replace/Stand
+										By</label>
+									<div class="col-sm-8" style="padding-top: 6px;">
+										<span class="radio-custom radio-danger " wicket:id="replace"></span><br>
+										<span class="text-danger" wicket:id="replacefeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 4 ends here -->
+						</div>
+						<!-- row 2 ends here -->
+						<div wicket:id="replacediv">
+							<div class="row">
+								<!-- row 2 starts here -->
+								<div class="col-sm-6">
+									<!-- col 2 starts here -->
+									<div class="form-group">
+										<label for="inputMT"
+											class="col-sm-4 text-danger control-label">Make<span
+											class="required">*</span></label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="inputBookNo"
+												placeholder="Enter Make" wicket:id="rmake"> <span
+												class="text-danger" wicket:id="rmakefeedback"></span>
+										</div>
+									</div>
+								</div>
+								<!-- col 2 ends here -->
+
+								<div class="col-sm-6">
+									<!-- col 3 starts here -->
+									<div class="form-group">
+										<label for="inputMV"
+											class="col-sm-4 text-danger control-label">Model<span
+											class="required">*</span></label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="inputBookNo"
+												placeholder="Enter Model" wicket:id="rmodel"> <span
+												class="text-danger" wicket:id="rmodelfeedback"></span>
+										</div>
+									</div>
+								</div>
+								<!-- col 3 ends here -->
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<!-- col 3 starts here -->
+									<div class="form-group">
+										<label for="inputNomineeFrom"
+											class="col-sm-4 text-danger control-label">Serial NO<span
+											class="required">*</span></label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" id="inputBookNo"
+												placeholder="Enter Serial NO" wicket:id="rserialno">
+											<span class="text-danger" wicket:id="rserialnofeedback"></span>
+										</div>
+									</div>
+								</div>
+								<!-- col 3 ends here -->
+								<div class="col-sm-6">
+									<!-- col 3 starts here -->
+									<div class="form-group">
+										<label for="inputNomineeFrom"
+											class="col-sm-4 text-danger control-label"><strong>Replacement
+												Date <span class="required">*</span>
+										</strong></label>
+
+										<div class="col-sm-8">
+											<span class="fa fa-calendar form-control-feedback right"></span>
+											<input type="text" wicket:id="installationdate"
+												class="form-control" data-plugin="datepicker"
+												id="installationdate" placeholder="Click to select date"
+												autocomplete="off"> <span class="text-danger"
+												wicket:id="installfeedback"></span>
+										</div>
+
+									</div>
+								</div>
+							</div>
+							<!-- row 2 ends here -->
+							<div class="row">
+								<!-- row 2 starts here -->
+								<div class="col-sm-12">
+									<!-- col 3 starts here -->
+									<div class="form-group">
+										<label for="inputSubject"
+											class="col-sm-2 text-danger control-label"><strong>Replacement
+												Remark</strong></label>
+										<div class="col-sm-10">
+											<textarea row="3" wicket:id="rremark" class="form-control"
+												id="inputSubject" placeholder="Enter Remark"></textarea>
+											<span class="text-danger" wicket:id="rremarkfeedback"></span>
+										</div>
+									</div>
+								</div>
+								<!-- col 3 ends here -->
+							</div>
+						</div>
+						<div class="ln_solid">
+							<span class="text-danger" wicket:id="feedback"></span>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+								<button class="btn btn-primary" type="submit"
+									wicket:id="btncancel">Back</button>
+								<button class="btn btn-primary" type="submit"
+									wicket:id="btnreset">Reset</button>
+								<button type="submit" class="btn btn-success"
+									wicket:id="btnsubmit">Submit</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<br> <br>
+		</div>
+	</div>
+
 </wicket:panel>

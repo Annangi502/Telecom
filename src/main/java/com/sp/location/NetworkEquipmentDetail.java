@@ -13,12 +13,21 @@ public class NetworkEquipmentDetail implements Serializable {
 	private String rmodel;
 	private String rserialnumber;
 	private String remark;
+	private String equipmentdesc;
+	public String getEquipmentdesc() {
+		return equipmentdesc;
+	}
+
+	public void setEquipmentdesc(String equipmentdesc) {
+		this.equipmentdesc = equipmentdesc;
+	}
+
 	public NetworkEquipmentDetail() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public NetworkEquipmentDetail(int equipmentid, String make, String model, String serialnumber, String amc,
-			int isreplace, String remark) {
+			int isreplace, String remark,String equipmentdesc) {
 		super();
 		this.equipmentid = equipmentid;
 		this.make = make;
@@ -27,6 +36,7 @@ public class NetworkEquipmentDetail implements Serializable {
 		this.amc = amc;
 		this.isreplace = isreplace;
 		this.remark = remark;
+		this.equipmentdesc = equipmentdesc;
 	}
 
 	public int getEquipmentid() {

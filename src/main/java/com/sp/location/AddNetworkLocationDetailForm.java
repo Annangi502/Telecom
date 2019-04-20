@@ -420,7 +420,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
 		TextField<String> remark = new TextField<String>("remark");
 		remark.setLabel(new Model("Remark"));
-		remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		//remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
 		/*remark.add(new StringValidator());*/
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
@@ -841,13 +841,13 @@ public class AddNetworkLocationDetailForm extends Panel{
 	}
 	private String getLocationname(Category cat,String opnft, String locationname)
 	{
-		System.out.println("In Condition");
+/*		System.out.println("In Condition");
 		System.out.println("Main Con 1:"+ (cat==null));
-		System.out.println(cat);
+		System.out.println(cat);*/
 		//System.out.println("Main Con 2:"+(cat.getCatid()==100)+"::"+cat==null);
 		if(cat==null){
-			System.out.println("Condition s"+(opnft==null));
-			System.out.println("Open TF"+opnft);
+/*			System.out.println("Condition s"+(opnft==null));
+			System.out.println("Open TF"+opnft);*/
 			return opnft==null?locationname:opnft+"-"+locationname;
 		}else {
 			return opnft==null?cat.getCatdesc()+"-"+locationname:cat.getCatdesc()+"-"+opnft+"-"+locationname;

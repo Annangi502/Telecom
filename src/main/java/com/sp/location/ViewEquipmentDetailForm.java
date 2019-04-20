@@ -5,14 +5,18 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -26,6 +30,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.StatelessForm;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -33,6 +38,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
@@ -64,6 +70,13 @@ public class ViewEquipmentDetailForm extends Panel {
 	final int DEF_NO_OF_ROWS = 9999;
 	private boolean mymodalflag;
 	private String replacelbl;
+	private Date installationdate;
+	private String installfeedback;
+	private String rremark;
+	private String remarkfeedback;
+	private String equipment;
+	private String locationname;
+	private static String PATTERN = "yyyy-MM-dd";
 	private NetworkEquipmentReplaceList ntvnlist = new NetworkEquipmentReplaceList();
 
 	public ViewEquipmentDetailForm(String id, final IModel<NetworkEquipmentDetail> nedmodel,
@@ -82,12 +95,14 @@ public class ViewEquipmentDetailForm extends Panel {
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+		locationname = nldmodel.getObject().getLocationname();
 		make = ned.getMake();
 		model = ned.getModel();
 		serialno = ned.getSerialnumber();
 		amc = ned.getAmc();
 		remark = ned.getRemark();
 		replacelbl = ned.getIsreplace()==1?"Replace":"Stand By";
+		equipment = ned.getEquipmentdesc();
 		WebMarkupContainer replacediv = new WebMarkupContainer("replacediv");
 		replacediv.setVisible(ned.getIsreplace()==1?true:false);
 		form.add(replacediv);
@@ -111,6 +126,8 @@ public class ViewEquipmentDetailForm extends Panel {
 		columns.add(new PropertyColumn(new Model("Make"), "rmake"));
 		columns.add(new PropertyColumn(new Model("Model"), "rmodel"));
 		columns.add(new PropertyColumn(new Model("Serial No."), "rserialnumber"));
+		columns.add(new PropertyColumn(new Model("Replacement Date"), "replacedate"));
+		columns.add(new PropertyColumn(new Model("Remark"), "remark"));
 		columns.add(new PropertyColumn(new Model("Status"), "status"));
 		final DataTable table = new DataTable("datatable", columns, replaceprovider, DEF_NO_OF_ROWS);
 		table.setOutputMarkupId(true);
@@ -119,12 +136,14 @@ public class ViewEquipmentDetailForm extends Panel {
 
 		form.add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
 		form.add(new Label("make"));
 		form.add(new Label("model"));
 		form.add(new Label("serialno"));
 		form.add(new Label("amc"));
 		form.add(new Label("remark"));
 		form.add(new Label("replacelbl"));
+		form.add(new Label("equipment"));
 
 		WebMarkupContainer mymodal = new WebMarkupContainer("mymodal") {
 			@Override
@@ -157,6 +176,39 @@ public class ViewEquipmentDetailForm extends Panel {
 		serialnoFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(serialnoFeedbackLabel);
 
+		
+		CustromDatePicker datePicker = new CustromDatePicker();
+        datePicker.setShowOnFieldClick(true);
+        datePicker.setAutoHide(false);
+		
+        
+        DateTextField instaldate = new DateTextField("installationdate",new PropertyModel<Date>(
+		            this, "installationdate"),new PatternDateConverter("dd MMM, yyyy", true));
+		
+		/*DateTextField instaldate = new DateTextField("installationdate","dd-mm-yyy")
+		{
+			  protected String getInputType()
+	            {
+	                return "date";
+	            }  
+	        };*/
+        instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+        final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+        instaldate.setOutputMarkupId(true);
+        instaldate.add(datePicker);
+        mymodal.add(insfeedback);
+        mymodal.add(instaldate);
+        
+        TextArea<String> remark = new TextArea<String>("rremark");
+		remark.setLabel(new Model("Remark"));
+		//remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		/*remark.add(new StringValidator());*/
+		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
+		remarkFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(remarkFeedbackLabel);
+		mymodal.add(remark);
+        
+        
 		Button btnback = new Button("back") {
 			@Override
 			public void onSubmit() {
@@ -287,7 +339,7 @@ public class ViewEquipmentDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				vnlist.add(new EquipmentReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4)));
+				vnlist.add(new EquipmentReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6)));
 			}
 		} catch (SQLException e) {
 			log.error((Object) ("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
@@ -313,7 +365,7 @@ public class ViewEquipmentDetailForm extends Panel {
 	}
 
 	private boolean networkEquipmentAddReplaceDetails() {
-		final String query = "{call sp_circuit_network_equipment_add_replace_details(?,?,?,?,?,?)}";
+		final String query = "{call sp_circuit_network_equipment_add_replace_details(?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -326,6 +378,8 @@ public class ViewEquipmentDetailForm extends Panel {
 			stmt.setString(4, addmake);
 			stmt.setString(5, addmodel);
 			stmt.setString(6, addserialno);
+			stmt.setString(7,getFormatDate(installationdate));
+			stmt.setString(8, rremark);
 
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
@@ -353,5 +407,11 @@ public class ViewEquipmentDetailForm extends Panel {
 			}
 		}
 		return true;
+	}
+	private String getFormatDate(Date date)
+	{
+	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+	    return simpleDateFormat.format(date);
+		
 	}
 }

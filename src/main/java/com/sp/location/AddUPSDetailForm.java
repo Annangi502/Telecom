@@ -58,6 +58,7 @@ public class AddUPSDetailForm extends Panel {
 	private String rserialnofeedback;
 	private String rbatteries;
 	private String rbatteriesfeedback;
+	private String locationname;
 	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
 	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
 	public AddUPSDetailForm(String id, final IModel<NetworkLocationDetail> nldmodel) {
@@ -73,7 +74,8 @@ public class AddUPSDetailForm extends Panel {
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
-
+		locationname = nldmodel.getObject().getLocationname();
+		
 		TextField<String> make = new TextField<String>("make");
 		make.setRequired(true).setLabel(new Model("Make"));
 		make.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
@@ -216,8 +218,9 @@ public class AddUPSDetailForm extends Panel {
 				}
 			}
 		}.setDefaultFormProcessing(true);
-		form.add(new Label("spcircuitcode"));
+		add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
 		form.add(make);
 		form.add(model);
 		form.add(serialno);

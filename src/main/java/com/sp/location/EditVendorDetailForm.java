@@ -67,6 +67,9 @@ public class EditVendorDetailForm extends Panel {
 	private String phasefeedback;
 	private NetworkVendorDetail nvd;
 	private int nt_vendor_id;
+	private boolean servicetypedivflag;
+	private boolean mediatypedivflag;
+	private String locationname;
 	private List<String> phaselist = Arrays.asList("Phase 1", "Phase 2");
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
 
@@ -112,22 +115,30 @@ public class EditVendorDetailForm extends Panel {
 		}
 	};
 
-	public EditVendorDetailForm(String id,final IModel<NetworkVendorDetail> nvdmodel, final IModel<NetworkLocationDetail> nldmodel) {
+	public EditVendorDetailForm(String id, final IModel<NetworkVendorDetail> nvdmodel,
+			final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		setDefaultModel(new CompoundPropertyModel<EditVendorDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("addvendorform");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
-		
+
 		nvd = nvdmodel.getObject();
 		nt_vendor_id = nvd.getVendorid();
 		vendorname = nvd.getVendorname();
-		if(nvd.getVendortypeid()==100){
-		vendornameflag = true;
+		if (nvd.getVendortypeid() == 100) {
+			vendornameflag = true;
 		} else {
-		vendornameflag = false;
-	}
+			vendornameflag = false;
+		}
+
+		if (nvd.getVendortypeid() == 5) {
+			servicetypedivflag = true;
+		} else {
+			mediatypedivflag = true;
+		}
+
 		bandwidth = nvd.getBandwidth().replace("Kbps", "").replace("Mbps", "");
 		if (nvd.getBandwidthtypeid() == 100) {
 			bandwidthflag = true;
@@ -138,10 +149,11 @@ public class EditVendorDetailForm extends Panel {
 		circuitid = nvd.getCircuitid();
 		phase = nvd.getPhase();
 		remark = nvd.getRemark();
-		
+
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+		locationname = nldmodel.getObject().getLocationname();
 
 		WebMarkupContainer vendortfdiv = new WebMarkupContainer("vendortextfileddivision") {
 			@Override
@@ -177,6 +189,13 @@ public class EditVendorDetailForm extends Panel {
 						vendornameflag = true;
 					} else {
 						vendornameflag = false;
+					}
+					if (vendornamedd.getVendorid() == 5) {
+						servicetypedivflag = true;
+						mediatypedivflag = false;
+					} else {
+						servicetypedivflag = false;
+						mediatypedivflag = true;
 					}
 				}
 			}
@@ -244,6 +263,33 @@ public class EditVendorDetailForm extends Panel {
 		bandwidthfdiv.add(unittypeFeedbackLabel);
 		bandwidthfdiv.add(unittype);
 
+		WebMarkupContainer servicetypediv = new WebMarkupContainer("servicetypediv") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return servicetypedivflag;
+			}
+		};
+		form.add(servicetypediv);
+
+		WebMarkupContainer mediatypediv = new WebMarkupContainer("mediatypediv") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return mediatypedivflag;
+			}
+		};
+		form.add(mediatypediv);
+
+		final DropDownChoice<MediaType> mediatypes = new DropDownChoice<MediaType>("mediatype", medialist,
+				new ChoiceRenderer("mediatypedesc"));
+		mediatypes.setNullValid(false);
+		mediatypes.setRequired(true).setLabel(new Model("Media Type"));
+		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback", mediatypes);
+		mediatypeFeedbackLabel.setOutputMarkupId(true);
+		mediatypediv.add(mediatypeFeedbackLabel);
+		mediatypediv.add(mediatypes);
+
 		DropDownChoice<ServiceType> servicetype = new DropDownChoice<ServiceType>("servicetype", servicetypelist,
 				new ChoiceRenderer("servicetypedesc"));
 		// TextField<String> servicetype = new TextField<String>("servicetype");
@@ -255,7 +301,8 @@ public class EditVendorDetailForm extends Panel {
 		/* servicetype.add(new StringValidator()); */
 		final FeedbackLabel servicetypeFeedbackLabel = new FeedbackLabel("servicetypefeedback", servicetype);
 		servicetypeFeedbackLabel.setOutputMarkupId(true);
-		form.add(servicetypeFeedbackLabel);
+		servicetypediv.add(servicetypeFeedbackLabel);
+		servicetypediv.add(servicetype);
 
 		TextField<String> ntinterface = new TextField<String>("ntinterface");
 		ntinterface.setRequired(true).setLabel(new Model("Interface"));
@@ -281,14 +328,6 @@ public class EditVendorDetailForm extends Panel {
 		remarkFeedbackLabel.setOutputMarkupId(true);
 		form.add(remarkFeedbackLabel);
 
-		final DropDownChoice<MediaType> mediatypes = new DropDownChoice<MediaType>("mediatype", medialist,
-				new ChoiceRenderer("mediatypedesc"));
-		mediatypes.setNullValid(false);
-		mediatypes.setRequired(true).setLabel(new Model("Media Type"));
-		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback", mediatypes);
-		mediatypeFeedbackLabel.setOutputMarkupId(true);
-		form.add(mediatypeFeedbackLabel);
-
 		DropDownChoice<String> phase = new DropDownChoice<String>("phase", phaselist);
 		phase.setRequired(true).setLabel(new Model("Phase"));
 		final FeedbackLabel phaseFeedbackLabel = new FeedbackLabel("phasefeedback", phase);
@@ -310,7 +349,7 @@ public class EditVendorDetailForm extends Panel {
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				EditVendorDetail av = new EditVendorDetail(parms,nvdmodel, nldmodel);
+				EditVendorDetail av = new EditVendorDetail(parms, nvdmodel, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);
@@ -327,16 +366,15 @@ public class EditVendorDetailForm extends Panel {
 			}
 		}.setDefaultFormProcessing(true);
 
-		form.add(new Label("spcircuitcode"));
+		add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
 		form.add(vendor);
 		form.add(vendortfdiv);
 		form.add(bandwidthfdiv);
 		form.add(bandwidth);
-		form.add(servicetype);
 		form.add(ntinterface);
 		form.add(circuitid);
-		form.add(mediatypes);
 		form.add(remark);
 		form.add(btncancel);
 		form.add(btnreset);
@@ -366,10 +404,10 @@ public class EditVendorDetailForm extends Panel {
 					(bandwidthdd.getBandwidthid() == 100) ? Integer.parseInt(bandwidth) : bandwidthdd.getBandwidth());
 			stmt.setInt(9, (bandwidthdd.getBandwidthid() == 100) ? unittype.getUnittypeid()
 					: bandwidthdd.getBandwidthunittypeid());
-			stmt.setInt(10, servicetype.getServicetypeid());
+			stmt.setInt(10, (vendornamedd.getVendorid() == 5) ? servicetype.getServicetypeid() : 0);
 			stmt.setString(11, ntinterface);
 			stmt.setInt(12, Integer.parseInt(this.circuitid));
-			stmt.setInt(13, mediatype.getMediatypeid());
+			stmt.setInt(13, (vendornamedd.getVendorid() != 5) ? mediatype.getMediatypeid() : 0);
 			stmt.setString(14, remark);
 			stmt.setString(15, phase);
 			stmt.setInt(16, nt_vendor_id);
@@ -416,7 +454,7 @@ public class EditVendorDetailForm extends Panel {
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
 				MediaType m = new MediaType(rs.getInt(1), rs.getString(2));
-				if(nvd.getMediatypedesc().trim().equals(rs.getString(2).trim())){
+				if (nvd.getMediatypedesc().trim().equals(rs.getString(2).trim())) {
 					mediatype = m;
 				}
 				list.add(m);
@@ -460,8 +498,8 @@ public class EditVendorDetailForm extends Panel {
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
 				Vendor v = new Vendor(rs.getInt(1), rs.getString(2));
-				if(nvd.getVendortypeid() == rs.getInt(1)){
-				vendornamedd = v;
+				if (nvd.getVendortypeid() == rs.getInt(1)) {
+					vendornamedd = v;
 				}
 				list.add(v);
 			}
@@ -503,8 +541,8 @@ public class EditVendorDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				Bandwidth b  = new Bandwidth(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
-				if(nvd.getBandwidthtypeid() == rs.getInt(1)){
+				Bandwidth b = new Bandwidth(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5));
+				if (nvd.getBandwidthtypeid() == rs.getInt(1)) {
 					bandwidthdd = b;
 				}
 				list.add(b);
@@ -548,7 +586,7 @@ public class EditVendorDetailForm extends Panel {
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
 				UnitType u = new UnitType(rs.getInt(1), rs.getString(2));
-				if(nvd.getBandwidthunittypeid() == rs.getInt(1)){
+				if (nvd.getBandwidthunittypeid() == rs.getInt(1)) {
 					unittype = u;
 				}
 				list.add(u);
@@ -592,7 +630,7 @@ public class EditVendorDetailForm extends Panel {
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
 				ServiceType s = new ServiceType(rs.getInt(1), rs.getString(2));
-				if(nvd.getServicetype().trim().equals(rs.getString(2).trim())){
+				if (nvd.getServicetype().trim().equals(rs.getString(2).trim())) {
 					servicetype = s;
 				}
 				list.add(s);

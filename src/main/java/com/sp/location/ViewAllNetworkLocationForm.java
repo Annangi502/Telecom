@@ -101,7 +101,7 @@ public class ViewAllNetworkLocationForm extends Panel {
 				cell.add(new Label(compId, rowNumber));
 			}
 		});
-		columns.add(new GClickablePropertyColumn(new Model("Circuit ID"), "spciruitcode") {
+		columns.add(new GClickablePropertyColumn(new Model("Location ID"), "spciruitcode") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
 				item.add(new ColumnClickPanelNetworkLocationDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty())));

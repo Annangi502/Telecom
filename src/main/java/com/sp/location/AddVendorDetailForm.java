@@ -65,6 +65,9 @@ public class AddVendorDetailForm extends Panel {
 	private String unittypefeedback;
 	private String phase;
 	private String phasefeedback;
+	private boolean servicetypedivflag;
+	private boolean mediatypedivflag ;
+	private String locationname;
 	private List<String> phaselist = Arrays.asList("Phase 1", "Phase 2");
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
 
@@ -121,6 +124,7 @@ public class AddVendorDetailForm extends Panel {
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+		locationname = nldmodel.getObject().getLocationname();
 
 		WebMarkupContainer vendortfdiv = new WebMarkupContainer("vendortextfileddivision") {
 			@Override
@@ -156,6 +160,13 @@ public class AddVendorDetailForm extends Panel {
 						vendornameflag = true;
 					} else {
 						vendornameflag = false;
+					}
+					if (vendornamedd.getVendorid() == 5) {
+						servicetypedivflag = true;
+						mediatypedivflag = false;
+					} else {
+						servicetypedivflag = false;
+						mediatypedivflag = true;
 					}
 				}
 			}
@@ -223,6 +234,32 @@ public class AddVendorDetailForm extends Panel {
 		bandwidthfdiv.add(unittypeFeedbackLabel);
 		bandwidthfdiv.add(unittype);
 
+		WebMarkupContainer servicetypediv = new WebMarkupContainer("servicetypediv") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return servicetypedivflag;
+			}
+		};
+		form.add(servicetypediv);
+
+		WebMarkupContainer mediatypediv = new WebMarkupContainer("mediatypediv") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return mediatypedivflag;
+			}
+		};
+		form.add(mediatypediv);
+		final DropDownChoice<MediaType> mediatypes = new DropDownChoice<MediaType>("mediatype", medialist,
+				new ChoiceRenderer("mediatypedesc"));
+		mediatypes.setNullValid(false);
+		mediatypes.setRequired(true).setLabel(new Model("Media Type"));
+		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback", mediatypes);
+		mediatypeFeedbackLabel.setOutputMarkupId(true);
+		mediatypediv.add(mediatypeFeedbackLabel);
+		mediatypediv.add(mediatypes);
+
 		DropDownChoice<ServiceType> servicetype = new DropDownChoice<ServiceType>("servicetype", servicetypelist,
 				new ChoiceRenderer("servicetypedesc"));
 		// TextField<String> servicetype = new TextField<String>("servicetype");
@@ -234,7 +271,8 @@ public class AddVendorDetailForm extends Panel {
 		/* servicetype.add(new StringValidator()); */
 		final FeedbackLabel servicetypeFeedbackLabel = new FeedbackLabel("servicetypefeedback", servicetype);
 		servicetypeFeedbackLabel.setOutputMarkupId(true);
-		form.add(servicetypeFeedbackLabel);
+		servicetypediv.add(servicetypeFeedbackLabel);
+		servicetypediv.add(servicetype);
 
 		TextField<String> ntinterface = new TextField<String>("ntinterface");
 		ntinterface.setRequired(true).setLabel(new Model("Interface"));
@@ -259,14 +297,6 @@ public class AddVendorDetailForm extends Panel {
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
 		form.add(remarkFeedbackLabel);
-
-		final DropDownChoice<MediaType> mediatypes = new DropDownChoice<MediaType>("mediatype", medialist,
-				new ChoiceRenderer("mediatypedesc"));
-		mediatypes.setNullValid(false);
-		mediatypes.setRequired(true).setLabel(new Model("Media Type"));
-		final FeedbackLabel mediatypeFeedbackLabel = new FeedbackLabel("mediatypefeedback", mediatypes);
-		mediatypeFeedbackLabel.setOutputMarkupId(true);
-		form.add(mediatypeFeedbackLabel);
 
 		DropDownChoice<String> phase = new DropDownChoice<String>("phase", phaselist);
 		phase.setRequired(true).setLabel(new Model("Phase"));
@@ -306,16 +336,17 @@ public class AddVendorDetailForm extends Panel {
 			}
 		}.setDefaultFormProcessing(true);
 
-		form.add(new Label("spcircuitcode"));
+		add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
 		form.add(vendor);
 		form.add(vendortfdiv);
 		form.add(bandwidthfdiv);
 		form.add(bandwidth);
-		form.add(servicetype);
+		/* form.add(servicetype); */
 		form.add(ntinterface);
 		form.add(circuitid);
-		form.add(mediatypes);
+		
 		form.add(remark);
 		form.add(btncancel);
 		form.add(btnreset);
@@ -345,10 +376,10 @@ public class AddVendorDetailForm extends Panel {
 					(bandwidthdd.getBandwidthid() == 100) ? Integer.parseInt(bandwidth) : bandwidthdd.getBandwidth());
 			stmt.setInt(9, (bandwidthdd.getBandwidthid() == 100) ? unittype.getUnittypeid()
 					: bandwidthdd.getBandwidthunittypeid());
-			stmt.setInt(10, servicetype.getServicetypeid());
+			stmt.setInt(10, (vendornamedd.getVendorid() == 5) ? servicetype.getServicetypeid() : 0);
 			stmt.setString(11, ntinterface);
 			stmt.setInt(12, Integer.parseInt(this.circuitid));
-			stmt.setInt(13, mediatype.getMediatypeid());
+			stmt.setInt(13, (vendornamedd.getVendorid() != 5) ? mediatype.getMediatypeid() : 0 );
 			stmt.setString(14, remark);
 			stmt.setString(15, phase);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");

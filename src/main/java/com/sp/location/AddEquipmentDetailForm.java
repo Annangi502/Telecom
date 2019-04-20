@@ -4,22 +4,32 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.StatelessForm;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
@@ -53,8 +63,24 @@ public class AddEquipmentDetailForm extends Panel{
 	private String rmodelfeedback;
 	private String rserialno;
 	private String rserialnofeedback;
+	private Date installationdate;
+	private String installfeedback;
+	private String rremark;
+	private String rremarkfeedback;
+	private EquipmentType equipmenttype;
+	private String equipmenttypefeedback;
+	private String locationname;
     private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
     private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
+    private static String PATTERN = "yyyy-MM-dd";
+    IModel<? extends List<EquipmentType>> equipmentlist = new LoadableDetachableModel<List<EquipmentType>>() {
+
+		@Override
+		protected List<EquipmentType> load() {
+			// TODO Auto-generated method stub
+			return loadEquipmentTypes();
+		}
+	};
 	public AddEquipmentDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
@@ -68,6 +94,15 @@ public class AddEquipmentDetailForm extends Panel{
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+		locationname = nldmodel.getObject().getLocationname();
+		
+		DropDownChoice<EquipmentType> equipmenttype = new DropDownChoice<EquipmentType>("equipmenttype", equipmentlist, new ChoiceRenderer<EquipmentType>("equipmenttypedesc"));
+		equipmenttype.setNullValid(false);
+		equipmenttype.setRequired(true).setLabel(new Model("Equipment Type"));
+		final FeedbackLabel equipmenttypeFeedbackLabel = new FeedbackLabel("equipmenttypefeedback", equipmenttype);
+		equipmenttypeFeedbackLabel.setOutputMarkupId(true);
+		form.add(equipmenttypeFeedbackLabel);
+		
 		
 		TextField<String> make = new TextField<String>("make");
 		make.setRequired(true).setLabel(new Model("Make"));
@@ -170,6 +205,36 @@ public class AddEquipmentDetailForm extends Panel{
 				repdiv.add(rserialnoFeedbackLabel);
 				repdiv.add(rserialno);
 				
+				CustromDatePicker datePicker = new CustromDatePicker();
+		        datePicker.setShowOnFieldClick(true);
+		        datePicker.setAutoHide(false);
+		        
+				 DateTextField instaldate = new DateTextField("installationdate",new PropertyModel<Date>(
+				            this, "installationdate"),new PatternDateConverter("dd MMM, yyyy", true));
+				
+				/*DateTextField instaldate = new DateTextField("installationdate","dd-mm-yyy")
+				{
+					  protected String getInputType()
+			            {
+			                return "date";
+			            }  
+			        };*/
+		        instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+		        final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+		        instaldate.setOutputMarkupId(true);
+		        instaldate.add(datePicker);
+		        repdiv.add(insfeedback);
+		        repdiv.add(instaldate);
+		        
+		        TextArea<String> rremark = new TextArea<String>("rremark");
+				rremark.setLabel(new Model("Remark"));
+				//remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+				/*remark.add(new StringValidator());*/
+				final FeedbackLabel rremarkFeedbackLabel = new FeedbackLabel("rremarkfeedback", rremark);
+				rremarkFeedbackLabel.setOutputMarkupId(true);
+				repdiv.add(rremarkFeedbackLabel);
+				repdiv.add(rremark);
+				
 		Button btncancel = new Button("btncancel")
 		{
 			@Override
@@ -204,8 +269,10 @@ public class AddEquipmentDetailForm extends Panel{
 				}
 			}
 		}.setDefaultFormProcessing(true);
-		form.add(new Label("spcircuitcode"));
+		add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
+		form.add(equipmenttype);
 		form.add(make);
 		form.add(model);
 		form.add(serialno);
@@ -221,7 +288,7 @@ public class AddEquipmentDetailForm extends Panel{
 	}
 	
 	private boolean addNetworkEquipmentDetail() {
-        final String query = "{call sp_circuit_add_network_equipment_details(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        final String query = "{call sp_circuit_add_network_equipment_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
@@ -240,6 +307,9 @@ public class AddEquipmentDetailForm extends Panel{
             stmt.setString(10,rmodel);
             stmt.setString(11, rserialno);
             stmt.setString(12, remark);
+            stmt.setInt(13, equipmenttype.getEquipmenttypeid());
+            stmt.setString(14,replace.equals("Replace")?getFormatDate(installationdate):null);
+            stmt.setString(15, rremark);
             log.info("Executing Stored Procedure { " + stmt.toString() + " }");
             rs = stmt.executeQuery();
             while (rs.next()) {
@@ -270,5 +340,50 @@ public class AddEquipmentDetailForm extends Panel{
         }
         return true;
     }
-
+	private List<EquipmentType> loadEquipmentTypes()
+	{
+		List<EquipmentType> list = new ArrayList<EquipmentType>();
+		String query = "{call sp_get_equipment_types(?,?)}";
+		Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = new DataBaseConnection().getConnection();
+            stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
+		    rs = stmt.executeQuery();
+		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
+		    while(rs.next())
+		    {
+		    	list.add(new EquipmentType(rs.getInt(1),rs.getString(2)));
+		    }
+		}catch (SQLException e) {
+			log.error("SQL Exception in loadProjectTypes() method {"+e.getMessage()+"}");
+			e.printStackTrace();
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+            catch (SQLException e2) {
+                log.error("SQL Exception in loadProjectTypes() method {" + e2.getMessage() + "}");
+                e2.printStackTrace();
+            }
+		}
+		return list;
+	}
+	private String getFormatDate(Date date)
+	{
+	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+	    return simpleDateFormat.format(date);
+		
+	}
 }

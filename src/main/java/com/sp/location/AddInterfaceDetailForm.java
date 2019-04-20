@@ -35,7 +35,7 @@ import com.sp.validators.StringValidator;
 public class AddInterfaceDetailForm extends Panel {
 	private static final Logger log = Logger.getLogger(AddInterfaceDetailForm.class);
 	private String spcircuitid;
-	private String spciruitcode;
+	private String spcircuitcode;
 	private String projecttypedescription;
 	private String ntinterface;
 	private String ntinterfacefeedback;
@@ -53,6 +53,7 @@ public class AddInterfaceDetailForm extends Panel {
 	private String vendorfeedback;
 	private String remark;
 	private String remarkfeedback;
+	private String locationname;
 	/*	private String equipment;
 	private String equipmentfeedback;*/
 	 IModel<? extends List<NetworkVendorDetail>> vendorlist=new LoadableDetachableModel<List<NetworkVendorDetail>>() {
@@ -73,9 +74,9 @@ public class AddInterfaceDetailForm extends Panel {
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
 
 		spcircuitid = nldmodel.getObject().getSpcircuitid();
-		spciruitcode = nldmodel.getObject().getSpciruitcode();
+		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
-		
+		locationname = nldmodel.getObject().getLocationname();
 		WebMarkupContainer wmodal = new WebMarkupContainer("warningmodal");
 		wmodal.add(new Link("closelink"){
 			@Override
@@ -202,8 +203,9 @@ public class AddInterfaceDetailForm extends Panel {
 			}
 		}.setDefaultFormProcessing(true);
 
-		form.add(new Label("spciruitcode"));
+		add(new Label("spcircuitcode"));
 		form.add(new Label("projecttypedescription"));
+		form.add(new Label("locationname"));
 		/*form.add(equipment);*/
 		form.add(ntinterface);
 		form.add(ipaddress);
