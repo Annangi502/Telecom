@@ -275,7 +275,7 @@ public class AddNetworkLocationDetailForm extends Panel{
 		TextField<String> opentf = new TextField<String>("opentf");
 		TextField<String> tname = new TextField<String>("townname");
 		tname.setRequired(true).setLabel(new Model("Town Name"));
-		tname.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		tname.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
 		/*tname.add(new StringValidator());*/
 		final FeedbackLabel townnameFeedbackLabel = new FeedbackLabel("townnamefeedback", tname);
 		townnameFeedbackLabel.setOutputMarkupId(true);
@@ -379,7 +379,6 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
 		/*TextField<String> ofc = new TextField<String>("ofcdesc");*/
 		ismergelocationrc.setRequired(true).setLabel(new Model("Merge Location"));
-		ismergelocationrc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
 		/*ofc.add(new StringValidator());*/
 		final FeedbackLabel ismergelocationfeedback = new FeedbackLabel("ismergelocationfeedback", ismergelocationrc);
 		ismergelocationfeedback.setOutputMarkupId(true);
@@ -404,8 +403,8 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
 		TextField<String> conperson = new TextField<String>("contactperson");
 		conperson.setRequired(true).setLabel(new Model("Location Contact Person "));
-		conperson.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
-		conperson.add(new StringValidator());
+		conperson.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+		/*conperson.add(new StringValidator());*/
 		final FeedbackLabel conpersonFeedbackLabel = new FeedbackLabel("contactpersonfeedback", conperson);
 		conpersonFeedbackLabel.setOutputMarkupId(true);
 		form.add(conpersonFeedbackLabel);
@@ -428,14 +427,14 @@ public class AddNetworkLocationDetailForm extends Panel{
 		
 		
 		TextField<String> latitude = new TextField<String>("latitude");
-		latitude.setRequired(true).setLabel(new Model("Latitude"));
+		latitude.setLabel(new Model("Latitude"));
 		final FeedbackLabel latitudeFeedbackLabel = new FeedbackLabel("latitudefeedback", latitude);
 		latitudeFeedbackLabel.setOutputMarkupId(true);
 		form.add(latitudeFeedbackLabel);
 		
 		
 		TextField<String> longitude = new TextField<String>("longitude");
-		longitude.setRequired(true).setLabel(new Model("Longitude"));	
+		longitude.setLabel(new Model("Longitude"));	
 		final FeedbackLabel longitudeFeedbackLabel = new FeedbackLabel("longitudefeedback", longitude);
 		longitudeFeedbackLabel.setOutputMarkupId(true);
 		form.add(longitudeFeedbackLabel);

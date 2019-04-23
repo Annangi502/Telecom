@@ -70,7 +70,7 @@ public class AddEquipmentDetailForm extends Panel{
 	private EquipmentType equipmenttype;
 	private String equipmenttypefeedback;
 	private String locationname;
-    private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
+    private static final List<String> TYPES = Arrays.asList("AMC", "Warranty","None");
     private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
     private static String PATTERN = "yyyy-MM-dd";
     IModel<? extends List<EquipmentType>> equipmentlist = new LoadableDetachableModel<List<EquipmentType>>() {
@@ -107,7 +107,7 @@ public class AddEquipmentDetailForm extends Panel{
 		TextField<String> make = new TextField<String>("make");
 		make.setRequired(true).setLabel(new Model("Make"));
 		make.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		make.add(new StringValidator());
+		/*make.add(new StringValidator());*/
 		final FeedbackLabel makeFeedbackLabel = new FeedbackLabel("makefeedback", make);
 		makeFeedbackLabel.setOutputMarkupId(true);
 		form.add(makeFeedbackLabel);
@@ -130,7 +130,7 @@ public class AddEquipmentDetailForm extends Panel{
 		form.add(serialnoFeedbackLabel);
 		
 		final CustomRadioChoice<String> amc = new CustomRadioChoice("amc",TYPES);
-		amc.setRequired(true).setLabel(new Model("Serial No."));
+		amc.setRequired(true).setLabel(new Model("AMC/Warranty"));
 		final FeedbackLabel amcFeedbackLabel = new FeedbackLabel("amcfeedback", amc);
 		amcFeedbackLabel.setOutputMarkupId(true);
 		form.add(amcFeedbackLabel);
@@ -180,7 +180,7 @@ public class AddEquipmentDetailForm extends Panel{
 				TextField<String> rmake = new TextField<String>("rmake");
 				rmake.setRequired(true).setLabel(new Model("Make"));
 				rmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-				rmake.add(new StringValidator());
+				/*rmake.add(new StringValidator());*/
 				final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("rmakefeedback", rmake);
 				rmakeFeedbackLabel.setOutputMarkupId(true);
 				repdiv.add(rmakeFeedbackLabel);

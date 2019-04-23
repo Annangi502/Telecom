@@ -59,7 +59,7 @@ public class AddUPSDetailForm extends Panel {
 	private String rbatteries;
 	private String rbatteriesfeedback;
 	private String locationname;
-	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
+	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty","None");
 	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
 	public AddUPSDetailForm(String id, final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
@@ -79,7 +79,7 @@ public class AddUPSDetailForm extends Panel {
 		TextField<String> make = new TextField<String>("make");
 		make.setRequired(true).setLabel(new Model("Make"));
 		make.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		make.add(new StringValidator());
+		/*make.add(new StringValidator());*/
 		final FeedbackLabel makeFeedbackLabel = new FeedbackLabel("makefeedback", make);
 		makeFeedbackLabel.setOutputMarkupId(true);
 		form.add(makeFeedbackLabel);
@@ -101,7 +101,7 @@ public class AddUPSDetailForm extends Panel {
 		form.add(serialnoFeedbackLabel);
 
 		final CustomRadioChoice<String> amc = new CustomRadioChoice("amc", TYPES);
-		amc.setRequired(true).setLabel(new Model("Serial No."));
+		amc.setRequired(true).setLabel(new Model("AMC/Warranty"));
 		amc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
 		amc.add(new StringValidator());
 		final FeedbackLabel amcFeedbackLabel = new FeedbackLabel("amcfeedback", amc);
@@ -117,7 +117,7 @@ public class AddUPSDetailForm extends Panel {
 
 		TextField<String> remark = new TextField<String>("remark");
 		remark.setLabel(new Model("Remark"));
-		remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		/*remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 1028));*/
 		/* remark.add(new StringValidator()); */
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
@@ -154,7 +154,7 @@ public class AddUPSDetailForm extends Panel {
 		TextField<String> rmake = new TextField<String>("rmake");
 		rmake.setRequired(true).setLabel(new Model("Make"));
 		rmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		rmake.add(new StringValidator());
+		/*rmake.add(new StringValidator());*/
 		final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("rmakefeedback", rmake);
 		rmakeFeedbackLabel.setOutputMarkupId(true);
 		repdiv.add(rmakeFeedbackLabel);
@@ -202,7 +202,7 @@ public class AddUPSDetailForm extends Panel {
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				AddEquipmentDetail av = new AddEquipmentDetail(parms, nldmodel);
+				AddUPSDetail av = new AddUPSDetail(parms, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);
@@ -257,7 +257,7 @@ public class AddUPSDetailForm extends Panel {
             stmt.setString(11, rmake);
             stmt.setString(12,rmodel);
             stmt.setString(13, rserialno);
-            stmt.setString(14, rbatteries);
+            stmt.setInt(14, replace.equals("Replace")?Integer.parseInt(rbatteries):0);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {

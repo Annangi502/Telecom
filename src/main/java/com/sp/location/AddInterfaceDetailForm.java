@@ -129,7 +129,8 @@ public class AddInterfaceDetailForm extends Panel {
 		Label vname = (Label) new Label("vendorname",(vendorlist.getObject().size()==1?vendorlist.getObject().get(0).getVendorname():"")).setVisible(vendorlist.getObject().size()==1?true:false);
 		form.add(vname);
 		DropDownChoice<NetworkVendorDetail> vendor = (DropDownChoice<NetworkVendorDetail>) new DropDownChoice<NetworkVendorDetail>("vendor", vendorlist, new ChoiceRenderer<NetworkVendorDetail>("vendorname")).setVisible(vendorlist.getObject().size()>1?true:false);;
-/*		TextField<String> vendor = new TextField<String>("vendor");
+		vendor.setRequired(true).setLabel(new Model("Vendor"));
+		/*		TextField<String> vendor = new TextField<String>("vendor");
 		vendor.setRequired(true).setLabel(new Model("Vendor"));
 		vendor.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));*/
 		/* ipaddress.add(new StringValidator()); */
@@ -186,7 +187,7 @@ public class AddInterfaceDetailForm extends Panel {
 			public void onSubmit() {
 				// TODO Auto-generated method stub
 				PageParameters parms = new PageParameters();
-				AddUPSDetail av = new AddUPSDetail(parms, nldmodel);
+				AddInterfaceDetail av = new AddInterfaceDetail(parms, nldmodel);
 				setResponsePage(av);
 			}
 		}.setDefaultFormProcessing(false);

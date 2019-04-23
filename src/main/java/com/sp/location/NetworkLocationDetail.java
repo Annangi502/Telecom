@@ -58,6 +58,21 @@ public class NetworkLocationDetail implements Serializable
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
+    public NetworkLocationDetail(String spcircuitid, String spciruitcode,String circledesc, String divisiondesc,
+			String subdivisiondesc, String sectiondesc,int projecttypeid, String projecttypedescription,String townname, String phase,String mergelocationdesc)
+    {
+    	this.spcircuitid = spcircuitid;
+		this.spciruitcode = spciruitcode;
+		this.circledesc = circledesc;
+		this.divisiondesc = divisiondesc;
+		this.subdivisiondesc = subdivisiondesc;
+		this.sectiondesc = sectiondesc;
+		this.projecttypeid = projecttypeid;
+		this.projecttypedescription = projecttypedescription;
+    	this.locationname = townname;
+		this.phase = phase;
+		this.mergelocationdesc = mergelocationdesc;
+    }
 	public NetworkLocationDetail(String spcircuitid, String spciruitcode,String circledesc, String divisiondesc,
 			String subdivisiondesc, String sectiondesc,int projecttypeid, String projecttypedescription,String townname, String phase)
     {

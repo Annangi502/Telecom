@@ -43,8 +43,8 @@ import com.sp.location.SubDivision;
 import com.sp.resource.DataBaseConnection;
 import com.sp.resource.GClickablePropertyColumn;
 
-public class TotalLocationsReportForm extends Panel {
-	private static final Logger log = Logger.getLogger(TotalLocationsReportForm.class);
+public class VendorLocationsReportForm extends Panel {
+	private static final Logger log = Logger.getLogger(VendorLocationsReportForm.class);
 	private Circle circle;
 	private int circleid = 0;
 	private Division division;
@@ -83,9 +83,9 @@ public class TotalLocationsReportForm extends Panel {
 			return loadSections(circleid, divisionid, subdivisionid);
 		}
 	};
-	public TotalLocationsReportForm(String id) {
+	public VendorLocationsReportForm(String id) {
 		super(id);
-		setDefaultModel(new CompoundPropertyModel<TotalLocationsReportForm>(this));
+		setDefaultModel(new CompoundPropertyModel<VendorLocationsReportForm>(this));
 	    StatelessForm<Form> form = new StatelessForm("form");
 		ntlclist.setList(getAllNetworkLocations());
 		NetworkLocationDataProvider nlprovider = new NetworkLocationDataProvider();
@@ -116,16 +116,16 @@ public class TotalLocationsReportForm extends Panel {
 		/*
 		 * columns.add(new PropertyColumn(new Model("Circuit ID"),
 		 * "spcircuitid"));
-		 * 
 		 */
-		columns.add(new PropertyColumn(new Model("Location Id"), "spciruitcode"));
+		columns.add(new PropertyColumn(new Model("Circuit ID"), "spciruitcode"));
 		columns.add(new PropertyColumn(new Model("Circle"), "circledesc"));
 	    columns.add(new PropertyColumn(new Model("Division"), "divisiondesc"));
 	    columns.add(new PropertyColumn(new Model("Sub-Division"), "subdivisiondesc"));
 	    columns.add(new PropertyColumn(new Model("Section"), "sectiondesc"));
 	    columns.add(new PropertyColumn(new Model("Project"), "projecttypedescription"));
 	    columns.add(new PropertyColumn(new Model("Location Name"), "locationname"));
-	    columns.add(new PropertyColumn(new Model("Phase"), "phase"));
+	    columns.add(new PropertyColumn(new Model("Vendor Name"), "vendorname"));
+	    columns.add(new PropertyColumn(new Model("Bandwidth"), "bandwidth"));
 		final DataTable table = new DataTable("datatable", columns, nlprovider, DEF_NO_OF_ROWS);
 		 table.setOutputMarkupId(true);
 		table.addTopToolbar(new HeadersToolbar(table, nlprovider));
@@ -378,7 +378,7 @@ public class TotalLocationsReportForm extends Panel {
 
 	public List<NetworkLocationDetail> getAllNetworkLocations() {
 		final List<NetworkLocationDetail> list = new ArrayList<NetworkLocationDetail>();
-		final String query = "{call sp_get_all_circuits(?,?,?,?,?,?)}";
+		final String query = "{call sp_report_total_network_locations(?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -394,9 +394,9 @@ public class TotalLocationsReportForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new NetworkLocationDetail(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9),
-						rs.getString(10)));
+				list.add(new NetworkLocationDetail(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4),
+						rs.getString(5), rs.getString(6), rs.getString(7),rs.getString(8),
+						rs.getString(9), rs.getString(10), rs.getString(11)));
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadProjectTypes() method {" + e.getMessage() + "}");

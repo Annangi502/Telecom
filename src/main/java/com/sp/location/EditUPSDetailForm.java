@@ -60,7 +60,7 @@ public class EditUPSDetailForm extends Panel {
 	private String rbatteriesfeedback;
 	private String locationname;
 	private NetworkUPSDetail nud;
-	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty");
+	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty","None");
 	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
 
 	public EditUPSDetailForm(String id, final IModel<NetworkUPSDetail> upsmodel,
@@ -277,7 +277,7 @@ public class EditUPSDetailForm extends Panel {
 			stmt.setString(12, rmake);
 			stmt.setString(13, rmodel);
 			stmt.setString(14, rserialno);
-			stmt.setInt(15, Integer.parseInt(rbatteries));
+			stmt.setInt(15, replace.equals("Replace")?Integer.parseInt(rbatteries):0);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {

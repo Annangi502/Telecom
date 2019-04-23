@@ -66,7 +66,7 @@ public class AddVendorDetailForm extends Panel {
 	private String phase;
 	private String phasefeedback;
 	private boolean servicetypedivflag;
-	private boolean mediatypedivflag ;
+	private boolean mediatypedivflag = true ;
 	private String locationname;
 	private List<String> phaselist = Arrays.asList("Phase 1", "Phase 2");
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
@@ -284,8 +284,8 @@ public class AddVendorDetailForm extends Panel {
 
 		TextField<String> circuitid = new TextField<String>("circuitid");
 		circuitid.setRequired(true).setLabel(new Model("Circuit ID"));
-		circuitid.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 10));
-		circuitid.add(new NumberValidator());
+		circuitid.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
+		/*circuitid.add(new NumberValidator());*/
 		final FeedbackLabel circuitidFeedbackLabel = new FeedbackLabel("circuitidfeedback", circuitid);
 		circuitidFeedbackLabel.setOutputMarkupId(true);
 		form.add(circuitidFeedbackLabel);
@@ -378,7 +378,7 @@ public class AddVendorDetailForm extends Panel {
 					: bandwidthdd.getBandwidthunittypeid());
 			stmt.setInt(10, (vendornamedd.getVendorid() == 5) ? servicetype.getServicetypeid() : 0);
 			stmt.setString(11, ntinterface);
-			stmt.setInt(12, Integer.parseInt(this.circuitid));
+			stmt.setString(12, this.circuitid);
 			stmt.setInt(13, (vendornamedd.getVendorid() != 5) ? mediatype.getMediatypeid() : 0 );
 			stmt.setString(14, remark);
 			stmt.setString(15, phase);

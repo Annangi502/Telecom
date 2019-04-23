@@ -193,7 +193,6 @@ public class EditNetworkLocationDetailForm extends Panel {
 		DropDownChoice<String> phase = new DropDownChoice<String>("phase", phaselist);
 		/* TextField<String> phase = new TextField<String>("phase"); */
 		phase.setRequired(true).setLabel(new Model("Phase"));
-		phase.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
 		/* phase.add(new StringValidator()); */
 		final FeedbackLabel phaseFeedbackLabel = new FeedbackLabel("phasefeedback", phase);
 		phaseFeedbackLabel.setOutputMarkupId(true);
@@ -259,7 +258,6 @@ public class EditNetworkLocationDetailForm extends Panel {
 
 		/* TextField<String> ofc = new TextField<String>("ofcdesc"); */
 		ismergelocationrc.setRequired(true).setLabel(new Model("Merge Location"));
-		ismergelocationrc.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 20));
 		/* ofc.add(new StringValidator()); */
 		final FeedbackLabel ismergelocationfeedback = new FeedbackLabel("ismergelocationfeedback", ismergelocationrc);
 		ismergelocationfeedback.setOutputMarkupId(true);
@@ -282,7 +280,7 @@ public class EditNetworkLocationDetailForm extends Panel {
 
 		TextField<String> conperson = new TextField<String>("contactperson");
 		conperson.setRequired(true).setLabel(new Model("Location Contact Person "));
-		conperson.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		conperson.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
 		conperson.add(new StringValidator());
 		final FeedbackLabel conpersonFeedbackLabel = new FeedbackLabel("contactpersonfeedback", conperson);
 		conpersonFeedbackLabel.setOutputMarkupId(true);
@@ -297,7 +295,7 @@ public class EditNetworkLocationDetailForm extends Panel {
 
 		TextField<String> remark = new TextField<String>("remark");
 		remark.setLabel(new Model("Remark"));
-		remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
+		remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
 		/* remark.add(new StringValidator()); */
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
@@ -305,14 +303,14 @@ public class EditNetworkLocationDetailForm extends Panel {
 		
 		
 		TextField<String> latitude = new TextField<String>("latitude");
-		latitude.setRequired(true).setLabel(new Model("Latitude"));
+		latitude.setLabel(new Model("Latitude"));
 		final FeedbackLabel latitudeFeedbackLabel = new FeedbackLabel("latitudefeedback", latitude);
 		latitudeFeedbackLabel.setOutputMarkupId(true);
 		form.add(latitudeFeedbackLabel);
 		
 		
 		TextField<String> longitude = new TextField<String>("longitude");
-		longitude.setRequired(true).setLabel(new Model("Longitude"));	
+		longitude.setLabel(new Model("Longitude"));	
 		final FeedbackLabel longitudeFeedbackLabel = new FeedbackLabel("longitudefeedback", longitude);
 		longitudeFeedbackLabel.setOutputMarkupId(true);
 		form.add(longitudeFeedbackLabel);

@@ -314,8 +314,8 @@ public class EditVendorDetailForm extends Panel {
 
 		TextField<String> circuitid = new TextField<String>("circuitid");
 		circuitid.setRequired(true).setLabel(new Model("Circuit ID"));
-		circuitid.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 10));
-		circuitid.add(new NumberValidator());
+		circuitid.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
+		/*circuitid.add(new NumberValidator());*/
 		final FeedbackLabel circuitidFeedbackLabel = new FeedbackLabel("circuitidfeedback", circuitid);
 		circuitidFeedbackLabel.setOutputMarkupId(true);
 		form.add(circuitidFeedbackLabel);
@@ -406,7 +406,7 @@ public class EditVendorDetailForm extends Panel {
 					: bandwidthdd.getBandwidthunittypeid());
 			stmt.setInt(10, (vendornamedd.getVendorid() == 5) ? servicetype.getServicetypeid() : 0);
 			stmt.setString(11, ntinterface);
-			stmt.setInt(12, Integer.parseInt(this.circuitid));
+			stmt.setString(12, this.circuitid);
 			stmt.setInt(13, (vendornamedd.getVendorid() != 5) ? mediatype.getMediatypeid() : 0);
 			stmt.setString(14, remark);
 			stmt.setString(15, phase);

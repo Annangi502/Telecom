@@ -155,7 +155,7 @@ public class ViewEquipmentDetailForm extends Panel {
 		TextField<String> rmake = new TextField<String>("addmake");
 		rmake.setRequired(true).setLabel(new Model("Make"));
 		rmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		rmake.add(new StringValidator());
+		/*rmake.add(new StringValidator());*/
 		final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("addmakefeedback", rmake);
 		rmakeFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(rmakeFeedbackLabel);
