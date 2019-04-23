@@ -21,7 +21,10 @@
 			<param-value>com.sp.SPNetworkLocation.SpNetworkLocationApplication</param-value>
 		</init-param>
 	</filter>
-
+ <context-param>
+    <param-name>configuration</param-name>
+    <param-value>development</param-value>
+  </context-param>
 
 	<filter-mapping>
 		<filter-name>wicket.SPNetworkLocation</filter-name>
