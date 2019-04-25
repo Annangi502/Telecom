@@ -72,7 +72,7 @@ public class DashboardForm extends Panel{
         // or do this, if you are using an older version of JFreeChart:
         //plot.setSectionPaint(1, Color.black);
         //plot.setSectionPaint(3, new Color(120, 0, 120));
-        add(new JFreeChartImage("image", chart, 450, 450));
+       // add(new JFreeChartImage("image", chart, 450, 450));
         
         DefaultPieDataset d1 = new DefaultPieDataset();
         Iterator<BandwidthDetail> itr1 = loadBandwidths().iterator();
@@ -99,7 +99,7 @@ public class DashboardForm extends Panel{
        // or do this, if you are using an older version of JFreeChart:
        //plot.setSectionPaint(1, Color.black);
        //plot.setSectionPaint(3, new Color(120, 0, 120));
-        add(new JFreeChartImage("image1", chart1, 450, 450));
+        //add(new JFreeChartImage("image1", chart1, 450, 450));
         
         getProjectTypeSummary();
 
@@ -121,7 +121,7 @@ public class DashboardForm extends Panel{
        // or do this, if you are using an older version of JFreeChart:
        //plot.setSectionPaint(1, Color.black);
        //plot.setSectionPaint(3, new Color(120, 0, 120));
-        add(new JFreeChartImage("image2", chart2, 450, 450));
+       // add(new JFreeChartImage("image2", chart2, 450, 450));
 
 	}
 	private List<VendorDetail> loadVendors() {
