@@ -1,0 +1,227 @@
+<wicket:panel>
+<div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12"
+			style="margin-bottom: 50px;">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>Add Interruptions Details</h2>
+					
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<br>
+					<form class="form-horizontal" wicket:id="addinterruptionform">
+					
+					<div class="row"> <!-- row 2 starts here -->
+              <div class="col-sm-2"> <!-- col 2 starts here -->  
+                <div class="form-group">
+                  <label for="inputMT" class="control-label"><strong> Circle </strong></label>
+                  
+                    <select class="form-control" wicket:id="circle">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+                  
+                </div>
+              </div> <!-- col 2 ends here -->
+
+              <div class="col-sm-2"> <!-- col 3 starts here -->  
+                <div class="form-group">
+                  <label for="inputMV" class="control-label"><strong>Division</strong></label>
+                  <select class="form-control" wicket:id="division">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+
+                </div>
+              </div> <!-- col 3 ends here -->
+               <div class="col-sm-2"> <!-- col 3 starts here -->  
+                <div class="form-group">
+                  <label for="inputMV" class="control-label"><strong>ERO</strong></label>
+                  <select class="form-control" wicket:id="ero">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+
+                </div>
+              </div> <!-- col 3 ends here -->
+              <div class="col-sm-2"> <!-- col 3 starts here -->  
+                <div class="form-group">
+                  <label for="inputMV" class="control-label"><strong>Sub-Division</strong></label>
+                  <select class="form-control" wicket:id="subdivision">
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+
+                </div>
+              </div> <!-- col 3 ends here -->
+              <div class="col-sm-2"> <!-- col 3 starts here -->  
+                <div class="form-group">
+                  <label for="inputMV" class="control-label"><strong>Section</strong></label>
+                  <select class="form-control" wicket:id="section" >
+                        <option value="AK">R-APDRP</option>
+                        <option value="HI">NON-R-APDRP</option>
+                    </select>
+
+                </div>
+              </div> <!-- col 3 ends here -->
+            </div>
+            
+						<div class="row">
+							<!-- row starts here -->
+							<div class="col-sm-6">
+								<!-- col 1 starts here -->
+								<div class="form-group">
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Circuit Id</strong></label>
+									<div class="col-sm-8">
+									<select class="form-control" wicket:id="circuitid">
+											<option value="AK">R-APDRP</option>
+											<option value="HI">NON-R-APDRP</option>
+									</select>
+									
+									</div>
+								</div>
+							</div>
+							<!-- col 1 ends here -->
+
+							
+							<!-- col 2 ends here -->
+						</div>
+						
+						<div class="row">
+							<!-- row starts here -->
+							<div class="col-sm-6">
+								<!-- col 1 starts here -->
+								<div class="form-group">
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Location Name</strong></label>
+									<div class="col-sm-8">
+									<input type="text" class="form-control" id="locationname"
+											placeholder="Location Name" wicket:id="locationname" readonly> 
+									<span class="text-danger" wicket:id="locationnamefeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 1 ends here -->
+
+							
+							<!-- col 2 ends here -->
+						</div>
+						
+						<div class="row">
+							<!-- row starts here -->
+							<div class="col-sm-6">
+								<!-- col 1 starts here -->
+								<div class="form-group">
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Vendor Name</strong></label>
+									<div class="col-sm-8">
+									<input type="text" class="form-control" id="vendor"
+											placeholder="Vendor Name" wicket:id="vendor" readonly> 
+									<span class="text-danger" wicket:id="vendorfeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 1 ends here -->
+
+							
+							<!-- col 2 ends here -->
+						</div>
+						
+						<div class="row">
+							
+							<div class="col-sm-6">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputSubject"
+										class="col-sm-4 text-danger control-label"><strong>Link Down Date
+												</strong></label>
+									<div class="col-sm-8">
+										<span wicket:id="linkdowndate"></span> <span class="text-danger"
+												wicket:id="linkdowndatefeed"></span>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+						<div class="row">
+							
+							<div class="col-sm-6">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputSubject"
+										class="col-sm-4 text-danger control-label"><strong>Link Up Date
+												</strong></label>
+									<div class="col-sm-8">
+										<span wicket:id="linkupdate"></span> <span class="text-danger"
+												wicket:id="linkupdatefeed"></span>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
+						<div class="row">
+							<!-- row starts here -->
+							<div class="col-sm-6">
+								<!-- col 1 starts here -->
+								<div class="form-group">
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Call Log Number</strong></label>
+									<div class="col-sm-8">
+									<input type="text" class="form-control" id="calllog"
+											placeholder="Call Log Number" wicket:id="calllog"> 
+									<span class="text-danger" wicket:id="calllogfeedback"></span>
+									</div>
+								</div>
+							</div>
+							<!-- col 1 ends here -->
+
+							
+							<!-- col 2 ends here -->
+						</div>
+						
+						<!-- <div class="row">
+							row starts here
+							<div class="col-sm-6">
+								col 1 starts here
+								<div class="form-group">
+									<label for="inputMT"
+										class="col-sm-4 control-label text-danger text-right"><strong>Total Hours</strong></label>
+									<div class="col-sm-8">
+									<input type="text" class="form-control" id="tothrs"
+											placeholder="Total Hours" wicket:id="tothrs"> 
+									<span class="text-danger" wicket:id="tothrsfeedback"></span>
+									</div>
+								</div>
+							</div>
+							col 1 ends here
+
+							
+							col 2 ends here
+						</div> -->
+						
+						
+						<div class="ln_solid">
+							<span class="text-danger" wicket:id="feedback"></span>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+								<button class="btn btn-primary" type="submit"
+									wicket:id="btncancel">Cancel</button>
+								<button class="btn btn-primary" type="submit"
+									wicket:id="btnreset">Reset</button>
+								<button type="submit" class="btn btn-success"
+									wicket:id="btnsubmit">Submit</button>
+							</div>
+						</div>
+						
+					</form>
+				</div>
+				</div>
+		</div>
+</div>	
+</wicket:panel>

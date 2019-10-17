@@ -122,11 +122,32 @@
 									</div>
 								</div>
 							</div>
+							
 							<div class="col-sm-6">
 								<!-- col 3 starts here -->
 								<div class="form-group">
 									<label for="inputSubject"
-										class="col-sm-4 text-danger control-label"><strong>Remak</strong></label>
+										class="col-sm-4 text-danger control-label"><strong>Installation
+												Date</strong></label>
+									<div class="col-sm-8">
+										<input type="text" wicket:id="installdate"
+												class="form-control" data-plugin="datepicker"
+												id="installdate" placeholder="Click to select date"
+												autocomplete="off"> <span class="text-danger"
+												wicket:id="installfeed"></span>
+									</div>
+								</div>
+							</div>
+													
+							<!-- col 4 ends here -->
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-6">
+								<!-- col 3 starts here -->
+								<div class="form-group">
+									<label for="inputSubject"
+										class="col-sm-4 text-danger control-label"><strong>Remark</strong></label>
 									<div class="col-sm-8">
 										<input type="text" wicket:id="remark" class="form-control"
 											id="inputSubject" placeholder="Enter Remark"> <span
@@ -136,6 +157,8 @@
 							</div>
 							<!-- col 4 ends here -->
 						</div>
+						
+						
 						<div class="row">
 							<!-- row 2 starts here -->
 							<div class="col-sm-6">
@@ -145,7 +168,7 @@
 										class="col-sm-4 text-danger control-label">Replace/Stand
 										By</label>
 									<div class="col-sm-8" style="padding-top: 6px;">
-										<span class="radio-custom radio-danger " wicket:id="replace"></span><br>
+										<span class="radio-custom radio-danger " wicket:id="itsposition"></span><br>
 										<span class="text-danger" wicket:id="replacefeedback"></span>
 									</div>
 								</div>

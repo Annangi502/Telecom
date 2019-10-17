@@ -4,10 +4,14 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,6 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
@@ -59,9 +64,14 @@ public class EditUPSDetailForm extends Panel {
 	private String rbatteries;
 	private String rbatteriesfeedback;
 	private String locationname;
+	private Date installationdate;
+	private String installfeedback;
+	private Date replacementdate;
+	private String replacedatefeedback;
+	private static String PATTERN = "yyyy-MM-dd";
 	private NetworkUPSDetail nud;
-	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty","None");
-	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
+	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty", "None");
+	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By","Existing");
 
 	public EditUPSDetailForm(String id, final IModel<NetworkUPSDetail> upsmodel,
 			final IModel<NetworkLocationDetail> nldmodel) {
@@ -73,26 +83,31 @@ public class EditUPSDetailForm extends Panel {
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
-		nud = upsmodel.getObject();
-		make = nud.getMake();
-		model = nud.getModel();
-		serialno = nud.getSerialnumber();
-		amc = nud.getAmc();
-		batteries = String.valueOf(nud.getNoofbatteries());
-		remark = nud.getRemark();
-		replace = nud.getIsreplace()==1?"Replace":"Stand By";
-		if(replace.equals("Replace"))
-		{
-			replacedivflag = true;
-		}else
-		{
-			replacedivflag = false;
+		try {
+			nud = upsmodel.getObject();
+			make = nud.getMake();
+			model = nud.getModel();
+			serialno = nud.getSerialnumber();
+			amc = nud.getAmc();
+			batteries = String.valueOf(nud.getNoofbatteries());
+			remark = nud.getRemark();
+			replace = checkNull(nud.getIstsposition()) ;
+			if (replace.equals("Replace")) {
+				replacedivflag = true;
+			} else {
+				replacedivflag = false;
+			}
+			System.out.println(" getInstallationdate " + nud.getInstallationdate());
+			installationdate = new SimpleDateFormat("dd MMM, yyyy").parse(nud.getInstallationdate());
+			getReplaceDetails();
+			spcircuitid = nldmodel.getObject().getSpcircuitid();
+			spcircuitcode = nldmodel.getObject().getSpciruitcode();
+			projecttypedescription = nldmodel.getObject().getProjecttypedescription();
+			locationname = nldmodel.getObject().getLocationname();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		getReplaceDetails();
-		spcircuitid = nldmodel.getObject().getSpcircuitid();
-		spcircuitcode = nldmodel.getObject().getSpciruitcode();
-		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
-		locationname = nldmodel.getObject().getLocationname();
 
 		TextField<String> make = new TextField<String>("make");
 		make.setRequired(true).setLabel(new Model("Make"));
@@ -197,7 +212,7 @@ public class EditUPSDetailForm extends Panel {
 		rserialnoFeedbackLabel.setOutputMarkupId(true);
 		repdiv.add(rserialnoFeedbackLabel);
 		repdiv.add(rserialno);
-		
+
 		TextField<String> rbatteries = new TextField<String>("rbatteries");
 		rbatteries.setRequired(true).setLabel(new Model("No.Of Batteries"));
 		rbatteries.add(new NumberValidator());
@@ -205,6 +220,44 @@ public class EditUPSDetailForm extends Panel {
 		rbatteriesFeedbackLabel.setOutputMarkupId(true);
 		repdiv.add(rbatteriesFeedbackLabel);
 		repdiv.add(rbatteries);
+
+		CustromDatePicker datePicker = new CustromDatePicker();
+		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(false);
+
+		DateTextField instaldate = new DateTextField("installationdate",
+				new PropertyModel<Date>(this, "installationdate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+		final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+		instaldate.setOutputMarkupId(true);
+		instaldate.add(datePicker);
+		form.add(insfeedback);
+		form.add(instaldate);
+
+		CustromDatePicker datePicker1 = new CustromDatePicker();
+		datePicker1.setShowOnFieldClick(true);
+		datePicker1.setAutoHide(false);
+
+		DateTextField instaldate1 = new DateTextField("replacementdate",
+				new PropertyModel<Date>(this, "replacementdate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		instaldate1.setRequired(true).setLabel(new Model("Replacement Date"));
+		final FeedbackLabel insfeedback1 = new FeedbackLabel("replacedatefeedback", instaldate1);
+		instaldate1.setOutputMarkupId(true);
+		instaldate1.add(datePicker1);
+		repdiv.add(insfeedback1);
+		repdiv.add(instaldate1);
 
 		Button btncancel = new Button("btncancel") {
 			@Override
@@ -256,7 +309,7 @@ public class EditUPSDetailForm extends Panel {
 	}
 
 	private boolean editNetworkUPSDetail() {
-		String query = "{call sp_circuit_edit_network_ups_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		String query = "{call sp_circuit_edit_network_ups_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -273,11 +326,17 @@ public class EditUPSDetailForm extends Panel {
 			stmt.setString(8, remark);
 			stmt.setInt(9, Integer.parseInt(batteries));
 			stmt.setInt(10, nud.getUpsid());
-			stmt.setInt(11, replace.equals("Replace")?1:0);
+			stmt.setInt(11, replace.equals("Replace") ? 1 : 0);
 			stmt.setString(12, rmake);
 			stmt.setString(13, rmodel);
 			stmt.setString(14, rserialno);
-			stmt.setInt(15, replace.equals("Replace")?Integer.parseInt(rbatteries):0);
+			stmt.setInt(15, replace.equals("Replace") ? Integer.parseInt(rbatteries) : 0);
+			stmt.setString(16, getFormatDate(installationdate));
+			if (replace.equals("Replace"))
+				stmt.setString(17, getFormatDate(replacementdate));
+			else
+				stmt.setString(17, null);
+			    stmt.setString(18, replace);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -305,47 +364,64 @@ public class EditUPSDetailForm extends Panel {
 		}
 		return true;
 	}
-	public boolean getReplaceDetails()
-	{
+
+	public boolean getReplaceDetails() {
 		String query = "{call sp_circuit_ups_get_replace_details(?,?,?)}";
 		Connection con = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = new DataBaseConnection().getConnection();
-            stmt = con.prepareCall(query);
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setInt(3, nud.getUpsid());
-		    rs = stmt.executeQuery();
-		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-		    while(rs.next())
-		    {
-		    	rmake = rs.getString(1);
-		    	rmodel = rs.getString(2);
-		    	rserialno = rs.getString(3);
-		    	rbatteries = rs.getString(4);
-		    }
-		}catch (SQLException e) {
-			log.error("SQL Exception in getReplaceDetails() method {"+e.getMessage()+"}");
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+				rmake = rs.getString(1);
+				rmodel = rs.getString(2);
+				rserialno = rs.getString(3);
+				rbatteries = rs.getString(4);
+				System.out.println(" replacementdate " + rs.getString(5));
+				replacementdate = new SimpleDateFormat("dd MMM, yyyy").parse(rs.getString(5));
+
+				System.out.println(" replacementdate " + replacementdate);
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in getReplaceDetails() method {" + e.getMessage() + "}");
 			e.printStackTrace();
-		}finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-            catch (SQLException e2) {
-                log.error("SQL Exception in getReplaceDetails() method {" + e2.getMessage() + "}");
-                e2.printStackTrace();
-            }
-        }
-		return true;	
+		} catch (Exception e) {
+			log.error("SQL Exception in getReplaceDetails() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getReplaceDetails() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return true;
+	}
+
+	private String getFormatDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+		return simpleDateFormat.format(date);
+
+	}
+	private String checkNull(String str){
+		
+		if(str==null)
+			str = "" ;
+		return str ;
 	}
 }

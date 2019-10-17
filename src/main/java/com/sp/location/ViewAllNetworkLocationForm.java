@@ -35,6 +35,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import com.sp.SPNetworkLocation.PortSession;
 import com.sp.resource.DataBaseConnection;
+import com.sp.resource.FeedbackLabel;
 import com.sp.resource.GClickablePropertyColumn;
 
 public class ViewAllNetworkLocationForm extends Panel {
@@ -42,49 +43,58 @@ public class ViewAllNetworkLocationForm extends Panel {
 	private Circle circle;
 	private int circleid = 0;
 	private Division division;
-	private int divisionid  = 0;
+	private int divisionid = 0;
+	private ERO ero ;
+	private int eroid ;
 	private SubDivision subdivision;
-	private int subdivisionid  = 0;
+	private int subdivisionid = 0;
 	private Section section;
-	private int sectionid  = 0;
+	private int sectionid = 0;
 	private NetworkLocationList ntlclist = new NetworkLocationList();
 	final int DEF_NO_OF_ROWS = 9999;
-	IModel<? extends List<Circle>> circlelist=new LoadableDetachableModel<List<Circle>>() {
+	IModel<? extends List<Circle>> circlelist = new LoadableDetachableModel<List<Circle>>() {
 		@Override
 		protected List<Circle> load() {
 			// TODO Auto-generated method stub
 			return loadCircles();
 		}
 	};
-    IModel<? extends List<Division>> divisionlist =  new LoadableDetachableModel<List<Division>>() {
+	IModel<? extends List<Division>> divisionlist = new LoadableDetachableModel<List<Division>>() {
 		@Override
 		protected List<Division> load() {
 			// TODO Auto-generated method stub
 			return loadDivisions(circleid);
 		}
 	};
-    IModel<? extends List<SubDivision>> subdivisionlist =  new LoadableDetachableModel<List<SubDivision>>() {
+	IModel<? extends List<ERO>> erolist = new LoadableDetachableModel<List<ERO>>() {
+		@Override
+		protected List<ERO> load() {
+			// TODO Auto-generated method stub
+			return loadEro(circleid, divisionid);
+		}
+	};
+	IModel<? extends List<SubDivision>> subdivisionlist = new LoadableDetachableModel<List<SubDivision>>() {
 		@Override
 		protected List<SubDivision> load() {
 			// TODO Auto-generated method stub
-			return loadSubDivisions(circleid, divisionid);
+			return loadSubDivisions(circleid, divisionid,eroid);
 		}
 	};
-    IModel<? extends List<Section>> sectionlist =  new LoadableDetachableModel<List<Section>>() {
+	IModel<? extends List<Section>> sectionlist = new LoadableDetachableModel<List<Section>>() {
 		@Override
 		protected List<Section> load() {
 			// TODO Auto-generated method stub
 			return loadSections(circleid, divisionid, subdivisionid);
 		}
 	};
+
 	public ViewAllNetworkLocationForm(String id) {
 		super(id);
 		setDefaultModel(new CompoundPropertyModel<ViewAllNetworkLocationForm>(this));
-	    StatelessForm<Form> form = new StatelessForm("form");
+		StatelessForm<Form> form = new StatelessForm("form");
 		ntlclist.setList(getAllNetworkLocations());
 		NetworkLocationDataProvider nlprovider = new NetworkLocationDataProvider();
-		
-		
+
 		List<IColumn> columns = new ArrayList<IColumn>();
 		columns.add(new AbstractColumn(new Model("Sr. No.")) {
 			public void populateItem(Item cell, String compId, IModel rowModel) {
@@ -101,7 +111,7 @@ public class ViewAllNetworkLocationForm extends Panel {
 				cell.add(new Label(compId, rowNumber));
 			}
 		});
-		columns.add(new GClickablePropertyColumn(new Model("Location ID"), "spciruitcode") {
+		columns.add(new GClickablePropertyColumn(new Model("Location Name"), "locationname") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
 				item.add(new ColumnClickPanelNetworkLocationDetail(componentId, rowModel,
 						new PropertyModel(rowModel, getProperty())));
@@ -112,65 +122,67 @@ public class ViewAllNetworkLocationForm extends Panel {
 		 * "spcircuitid"));
 		 */
 		columns.add(new PropertyColumn(new Model("Circle"), "circledesc"));
-	    columns.add(new PropertyColumn(new Model("Division"), "divisiondesc"));
-	    columns.add(new PropertyColumn(new Model("Sub-Division"), "subdivisiondesc"));
-	    columns.add(new PropertyColumn(new Model("Section"), "sectiondesc"));
-	    columns.add(new PropertyColumn(new Model("Project"), "projecttypedescription"));
-	    columns.add(new PropertyColumn(new Model("Location Name"), "locationname"));
-	    columns.add(new PropertyColumn(new Model("Phase"), "phase"));
-	    /*columns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
+		columns.add(new PropertyColumn(new Model("Division"), "divisiondesc"));
+		columns.add(new PropertyColumn(new Model("ERO"), "erodesc"));
+		columns.add(new PropertyColumn(new Model("Sub-Division"), "subdivisiondesc"));
+		columns.add(new PropertyColumn(new Model("Section"), "sectiondesc"));
+		columns.add(new PropertyColumn(new Model("Project"), "projecttypedescription"));
+		columns.add(new PropertyColumn(new Model("Phase"), "phase"));
+		/* columns.add(new PropertyColumn(new Model("Remark"), "remark")); */
 		final DataTable table = new DataTable("datatable", columns, nlprovider, DEF_NO_OF_ROWS);
-		 table.setOutputMarkupId(true);
+		table.setOutputMarkupId(true);
 		table.addTopToolbar(new HeadersToolbar(table, nlprovider));
 		form.add(table);
-		
-		final DropDownChoice<Section> sectiondd = new DropDownChoice<Section>("section", sectionlist, new ChoiceRenderer("sectiondesc", "sectionid"))
-				{
-				@Override
-				protected CharSequence getDefaultChoice(String selectedValue) {
-					// TODO Auto-generated method stub
-					return "";
-				}
-				@Override
-				protected boolean wantOnSelectionChangedNotifications() {
-					// TODO Auto-generated method stub
-					return true;
-				}
-			@Override
-				protected void onSelectionChanged(Section newSelection) {
-					// TODO Auto-generated method stub
-				sectionid  = section.getSectionid();
-				ntlclist.setList(getAllNetworkLocations());
-				}
-				};
-	    /*sectiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
-	    		{
-					@Override
-					protected void onUpdate(AjaxRequestTarget target) {
-						// TODO Auto-generated method stub
-						sectionid  = section.getSectionid();
-						ntlclist.setList(getAllNetworkLocations());
-						target.add(table);
-					}
-	    	
-	    		});*/
-	    sectiondd.setNullValid(false);
-	    sectiondd.setLabel(new Model("Section"));
-	    /*sectiondd.setOutputMarkupId(true);*/
-	    form.add(sectiondd);
-	    
-	    final DropDownChoice<SubDivision> subdivisiondd = new DropDownChoice<SubDivision>("subdivision", subdivisionlist, new ChoiceRenderer("subdivisiondesc", "subdivisionid"))
-	    {
+
+		final DropDownChoice<Section> sectiondd = new DropDownChoice<Section>("section", sectionlist,
+				new ChoiceRenderer("sectiondesc", "sectionid")) {
 			@Override
 			protected CharSequence getDefaultChoice(String selectedValue) {
 				// TODO Auto-generated method stub
 				return "";
 			}
+
 			@Override
 			protected boolean wantOnSelectionChangedNotifications() {
 				// TODO Auto-generated method stub
 				return true;
 			}
+
+			@Override
+			protected void onSelectionChanged(Section newSelection) {
+				// TODO Auto-generated method stub
+				sectionid = section.getSectionid();
+				ntlclist.setList(getAllNetworkLocations());
+			}
+		};
+		/*
+		 * sectiondd.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+		 * 
+		 * @Override protected void onUpdate(AjaxRequestTarget target) { // TODO
+		 * Auto-generated method stub sectionid = section.getSectionid();
+		 * ntlclist.setList(getAllNetworkLocations()); target.add(table); }
+		 * 
+		 * });
+		 */
+		sectiondd.setNullValid(false);
+		sectiondd.setLabel(new Model("Section"));
+		/* sectiondd.setOutputMarkupId(true); */
+		form.add(sectiondd);
+
+		final DropDownChoice<SubDivision> subdivisiondd = new DropDownChoice<SubDivision>("subdivision",
+				subdivisionlist, new ChoiceRenderer("subdivisiondesc", "subdivisionid")) {
+			@Override
+			protected CharSequence getDefaultChoice(String selectedValue) {
+				// TODO Auto-generated method stub
+				return "";
+			}
+
+			@Override
+			protected boolean wantOnSelectionChangedNotifications() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
 			@Override
 			protected void onSelectionChanged(SubDivision newSelection) {
 				// TODO Auto-generated method stub
@@ -179,121 +191,142 @@ public class ViewAllNetworkLocationForm extends Panel {
 				ntlclist.setList(getAllNetworkLocations());
 				section = null;
 			}
-			};
-	   /* subdivisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
-		{
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				// TODO Auto-generated method stub
-				subdivisionid = subdivision.getSubdivisionid();
-				sectionid = 0;
-				ntlclist.setList(getAllNetworkLocations());
-				section = null;
-				target.add(table);
-				target.add(sectiondd);
-			}
-	
-		});*/
-	    subdivisiondd.setNullValid(false);
-	    subdivisiondd.setLabel(new Model("Sub-Division"));
-	    /*subdivisiondd.setOutputMarkupId(true);*/
-	    
-	    
-	    final DropDownChoice<Division> divisiondd = new DropDownChoice<Division>("division", divisionlist, new ChoiceRenderer("divisiondesc", "divisionid"))
-	    {
+		};
+		/*
+		 * subdivisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+		 * 
+		 * @Override protected void onUpdate(AjaxRequestTarget target) { // TODO
+		 * Auto-generated method stub subdivisionid =
+		 * subdivision.getSubdivisionid(); sectionid = 0;
+		 * ntlclist.setList(getAllNetworkLocations()); section = null;
+		 * target.add(table); target.add(sectiondd); }
+		 * 
+		 * });
+		 */
+		subdivisiondd.setNullValid(false);
+		subdivisiondd.setLabel(new Model("Sub-Division"));
+		/* subdivisiondd.setOutputMarkupId(true); */
+		
+		final DropDownChoice<ERO> erodd = new DropDownChoice<ERO>("ero",
+				erolist, new ChoiceRenderer("erodes", "eroid")){
 			@Override
 			protected CharSequence getDefaultChoice(String selectedValue) {
 				// TODO Auto-generated method stub
 				return "";
 			}
+
 			@Override
 			protected boolean wantOnSelectionChangedNotifications() {
 				// TODO Auto-generated method stub
 				return true;
 			}
+
+			@Override
+			protected void onSelectionChanged(ERO newSelection) {
+				// TODO Auto-generated method stub
+				eroid = ero.getEroid();
+				subdivisionid = 0;
+				sectionid = 0;
+				ntlclist.setList(getAllNetworkLocations());
+				section = null;
+				subdivision = null;
+			}
+		};
+		erodd.setNullValid(false);
+		erodd.setLabel(new Model("ERO"));
+		form.add(erodd);
+
+		final DropDownChoice<Division> divisiondd = new DropDownChoice<Division>("division", divisionlist,
+				new ChoiceRenderer("divisiondesc", "divisionid")) {
+			@Override
+			protected CharSequence getDefaultChoice(String selectedValue) {
+				// TODO Auto-generated method stub
+				return "";
+			}
+
+			@Override
+			protected boolean wantOnSelectionChangedNotifications() {
+				// TODO Auto-generated method stub
+				return true;
+			}
+
 			@Override
 			protected void onSelectionChanged(Division newSelection) {
 				// TODO Auto-generated method stub
 				divisionid = division.getDivisionid();
+				eroid = 0 ;
 				subdivisionid = 0;
 				sectionid = 0;
 				ntlclist.setList(getAllNetworkLocations());
+				ero = null ;
 				section = null;
 				subdivision = null;
 			}
-			};
-	   /* divisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange")
-		{
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				// TODO Auto-generated method stub
-				divisionid = division.getDivisionid();
-				subdivisionid = 0;
-				sectionid = 0;
-				ntlclist.setList(getAllNetworkLocations());
-				section = null;
-				subdivision = null;
-				target.add(table);
-				target.add(sectiondd);
-				target.add(subdivisiondd);
-			}
-	
-		});*/
-	    divisiondd.setNullValid(false);
-	    divisiondd.setLabel(new Model("Division"));
-	    /*divisiondd.setOutputMarkupId(true);	 */   
-	    form.add(divisiondd);
-	    
-	    DropDownChoice<Circle> circledd = new DropDownChoice<Circle>("circle", circlelist, new ChoiceRenderer("circledes", "circleid"))
-	    {
+		};
+		/*
+		 * divisiondd.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+		 * 
+		 * @Override protected void onUpdate(AjaxRequestTarget target) { // TODO
+		 * Auto-generated method stub divisionid = division.getDivisionid();
+		 * subdivisionid = 0; sectionid = 0;
+		 * ntlclist.setList(getAllNetworkLocations()); section = null;
+		 * subdivision = null; target.add(table); target.add(sectiondd);
+		 * target.add(subdivisiondd); }
+		 * 
+		 * });
+		 */
+		divisiondd.setNullValid(false);
+		divisiondd.setLabel(new Model("Division"));
+		/* divisiondd.setOutputMarkupId(true); */
+		form.add(divisiondd);
+
+		DropDownChoice<Circle> circledd = new DropDownChoice<Circle>("circle", circlelist,
+				new ChoiceRenderer("circledes", "circleid")) {
 			@Override
 			protected CharSequence getDefaultChoice(String selectedValue) {
 				// TODO Auto-generated method stub
 				return "";
 			}
+
 			@Override
 			protected boolean wantOnSelectionChangedNotifications() {
 				// TODO Auto-generated method stub
 				return true;
 			}
+
 			@Override
 			protected void onSelectionChanged(Circle newSelection) {
 				// TODO Auto-generated method stub
 				circleid = circle.getCircleid();
 				divisionid = 0;
+				eroid = 0 ;
 				subdivisionid = 0;
 				sectionid = 0;
 				ntlclist.setList(getAllNetworkLocations());
 				section = null;
 				subdivision = null;
+				ero = null ;
 				division = null;
 			}
-			};
-	   /* circledd.add(new AjaxFormComponentUpdatingBehavior("onChange")
-		{
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				// TODO Auto-generated method stub
-				circleid = circle.getCircleid();
-				divisionid = 0;
-				subdivisionid = 0;
-				sectionid = 0;
-				ntlclist.setList(getAllNetworkLocations());
-				section = null;
-				subdivision = null;
-				division = null;
-				target.add(table);
-				target.add(sectiondd);
-				target.add(subdivisiondd);
-				target.add(divisiondd);
-			}
-	
-		});*/
-	    circledd.setNullValid(false);
-	    circledd.setRequired(true).setLabel(new Model("Circle"));
-	    form.add(circledd);
-	    form.add(subdivisiondd);
-	    add(form);
+		};
+		/*
+		 * circledd.add(new AjaxFormComponentUpdatingBehavior("onChange") {
+		 * 
+		 * @Override protected void onUpdate(AjaxRequestTarget target) { // TODO
+		 * Auto-generated method stub circleid = circle.getCircleid();
+		 * divisionid = 0; subdivisionid = 0; sectionid = 0;
+		 * ntlclist.setList(getAllNetworkLocations()); section = null;
+		 * subdivision = null; division = null; target.add(table);
+		 * target.add(sectiondd); target.add(subdivisiondd);
+		 * target.add(divisiondd); }
+		 * 
+		 * });
+		 */
+		circledd.setNullValid(false);
+		circledd.setRequired(true).setLabel(new Model("Circle"));
+		form.add(circledd);
+		form.add(subdivisiondd);
+		add(form);
 
 	}
 
@@ -363,7 +396,7 @@ public class ViewAllNetworkLocationForm extends Panel {
 
 	public List<NetworkLocationDetail> getAllNetworkLocations() {
 		final List<NetworkLocationDetail> list = new ArrayList<NetworkLocationDetail>();
-		final String query = "{call sp_get_all_circuits(?,?,?,?,?,?)}";
+		final String query = "{call sp_get_all_circuits(?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -374,14 +407,15 @@ public class ViewAllNetworkLocationForm extends Panel {
 			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
 			stmt.setInt(3, this.circleid);
 			stmt.setInt(4, this.divisionid);
-			stmt.setInt(5, this.subdivisionid);
-			stmt.setInt(6, this.sectionid);
+			stmt.setInt(5, this.eroid);
+			stmt.setInt(6, this.subdivisionid);
+			stmt.setInt(7, this.sectionid);
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
 				list.add(new NetworkLocationDetail(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9),
-						rs.getString(10)));
+						rs.getString(5), rs.getString(6), rs.getString(7), rs.getInt(8), rs.getString(9), rs.getString(10),
+						rs.getString(11)));
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadProjectTypes() method {" + e.getMessage() + "}");
@@ -402,7 +436,7 @@ public class ViewAllNetworkLocationForm extends Panel {
 				log.error("SQL Exception in loadProjectTypes() method {" + e2.getMessage() + "}");
 				e2.printStackTrace();
 			}
-		}		
+		}
 		return list;
 	}
 
@@ -486,11 +520,11 @@ public class ViewAllNetworkLocationForm extends Panel {
 		}
 		return list;
 	}
-
-	private List<SubDivision> loadSubDivisions(final int circleid, final int divisionid) {
-		final List<SubDivision> list = new ArrayList<SubDivision>();
-		list.add(new SubDivision(0, "All", "ALL"));
-		final String query = "{call sp_division_get_sub_divisions(?,?,?,?)}";
+	
+	private List<ERO> loadEro(final int circleid, final int divisionid) {
+		final List<ERO> list = new ArrayList<ERO>();
+		list.add(new ERO(0, "All", "ALL"));
+		final String query = "{call sp_division_get_eros(?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -501,6 +535,49 @@ public class ViewAllNetworkLocationForm extends Panel {
 			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
 			stmt.setInt(3, circleid);
 			stmt.setInt(4, divisionid);
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+				list.add(new ERO(rs.getInt(1), rs.getString(2), rs.getString(3)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in loadEro() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+			return list;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in addNetworkLocationDetails() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+
+	private List<SubDivision> loadSubDivisions(final int circleid, final int divisionid, final int eroid) {
+		final List<SubDivision> list = new ArrayList<SubDivision>();
+		list.add(new SubDivision(0, "All", "ALL"));
+		final String query = "{call sp_division_get_sub_divisions(?,?,?,?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			stmt.setInt(3, circleid);
+			stmt.setInt(4, divisionid);
+			stmt.setInt(5, eroid);
 			rs = stmt.executeQuery();
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			while (rs.next()) {

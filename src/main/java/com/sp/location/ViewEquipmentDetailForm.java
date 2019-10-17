@@ -101,12 +101,12 @@ public class ViewEquipmentDetailForm extends Panel {
 		serialno = ned.getSerialnumber();
 		amc = ned.getAmc();
 		remark = ned.getRemark();
-		replacelbl = ned.getIsreplace()==1?"Replace":"Stand By";
+		replacelbl = ned.getItsposition() ;
 		equipment = ned.getEquipmentdesc();
 		WebMarkupContainer replacediv = new WebMarkupContainer("replacediv");
-		replacediv.setVisible(ned.getIsreplace()==1?true:false);
+		replacediv.setVisible(ned.getIsreplace() == 1 ? true : false);
 		form.add(replacediv);
-		
+
 		List<IColumn> columns = new ArrayList<IColumn>();
 		columns.add(new AbstractColumn(new Model("Sr. No.")) {
 			public void populateItem(Item cell, String compId, IModel rowModel) {
@@ -155,7 +155,7 @@ public class ViewEquipmentDetailForm extends Panel {
 		TextField<String> rmake = new TextField<String>("addmake");
 		rmake.setRequired(true).setLabel(new Model("Make"));
 		rmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		/*rmake.add(new StringValidator());*/
+		/* rmake.add(new StringValidator()); */
 		final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("addmakefeedback", rmake);
 		rmakeFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(rmakeFeedbackLabel);
@@ -176,39 +176,35 @@ public class ViewEquipmentDetailForm extends Panel {
 		serialnoFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(serialnoFeedbackLabel);
 
-		
 		CustromDatePicker datePicker = new CustromDatePicker();
-        datePicker.setShowOnFieldClick(true);
-        datePicker.setAutoHide(false);
-		
-        
-        DateTextField instaldate = new DateTextField("installationdate",new PropertyModel<Date>(
-		            this, "installationdate"),new PatternDateConverter("dd MMM, yyyy", true));
-		
-		/*DateTextField instaldate = new DateTextField("installationdate","dd-mm-yyy")
-		{
-			  protected String getInputType()
-	            {
-	                return "date";
-	            }  
-	        };*/
-        instaldate.setRequired(true).setLabel(new Model("Installation Date"));
-        final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
-        instaldate.setOutputMarkupId(true);
-        instaldate.add(datePicker);
-        mymodal.add(insfeedback);
-        mymodal.add(instaldate);
-        
-        TextArea<String> remark = new TextArea<String>("rremark");
+		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(false);
+
+		DateTextField instaldate = new DateTextField("installationdate",
+				new PropertyModel<Date>(this, "installationdate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+		final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+		instaldate.setOutputMarkupId(true);
+		instaldate.add(datePicker);
+		mymodal.add(insfeedback);
+		mymodal.add(instaldate);
+
+		TextArea<String> remark = new TextArea<String>("rremark");
 		remark.setLabel(new Model("Remark"));
-		//remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
-		/*remark.add(new StringValidator());*/
+		// remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1,
+		// 64));
+		/* remark.add(new StringValidator()); */
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(remarkFeedbackLabel);
 		mymodal.add(remark);
-        
-        
+
 		Button btnback = new Button("back") {
 			@Override
 			public void onSubmit() {
@@ -242,7 +238,8 @@ public class ViewEquipmentDetailForm extends Panel {
 				// TODO Auto-generated method stub
 				mymodalflag = true;
 			}
-		}.setVisible(ned.getIsreplace()==1?true:false);;
+		}.setVisible(ned.getIsreplace() == 1 ? true : false);
+		;
 		Button pback = new Button("pback") {
 			@Override
 			public void onSubmit() {
@@ -339,7 +336,8 @@ public class ViewEquipmentDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				vnlist.add(new EquipmentReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6)));
+				vnlist.add(new EquipmentReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),
+						rs.getString(4), rs.getString(5), rs.getString(6)));
 			}
 		} catch (SQLException e) {
 			log.error((Object) ("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
@@ -378,7 +376,7 @@ public class ViewEquipmentDetailForm extends Panel {
 			stmt.setString(4, addmake);
 			stmt.setString(5, addmodel);
 			stmt.setString(6, addserialno);
-			stmt.setString(7,getFormatDate(installationdate));
+			stmt.setString(7, getFormatDate(installationdate));
 			stmt.setString(8, rremark);
 
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
@@ -408,10 +406,10 @@ public class ViewEquipmentDetailForm extends Panel {
 		}
 		return true;
 	}
-	private String getFormatDate(Date date)
-	{
-	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
-	    return simpleDateFormat.format(date);
-		
+
+	private String getFormatDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+		return simpleDateFormat.format(date);
+
 	}
 }

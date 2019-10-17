@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 	<Resource name="DEVELOPMENT" auth="Container" type="javax.sql.DataSource"
-		maxActive="100" maxIdle="30" maxWait="10000" username="root" password="root"
+		 maxActive="10" maxIdle="4" maxWait="10000"
+		removeAbandonedTimeout="300" removeAbandoned="true"
+		logAbandoned="true" username="root" password="root"
 		driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/apspdcl_network_location" />
 	<Resource name="STAGING" auth="Container" type="javax.sql.DataSource"
-		maxActive="100" maxIdle="30" maxWait="10000" username="root" password="root@2019"
+		maxActive="10" maxIdle="4" maxWait="10000" username="root" password="root@2019"
 		driverClassName="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://10.50.50.158:3306/apspdcl_network_location?noAccessToProcedureBodies = true" />
 	<Resource name="DEPLOYMENT" auth="Container" type="javax.sql.DataSource"
-		maxActive="100" maxIdle="30" maxWait="10000" username="root" password="root@2019"
+		 maxActive="10" maxIdle="4" maxWait="10000"
+		removeAbandonedTimeout="300" removeAbandoned="true"
+		logAbandoned="true" username="root" password="root@2019"
 		driverClassName="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://10.50.50.158:3306/apspdcl_network_location?noAccessToProcedureBodies = true" />
 </Context>

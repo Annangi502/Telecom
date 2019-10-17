@@ -9,18 +9,23 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class SPDetailColumn extends Panel{
+public class SPDetailColumn extends Panel {
 
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("rawtypes")
 	private Link lnk;
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public SPDetailColumn(String id, final IModel rowModel,IModel labelModel ) {
+	public SPDetailColumn(String id, final IModel rowModel, IModel labelModel) {
 		super(id);
 		NetworkInterfaceDetail ndl = (NetworkInterfaceDetail) rowModel.getObject();
-		add(new Label("spinterface",ndl.getSpntinterface()));
-		add(new Label("spipaddress",ndl.getSpipaddress()));
-		add(new Label("spsubnet",ndl.getSpsubnetmask()));
+		/*
+		 * add(new Label("spinterface",ndl.getSpntinterface())); add(new
+		 * Label("spipaddress",ndl.getSpipaddress())); add(new
+		 * Label("spsubnet",ndl.getSpsubnetmask()));
+		 */
+		add(new Label("lanspinterface", ndl.getLanspntinterface()));
+		add(new Label("lanspipaddress", ndl.getLanspipaddress()));
+		add(new Label("lanspsubnet", ndl.getLanspsubnetmask()));
 	}
 }

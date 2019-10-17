@@ -3,7 +3,7 @@
 	<div class="left_col scroll-view">
 		<div class="navbar nav_title" style="border: 1;background-color:#fff;padding-top: 6px;">
 			<a href="./master/ApspdclMaster" class="">
-			<img class="img-responsive" src="logo1.jpg" alt="..." ></a>
+			<img class="img-responsive hidden-xs hidden-sm" src="logo1.jpg" alt="..."></a>
 		</div>
 
 		<div class="clearfix"></div>
@@ -13,19 +13,45 @@
 		<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 			<div class="menu_section">
 				<ul class="nav side-menu">
-					<li><a><i class="fa fa-home"></i> Home <span
+					<!-- <li><a><i class="fa fa-home"></i> Home <span
 							class="fa fa-chevron-down"></span></a>
 						<ul class="nav child_menu">
 							<li><a href="./master/Dashboard">Dashboard</a></li>
-							<li><a href="./master/NetworkMap">Network Map's</a></li>
-						</ul></li>
+							<li><a href="./master/ContactDetail">Contact Detail's</a></li> 
+						</ul>
+					</li> -->
+					
+					
 					<li><a><i class="fa fa-edit"></i> Network Location <span
 							class="fa fa-chevron-down"></span></a>
 						<ul class="nav child_menu">
 							<li><a href="./addequipment/AddNetworkLocationDetail">Add Location</a></li>
 							<li><a id="viewlocation" href="./addequipment/ViewAllNetworkLocation">View Location</a></li>
-							<li><a id="viewlocation" href="./report/Report">Abstract</a></li>
-						</ul></li>
+							<!-- <li><a id="viewlocation" href="./report/Report">Abstract</a></li> -->
+						</ul>
+					</li>
+					<!-- <li><a><i class="fa fa-italic"></i>Rolling Stock<span
+							class="fa fa-chevron-down"></span></a>
+						<ul class="nav child_menu">
+							<li><a href="./addequipment/AddRollingStockDetail">Add</a></li>
+							<li><a id="viewlocation" href="./addequipment/ViewInterruptionDetail">View</a></li>
+							<li><a id="viewlocation" href="./report/InterruptionsDetails">Report</a></li>
+						</ul>
+					</li> -->
+					<li><a><i class="fa fa-italic"></i>Interruptions<span
+							class="fa fa-chevron-down"></span></a>
+						<ul class="nav child_menu">
+							<li><a href="./addequipment/AddInterruptionsDetails">Add</a></li>
+							<li><a id="viewlocation" href="./addequipment/ViewInterruptionDetail">View</a></li>
+							<li><a id="viewlocation" href="./report/InterruptionsDetails">Report</a></li>
+						</ul>
+					</li>
+					<li><a href="./report/Report"><i class="fa fa-file" aria-hidden="true"></i>Reports</a></li>
+					<li><a href="./master/Dashboard"><i class="fa fa-tachometer" aria-hidden="true"></i>DashBoard</a></li>
+					<li><a href="./master/ContactDetail"><i class="fa fa-book" aria-hidden="true"></i>Contact Detail's</a></li> 
+				
+					
+					
 					
 				</ul>
 			</div>

@@ -50,70 +50,77 @@ public class ViewNetworkLocationDetailForm extends Panel {
 	private String officeaddress;
 	private String locationcontactperson;
 	private String loactioncontactno;
+	private String oprcontactno ;
+	private String oprcontactname ;
 	private String remark;
 	private String townname;
 	private String phase;
 	private String circle;
-    private String division;
-    private String subdivision;
-    private String section;
-    private String spcircuitcode;
-    private String latitude;
-    private String longitude;
-	private NetworkLocationDetail nld ;
-	
-	final int DEF_NO_OF_ROWS=9999;
+	private String division;
+	private String ero;
+	private String subdivision;
+	private String section;
+	private String spcircuitcode;
+	private String latitude;
+	private String longitude;
+	private NetworkLocationDetail nld;
+
+	final int DEF_NO_OF_ROWS = 9999;
 	private NetworkVendorList ntvnlist = new NetworkVendorList();
 	private NetworkEquipmentList nteqlist = new NetworkEquipmentList();
 	private NetworkUPSList ntupslist = new NetworkUPSList();
 	private NetworkInterfaceList ntinlist = new NetworkInterfaceList();
-	public ViewNetworkLocationDetailForm(String id,final IModel<NetworkLocationDetail> nldmodel) {
+	private NetworkRollingStockList ntrslist = new NetworkRollingStockList();
+
+	public ViewNetworkLocationDetailForm(String id, final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
 		setDefaultModel(new CompoundPropertyModel<ViewNetworkLocationDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("detailform");
 		nld = getNetworkLocationDetail(nldmodel.getObject().getSpcircuitid());
-		
+
 		circle = nld.getCircledesc();
-        division = nld.getDivisiondesc();
-        subdivision = nld.getSubdivisiondesc();
-        section = nld.getSectiondesc();
-        spcircuitid = nld.getSpcircuitid();
-        spcircuitcode = nld.getSpciruitcode();
+		division = nld.getDivisiondesc();
+		ero = nld.getErodesc() ;
+		subdivision = nld.getSubdivisiondesc();
+		section = nld.getSectiondesc();
+		spcircuitid = nld.getSpcircuitid();
+		spcircuitcode = nld.getSpciruitcode();
 		projecttypedescription = nld.getProjecttypedescription();
 		noofpointsavailable = nld.getNoofpointsavailable();
 		installationdate = nld.getInstallationdate();
 		dateofconnected = nld.getDateofconnected();
-		ismergelocation = nld.getIsmergelocation()==1?nld.getMergelocationdesc():"No";
+		ismergelocation = nld.getIsmergelocation() == 1 ? nld.getMergelocationdesc() : "No";
 		officecontactno = nld.getOfficecontactno();
 		officeaddress = nld.getOfficeaddress();
 		locationcontactperson = nld.getLocationcontactperson();
 		loactioncontactno = nld.getLoactioncontactno();
+		oprcontactno = nld.getOprcontactno();
+		oprcontactname = nld.getOprcontactname();
 		remark = nld.getRemark();
 		townname = nld.getTownname();
 		phase = nld.getPhase();
 		latitude = nld.getLatitude();
 		longitude = nld.getLongitude();
-		
+
 		ntvnlist.setList(getVendors());
 		NetworkVendorDataProvider ntvndataprovider = new NetworkVendorDataProvider();
 		List<IColumn> vncolumns = new ArrayList<IColumn>();
-		vncolumns.add(new AbstractColumn(new Model("Sr. No.")){
-			   public void populateItem(Item cell, String compId, IModel rowModel) {
-			    int pageNumber,noRows;
-			    DataTable tbl=(DataTable) get("datatable");
-			    if(tbl != null) {
-			    	pageNumber= (int) tbl.getCurrentPage();
-			    	noRows=(int) tbl.getItemsPerPage();
-			    	}
-			    else {
-			    	pageNumber=0;
-			    	noRows=0;
-			    	}
-			    int rowNumber = (pageNumber*noRows)+((Item) cell.getParent().getParent()).getIndex()+1;
-			          cell.add(new Label(compId,rowNumber)); 
-			      }
-			  });
+		vncolumns.add(new AbstractColumn(new Model("Sr. No.")) {
+			public void populateItem(Item cell, String compId, IModel rowModel) {
+				int pageNumber, noRows;
+				DataTable tbl = (DataTable) get("datatable");
+				if (tbl != null) {
+					pageNumber = (int) tbl.getCurrentPage();
+					noRows = (int) tbl.getItemsPerPage();
+				} else {
+					pageNumber = 0;
+					noRows = 0;
+				}
+				int rowNumber = (pageNumber * noRows) + ((Item) cell.getParent().getParent()).getIndex() + 1;
+				cell.add(new Label(compId, rowNumber));
+			}
+		});
 
 		vncolumns.add(new PropertyColumn(new Model("Vendor Name"), "vendorname"));
 		vncolumns.add(new PropertyColumn(new Model("Bandwidth"), "bandwidth"));
@@ -122,170 +129,209 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		vncolumns.add(new PropertyColumn(new Model("Media Type"), "mediatypedesc"));
 		vncolumns.add(new PropertyColumn(new Model("Circuit ID"), "circuitid"));
 		vncolumns.add(new PropertyColumn(new Model("Phase"), "phase"));
-	/*	vncolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
-		if(((PortSession) getSession()).isAdmin()){	
-		vncolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
-			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
-			}
-		});
+		vncolumns.add(new PropertyColumn(new Model("Commissioned Date"), "commissionedate"));
+		/* vncolumns.add(new PropertyColumn(new Model("Remark"), "remark")); */
+		if (((PortSession) getSession()).isAdmin()) {
+			vncolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
+				public void populateItem(Item item, String componentId, IModel rowModel) {
+					item.add(new ColumnEditPanelNetworkVendorDetail(componentId, rowModel,
+							new PropertyModel(rowModel, getProperty()),
+							new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				}
+			});
 		}
 		DataTable table = new DataTable("vndatatable", vncolumns, ntvndataprovider, DEF_NO_OF_ROWS);
-		table.addTopToolbar(new HeadersToolbar(table,ntvndataprovider));
+		table.addTopToolbar(new HeadersToolbar(table, ntvndataprovider));
 		form.add(table);
-		
+
 		nteqlist.setList(getEquipments());
 		NetworkEquipmentDataProvider nteqdataprovider = new NetworkEquipmentDataProvider();
-		
-		List<IColumn> eqcolumns = new ArrayList<IColumn>();
-		eqcolumns.add(new AbstractColumn(new Model("Sr. No.")){
-			   public void populateItem(Item cell, String compId, IModel rowModel) {
-			    int pageNumber,noRows;
-			    DataTable tbl=(DataTable) get("datatable");
-			    if(tbl != null) {
-			    	pageNumber= (int) tbl.getCurrentPage();
-			    	noRows=(int) tbl.getItemsPerPage();
-			    	}
-			    else {
-			    	pageNumber=0;
-			    	noRows=0;
-			    	}
-			    int rowNumber = (pageNumber*noRows)+((Item) cell.getParent().getParent()).getIndex()+1;
-			          cell.add(new Label(compId,rowNumber)); 
-			      }
-			  });
 
-/*		eqcolumns.add(new PropertyColumn(new Model("Make"), "make"));*/
+		List<IColumn> eqcolumns = new ArrayList<IColumn>();
+		eqcolumns.add(new AbstractColumn(new Model("Sr. No.")) {
+			public void populateItem(Item cell, String compId, IModel rowModel) {
+				int pageNumber, noRows;
+				DataTable tbl = (DataTable) get("datatable");
+				if (tbl != null) {
+					pageNumber = (int) tbl.getCurrentPage();
+					noRows = (int) tbl.getItemsPerPage();
+				} else {
+					pageNumber = 0;
+					noRows = 0;
+				}
+				int rowNumber = (pageNumber * noRows) + ((Item) cell.getParent().getParent()).getIndex() + 1;
+				cell.add(new Label(compId, rowNumber));
+			}
+		});
+
+		/* eqcolumns.add(new PropertyColumn(new Model("Make"), "make")); */
 		eqcolumns.add(new GClickablePropertyColumn(new Model("Equipment"), "equipmentdesc") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnClickPanelNetworkEquipmentDetail(componentId,rowModel ,
-						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				item.add(new ColumnClickPanelNetworkEquipmentDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty()),
+						new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
 		eqcolumns.add(new PropertyColumn(new Model("Make"), "make"));
 		eqcolumns.add(new PropertyColumn(new Model("Model"), "model"));
 		eqcolumns.add(new PropertyColumn(new Model("Serial No."), "serialnumber"));
 		eqcolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
-		eqcolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"), "isreplace") {
+		eqcolumns.add(new PropertyColumn(new Model("Installation Date"), "installdate"));
+		eqcolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"),"itsposition") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ReplaceDetail(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty())));
+				item.add(new ReplaceDetail(componentId, rowModel, new PropertyModel(rowModel, getProperty())));
 			}
 		});
-		if(((PortSession) getSession()).isAdmin()){	
-		eqcolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
-			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkEquipmentDetail(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
-			}
-		});
+		if (((PortSession) getSession()).isAdmin()) {
+			eqcolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
+				public void populateItem(Item item, String componentId, IModel rowModel) {
+					item.add(new ColumnEditPanelNetworkEquipmentDetail(componentId, rowModel,
+							new PropertyModel(rowModel, getProperty()),
+							new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				}
+			});
 		}
-		/*eqcolumns.add(new PropertyColumn(new Model("Remark"), "remark"));*/
+		/* eqcolumns.add(new PropertyColumn(new Model("Remark"), "remark")); */
 		DataTable eqtable = new DataTable("eqdatatable", eqcolumns, nteqdataprovider, DEF_NO_OF_ROWS);
-		eqtable.addTopToolbar(new HeadersToolbar(eqtable,nteqdataprovider));
+		eqtable.addTopToolbar(new HeadersToolbar(eqtable, nteqdataprovider));
 		form.add(eqtable);
-		
-		
+
 		ntupslist.setList(getUPS());
 		NetworkUPSDataProvider ntupsdataprovider = new NetworkUPSDataProvider();
-		
-		List<IColumn> upscolumns = new ArrayList<IColumn>();
-		upscolumns.add(new AbstractColumn(new Model("Sr. No.")){
-			   public void populateItem(Item cell, String compId, IModel rowModel) {
-			    int pageNumber,noRows;
-			    DataTable tbl=(DataTable) get("datatable");
-			    if(tbl != null) {
-			    	pageNumber= (int) tbl.getCurrentPage();
-			    	noRows=(int) tbl.getItemsPerPage();
-			    	}
-			    else {
-			    	pageNumber=0;
-			    	noRows=0;
-			    	}
-			    int rowNumber = (pageNumber*noRows)+((Item) cell.getParent().getParent()).getIndex()+1;
-			          cell.add(new Label(compId,rowNumber)); 
-			      }
-			  });
 
-		/*upscolumns.add(new PropertyColumn(new Model("Make"), "make"));*/
+		List<IColumn> upscolumns = new ArrayList<IColumn>();
+		upscolumns.add(new AbstractColumn(new Model("Sr. No.")) {
+			public void populateItem(Item cell, String compId, IModel rowModel) {
+				int pageNumber, noRows;
+				DataTable tbl = (DataTable) get("datatable");
+				if (tbl != null) {
+					pageNumber = (int) tbl.getCurrentPage();
+					noRows = (int) tbl.getItemsPerPage();
+				} else {
+					pageNumber = 0;
+					noRows = 0;
+				}
+				int rowNumber = (pageNumber * noRows) + ((Item) cell.getParent().getParent()).getIndex() + 1;
+				cell.add(new Label(compId, rowNumber));
+			}
+		});
+
+		/* upscolumns.add(new PropertyColumn(new Model("Make"), "make")); */
 		upscolumns.add(new GClickablePropertyColumn(new Model("Make"), "make") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnClickPanelNetworkUPSDetail(componentId,rowModel ,
-						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				item.add(new ColumnClickPanelNetworkUPSDetail(componentId, rowModel,
+						new PropertyModel(rowModel, getProperty()),
+						new CompoundPropertyModel<NetworkLocationDetail>(nld)));
 			}
 		});
 		upscolumns.add(new PropertyColumn(new Model("Model"), "model"));
 		upscolumns.add(new PropertyColumn(new Model("Serial No."), "serialnumber"));
 		upscolumns.add(new PropertyColumn(new Model("No .of Batteries"), "noofbatteries"));
 		upscolumns.add(new PropertyColumn(new Model("AMC/Warranty"), "amc"));
+		upscolumns.add(new PropertyColumn(new Model("Installation Date"), "installationdate"));
 		upscolumns.add(new GClickablePropertyColumn(new Model("Replace/Stand By"), "isreplace") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new UPSReplaceDetail(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty())));
+				item.add(new UPSReplaceDetail(componentId, rowModel, new PropertyModel(rowModel, getProperty())));
 			}
 		});
 		upscolumns.add(new PropertyColumn(new Model("Remark"), "remark"));
-		if(((PortSession) getSession()).isAdmin()){	
-		upscolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
-			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkUPSDetail(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
-			}
-		});
+		if (((PortSession) getSession()).isAdmin()) {
+			upscolumns.add(new GClickablePropertyColumn(new Model("Edit"), "make") {
+				public void populateItem(Item item, String componentId, IModel rowModel) {
+					item.add(new ColumnEditPanelNetworkUPSDetail(componentId, rowModel,
+							new PropertyModel(rowModel, getProperty()),
+							new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				}
+			});
 		}
 		DataTable upstable = new DataTable("upsdatatable", upscolumns, ntupsdataprovider, DEF_NO_OF_ROWS);
-		upstable.addTopToolbar(new HeadersToolbar(upstable,nteqdataprovider));
+		upstable.addTopToolbar(new HeadersToolbar(upstable, nteqdataprovider));
 		form.add(upstable);
-		
-		
+
 		ntinlist.setList(getInterfaces());
 		NetworkInterfaceDataProvider ntindataprovider = new NetworkInterfaceDataProvider();
-		
+
 		List<IColumn> incolumns = new ArrayList<IColumn>();
-		incolumns.add(new AbstractColumn(new Model("Sr. No.")){
-			   public void populateItem(Item cell, String compId, IModel rowModel) {
-			    int pageNumber,noRows;
-			    DataTable tbl=(DataTable) get("datatable");
-			    if(tbl != null) {
-			    	pageNumber= (int) tbl.getCurrentPage();
-			    	noRows=(int) tbl.getItemsPerPage();
-			    	}
-			    else {
-			    	pageNumber=0;
-			    	noRows=0;
-			    	}
-			    int rowNumber = (pageNumber*noRows)+((Item) cell.getParent().getParent()).getIndex()+1;
-			          cell.add(new Label(compId,rowNumber)); 
-			      }
-			  });
+		incolumns.add(new AbstractColumn(new Model("Sr. No.")) {
+			public void populateItem(Item cell, String compId, IModel rowModel) {
+				int pageNumber, noRows;
+				DataTable tbl = (DataTable) get("datatable");
+				if (tbl != null) {
+					pageNumber = (int) tbl.getCurrentPage();
+					noRows = (int) tbl.getItemsPerPage();
+				} else {
+					pageNumber = 0;
+					noRows = 0;
+				}
+				int rowNumber = (pageNumber * noRows) + ((Item) cell.getParent().getParent()).getIndex() + 1;
+				cell.add(new Label(compId, rowNumber));
+			}
+		});
 
 		incolumns.add(new PropertyColumn(new Model("Vendor Name"), "vendorname"));
 		incolumns.add(new GClickablePropertyColumn(new Model("Vendor Details"), "vendorname") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new VendorDetailColumn(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty())));
+				item.add(new VendorDetailColumn(componentId, rowModel, new PropertyModel(rowModel, getProperty())));
 			}
 		});
 		incolumns.add(new GClickablePropertyColumn(new Model("Spdcl Details"), "spntinterface") {
 			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new SPDetailColumn(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty())));
+				item.add(new SPDetailColumn(componentId, rowModel, new PropertyModel(rowModel, getProperty())));
 			}
 		});
-		if(((PortSession) getSession()).isAdmin()){			
-		incolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
-			public void populateItem(Item item, String componentId, IModel rowModel) {
-				item.add(new ColumnEditPanelNetworkInterfaceDetail(componentId, rowModel,
-						new PropertyModel(rowModel, getProperty()),new CompoundPropertyModel<NetworkLocationDetail>(nld)));
-			}
-		});
+		if (((PortSession) getSession()).isAdmin()) {
+			incolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
+				public void populateItem(Item item, String componentId, IModel rowModel) {
+					item.add(new ColumnEditPanelNetworkInterfaceDetail(componentId, rowModel,
+							new PropertyModel(rowModel, getProperty()),
+							new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				}
+			});
 		}
 		DataTable intable = new DataTable("indatatable", incolumns, ntindataprovider, DEF_NO_OF_ROWS);
-		intable.addTopToolbar(new HeadersToolbar(intable,ntindataprovider));
+		intable.addTopToolbar(new HeadersToolbar(intable, ntindataprovider));
 		form.add(intable);
 		
-		Button btnaddvendor = new Button("btnaddvendor"){
+		
+		/*ntrslist.setList(getRollingStock());
+		NetworkRollingStockDataProvider ntrsdataprovider = new NetworkRollingStockDataProvider();
+
+		List<IColumn> rscolumns = new ArrayList<IColumn>();
+		rscolumns.add(new AbstractColumn(new Model("Sr. No.")) {
+			public void populateItem(Item cell, String compId, IModel rowModel) {
+				int pageNumber, noRows;
+				DataTable tbl = (DataTable) get("datatable");
+				if (tbl != null) {
+					pageNumber = (int) tbl.getCurrentPage();
+					noRows = (int) tbl.getItemsPerPage();
+				} else {
+					pageNumber = 0;
+					noRows = 0;
+				}
+				int rowNumber = (pageNumber * noRows) + ((Item) cell.getParent().getParent()).getIndex() + 1;
+				cell.add(new Label(compId, rowNumber));
+			}
+		});
+
+		rscolumns.add(new PropertyColumn(new Model("Equipment Name"), "equipmentname"));
+		rscolumns.add(new PropertyColumn(new Model("Model"), "model"));
+		rscolumns.add(new PropertyColumn(new Model("Serial No"), "serialno"));
+		rscolumns.add(new PropertyColumn(new Model("Total"), "total"));
+		
+		if (((PortSession) getSession()).isAdmin()) {
+			rscolumns.add(new GClickablePropertyColumn(new Model("Edit"), "vendorname") {
+				public void populateItem(Item item, String componentId, IModel rowModel) {
+					item.add(new ColumnEditPanelRollingStockDetail(componentId, rowModel,
+							new PropertyModel(rowModel, getProperty()),
+							new CompoundPropertyModel<NetworkLocationDetail>(nld)));
+				}
+			});
+		}
+		DataTable rstable = new DataTable("rsdatatable", rscolumns, ntrsdataprovider, DEF_NO_OF_ROWS);
+		rstable.addTopToolbar(new HeadersToolbar(rstable, ntrsdataprovider));
+		form.add(rstable);*/
+
+		Button btnaddvendor = new Button("btnaddvendor") {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
@@ -293,52 +339,64 @@ public class ViewNetworkLocationDetailForm extends Panel {
 				setResponsePage(av);
 			}
 		};
-		Button btnaddnetworkeqp = new Button("btnaddnteq"){
+		Button btnaddnetworkeqp = new Button("btnaddnteq") {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddEquipmentDetail ae = new AddEquipmentDetail(parms,  new CompoundPropertyModel<NetworkLocationDetail>(nld));
+				AddEquipmentDetail ae = new AddEquipmentDetail(parms,
+						new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(ae);
 			}
 		};
-		Button btnaddnetworkinterface = new Button("btnaddntin"){
+		Button btnaddnetworkinterface = new Button("btnaddntin") {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddInterfaceDetail ai = new AddInterfaceDetail(parms,  new CompoundPropertyModel<NetworkLocationDetail>(nld));
+				AddInterfaceDetail ai = new AddInterfaceDetail(parms,
+						new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(ai);
 			}
 		};
-		Button btnaddupsd = new Button("btnaddupsd"){
+		Button btnaddupsd = new Button("btnaddupsd") {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				AddUPSDetail av = new AddUPSDetail(parms,  new CompoundPropertyModel<NetworkLocationDetail>(nld));
+				AddUPSDetail av = new AddUPSDetail(parms, new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(av);
 			}
 		};
-		Button btnback = new Button("btnback"){
+		/*Button btnaddrsd = new Button("btnaddrsd") {
+			@Override
+			public void onSubmit() {
+				PageParameters parms = new PageParameters();
+				AddRollingStockDetail av = new AddRollingStockDetail(parms, new CompoundPropertyModel<NetworkLocationDetail>(nld));
+				setResponsePage(av);
+			}
+		};*/
+		Button btnback = new Button("btnback") {
 			@Override
 			public void onSubmit() {
 				setResponsePage(ViewAllNetworkLocation.class);
 			}
 		};
-		
-		Button edit = new Button("edit"){
+
+		Button edit = new Button("edit") {
 			@Override
 			public void onSubmit() {
 				PageParameters parms = new PageParameters();
-				EditNetworkLocationDetail av = new EditNetworkLocationDetail(parms, new CompoundPropertyModel<NetworkLocationDetail>(nld));
+				EditNetworkLocationDetail av = new EditNetworkLocationDetail(parms,
+						new CompoundPropertyModel<NetworkLocationDetail>(nld));
 				setResponsePage(av);
 			}
 		};
 		edit.setVisible(((PortSession) getSession()).isAdmin());
-		form.add(new Label("circle") );
-        form.add(new Label("division"));
-        form.add(new Label("subdivision"));
-        form.add(new Label("section") );
-        form.add(new Label("spcircuitcode"));
-	/*	form.add(new Label("spcircuitid"));*/
+		form.add(new Label("circle"));
+		form.add(new Label("division"));
+		form.add(new Label("ero"));
+		form.add(new Label("subdivision"));
+		form.add(new Label("section"));
+		/*form.add(new Label("spcircuitcode"));*/
+		/* form.add(new Label("spcircuitid")); */
 		form.add(new Label("projecttypedescription"));
 		form.add(new Label("noofpointsavailable"));
 		form.add(new Label("installationdate"));
@@ -348,6 +406,8 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		form.add(new Label("officeaddress"));
 		form.add(new Label("locationcontactperson"));
 		form.add(new Label("loactioncontactno"));
+		form.add(new Label("oprcontactno"));
+		form.add(new Label("oprcontactname"));
 		form.add(new Label("remark"));
 		form.add(new Label("townname"));
 		form.add(new Label("phase"));
@@ -357,28 +417,29 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		form.add(btnaddnetworkeqp);
 		form.add(btnaddnetworkinterface);
 		form.add(btnaddupsd);
+		/*form.add(btnaddrsd);*/
 		form.add(btnback);
 		form.add(edit);
 		add(form);
 	}
-	public class NetworkVendorDataProvider extends  SortableDataProvider implements Serializable
-	{
+
+	public class NetworkVendorDataProvider extends SortableDataProvider implements Serializable {
 
 		public NetworkVendorDataProvider() {
 			// TODO Auto-generated constructor stub
-			setSort("spcircuidid",SortOrder.ASCENDING);
+			setSort("spcircuidid", SortOrder.ASCENDING);
 		}
+
 		@Override
 		public Iterator iterator(long first, long count) {
 			// TODO Auto-generated method stub
 			Collections.sort(ntvnlist.getList(), new Comparator<NetworkVendorDetail>() {
 
 				@Override
-				public int compare(NetworkVendorDetail arg0,
-						NetworkVendorDetail arg1) {
+				public int compare(NetworkVendorDetail arg0, NetworkVendorDetail arg1) {
 					// TODO Auto-generated method stub
-					int dir=getSort().isAscending()?1:-1;
-					return dir * (arg0.getVendorname()  .compareTo(arg1.getVendorname()));
+					int dir = getSort().isAscending() ? 1 : -1;
+					return dir * (arg0.getVendorname().compareTo(arg1.getVendorname()));
 				}
 			});
 			return ntvnlist.selectList((int) first, (int) count).iterator();
@@ -388,7 +449,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		public IModel model(Object arg0) {
 			// TODO Auto-generated method stub
 			NetworkVendorDetail nld = (NetworkVendorDetail) arg0;
-			return new Model((Serializable)nld);
+			return new Model((Serializable) nld);
 		}
 
 		@Override
@@ -396,51 +457,52 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			// TODO Auto-generated method stub
 			return ntvnlist.getList().size();
 		}
-		
+
 	}
-	public class NetworkVendorList implements Serializable
-	{
+
+	public class NetworkVendorList implements Serializable {
 		private List<NetworkVendorDetail> list;
+
 		public NetworkVendorList() {
 			// TODO Auto-generated constructor stub
 			list = new ArrayList<NetworkVendorDetail>();
 		}
-		public void addItem(NetworkVendorDetail t){
+
+		public void addItem(NetworkVendorDetail t) {
 			list.add(t);
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List getList(){
+		public List getList() {
 			return list;
 		}
-		
-		public void setList(List<NetworkVendorDetail> l){
-			list=l;
+
+		public void setList(List<NetworkVendorDetail> l) {
+			list = l;
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List selectList(int first,int count){
-			return list.subList(first, first+count);
+		public List selectList(int first, int count) {
+			return list.subList(first, first + count);
 		}
 	}
-	
-	public class NetworkEquipmentDataProvider extends  SortableDataProvider implements Serializable
-	{
+
+	public class NetworkEquipmentDataProvider extends SortableDataProvider implements Serializable {
 
 		public NetworkEquipmentDataProvider() {
 			// TODO Auto-generated constructor stub
-			setSort("make",SortOrder.ASCENDING);
+			setSort("make", SortOrder.ASCENDING);
 		}
+
 		@Override
 		public Iterator iterator(long first, long count) {
 			// TODO Auto-generated method stub
 			Collections.sort(nteqlist.getList(), new Comparator<NetworkEquipmentDetail>() {
 
 				@Override
-				public int compare(NetworkEquipmentDetail arg0,
-						NetworkEquipmentDetail arg1) {
+				public int compare(NetworkEquipmentDetail arg0, NetworkEquipmentDetail arg1) {
 					// TODO Auto-generated method stub
-					int dir=getSort().isAscending()?1:-1;
+					int dir = getSort().isAscending() ? 1 : -1;
 					return dir * (arg0.getMake().compareTo(arg1.getMake()));
 				}
 			});
@@ -451,7 +513,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		public IModel model(Object arg0) {
 			// TODO Auto-generated method stub
 			NetworkEquipmentDetail nld = (NetworkEquipmentDetail) arg0;
-			return new Model((Serializable)nld);
+			return new Model((Serializable) nld);
 		}
 
 		@Override
@@ -459,52 +521,52 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			// TODO Auto-generated method stub
 			return nteqlist.getList().size();
 		}
-		
+
 	}
-	
-	public class NetworkEquipmentList implements Serializable
-	{
+
+	public class NetworkEquipmentList implements Serializable {
 		private List<NetworkEquipmentDetail> list;
+
 		public NetworkEquipmentList() {
 			// TODO Auto-generated constructor stub
 			list = new ArrayList<NetworkEquipmentDetail>();
 		}
-		public void addItem(NetworkEquipmentDetail t){
+
+		public void addItem(NetworkEquipmentDetail t) {
 			list.add(t);
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List getList(){
+		public List getList() {
 			return list;
 		}
-		
-		public void setList(List<NetworkEquipmentDetail> l){
-			list=l;
+
+		public void setList(List<NetworkEquipmentDetail> l) {
+			list = l;
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List selectList(int first,int count){
-			return list.subList(first, first+count);
+		public List selectList(int first, int count) {
+			return list.subList(first, first + count);
 		}
 	}
-	
-	public class NetworkUPSDataProvider extends  SortableDataProvider implements Serializable
-	{
+
+	public class NetworkUPSDataProvider extends SortableDataProvider implements Serializable {
 
 		public NetworkUPSDataProvider() {
 			// TODO Auto-generated constructor stub
-			setSort("make",SortOrder.ASCENDING);
+			setSort("make", SortOrder.ASCENDING);
 		}
+
 		@Override
 		public Iterator iterator(long first, long count) {
 			// TODO Auto-generated method stub
 			Collections.sort(ntupslist.getList(), new Comparator<NetworkUPSDetail>() {
 
 				@Override
-				public int compare(NetworkUPSDetail arg0,
-						NetworkUPSDetail arg1) {
+				public int compare(NetworkUPSDetail arg0, NetworkUPSDetail arg1) {
 					// TODO Auto-generated method stub
-					int dir=getSort().isAscending()?1:-1;
+					int dir = getSort().isAscending() ? 1 : -1;
 					return dir * (arg0.getMake().compareTo(arg1.getMake()));
 				}
 			});
@@ -515,7 +577,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		public IModel model(Object arg0) {
 			// TODO Auto-generated method stub
 			NetworkUPSDetail nld = (NetworkUPSDetail) arg0;
-			return new Model((Serializable)nld);
+			return new Model((Serializable) nld);
 		}
 
 		@Override
@@ -523,51 +585,52 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			// TODO Auto-generated method stub
 			return ntupslist.getList().size();
 		}
-		
+
 	}
-	public class NetworkUPSList implements Serializable
-	{
+
+	public class NetworkUPSList implements Serializable {
 		private List<NetworkUPSDetail> list;
+
 		public NetworkUPSList() {
 			// TODO Auto-generated constructor stub
 			list = new ArrayList<NetworkUPSDetail>();
 		}
-		public void addItem(NetworkUPSDetail t){
+
+		public void addItem(NetworkUPSDetail t) {
 			list.add(t);
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List getList(){
+		public List getList() {
 			return list;
 		}
-		
-		public void setList(List<NetworkUPSDetail> l){
-			list=l;
+
+		public void setList(List<NetworkUPSDetail> l) {
+			list = l;
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List selectList(int first,int count){
-			return list.subList(first, first+count);
+		public List selectList(int first, int count) {
+			return list.subList(first, first + count);
 		}
 	}
-	
-	public class NetworkInterfaceDataProvider extends  SortableDataProvider implements Serializable
-	{
+
+	public class NetworkInterfaceDataProvider extends SortableDataProvider implements Serializable {
 
 		public NetworkInterfaceDataProvider() {
 			// TODO Auto-generated constructor stub
-			setSort("equipment",SortOrder.ASCENDING);
+			setSort("equipment", SortOrder.ASCENDING);
 		}
+
 		@Override
 		public Iterator iterator(long first, long count) {
 			// TODO Auto-generated method stub
 			Collections.sort(ntinlist.getList(), new Comparator<NetworkInterfaceDetail>() {
 
 				@Override
-				public int compare(NetworkInterfaceDetail arg0,
-						NetworkInterfaceDetail arg1) {
+				public int compare(NetworkInterfaceDetail arg0, NetworkInterfaceDetail arg1) {
 					// TODO Auto-generated method stub
-					int dir=getSort().isAscending()?1:-1;
+					int dir = getSort().isAscending() ? 1 : -1;
 					return dir * (arg0.getVendorname().compareTo(arg1.getVendorname()));
 				}
 			});
@@ -578,7 +641,7 @@ public class ViewNetworkLocationDetailForm extends Panel {
 		public IModel model(Object arg0) {
 			// TODO Auto-generated method stub
 			NetworkInterfaceDetail nld = (NetworkInterfaceDetail) arg0;
-			return new Model((Serializable)nld);
+			return new Model((Serializable) nld);
 		}
 
 		@Override
@@ -586,268 +649,348 @@ public class ViewNetworkLocationDetailForm extends Panel {
 			// TODO Auto-generated method stub
 			return ntinlist.getList().size();
 		}
-		
+
 	}
-	public class NetworkInterfaceList implements Serializable
-	{
+	
+	public class NetworkRollingStockDataProvider extends SortableDataProvider implements Serializable {
+
+		public NetworkRollingStockDataProvider() {
+			// TODO Auto-generated constructor stub
+			setSort("equipment", SortOrder.ASCENDING);
+		}
+
+		@Override
+		public Iterator iterator(long first, long count) {
+			// TODO Auto-generated method stub
+			Collections.sort(ntrslist.getList(), new Comparator<NetworkRollingStockDetail>() {
+
+				@Override
+				public int compare(NetworkRollingStockDetail arg0, NetworkRollingStockDetail arg1) {
+					// TODO Auto-generated method stub
+					int dir = getSort().isAscending() ? 1 : -1;
+					return dir * (arg0.getEquipmentname().compareTo(arg1.getEquipmentname()));
+				}
+			});
+			return ntrslist.selectList((int) first, (int) count).iterator();
+		}
+
+		@Override
+		public IModel model(Object arg0) {
+			// TODO Auto-generated method stub
+			NetworkRollingStockDetail nld = (NetworkRollingStockDetail) arg0;
+			return new Model((Serializable) nld);
+		}
+
+		@Override
+		public long size() {
+			// TODO Auto-generated method stub
+			return ntrslist.getList().size();
+		}
+
+	}
+
+	public class NetworkInterfaceList implements Serializable {
 		private List<NetworkInterfaceDetail> list;
+
 		public NetworkInterfaceList() {
 			// TODO Auto-generated constructor stub
 			list = new ArrayList<NetworkInterfaceDetail>();
 		}
-		public void addItem(NetworkInterfaceDetail t){
+
+		public void addItem(NetworkInterfaceDetail t) {
 			list.add(t);
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List getList(){
+		public List getList() {
 			return list;
 		}
-		
-		public void setList(List<NetworkInterfaceDetail> l){
-			list=l;
+
+		public void setList(List<NetworkInterfaceDetail> l) {
+			list = l;
 		}
-		
+
 		@SuppressWarnings("rawtypes")
-		public List selectList(int first,int count){
-			return list.subList(first, first+count);
+		public List selectList(int first, int count) {
+			return list.subList(first, first + count);
 		}
 	}
 	
-	public NetworkLocationDetail getNetworkLocationDetail(String circuit_id)
-	{
+	public class NetworkRollingStockList implements Serializable {
+		private List<NetworkRollingStockDetail> list;
+
+		public NetworkRollingStockList() {
+			// TODO Auto-generated constructor stub
+			list = new ArrayList<NetworkRollingStockDetail>();
+		}
+
+		public void addItem(NetworkRollingStockDetail t) {
+			list.add(t);
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List getList() {
+			return list;
+		}
+
+		public void setList(List<NetworkRollingStockDetail> l) {
+			list = l;
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List selectList(int first, int count) {
+			return list.subList(first, first + count);
+		}
+	}
+
+	public NetworkLocationDetail getNetworkLocationDetail(String circuit_id) {
 		NetworkLocationDetail detail = null;
-		
+
 		String query = "{call sp_circuit_get_details(?,?,?)}";
 		Connection con = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = new DataBaseConnection().getConnection();
-            stmt = con.prepareCall(query);
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, circuit_id);
-		    rs = stmt.executeQuery();
-		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-		    while(rs.next())
-		    {
-		   
-		    	detail = new NetworkLocationDetail(
-		    			rs.getString(1),
-		    			rs.getInt(2),
-		    			rs.getString(3),
-		    			rs.getInt(4),
-						rs.getString(5), 
-						rs.getString(6),
-						rs.getString(7), 
-						rs.getString(8), 
-						rs.getString(9),
-						rs.getString(10),
-						rs.getString(11), 
-						rs.getString(12), 
-						rs.getString(13), 
-						rs.getString(14),
-						rs.getString(15),
-						rs.getString(16), 
-						rs.getString(17), 
-						rs.getString(18), 
-						rs.getInt(19),
-						rs.getString(20),
-						rs.getString(21),
-						rs.getString(22));
-		    }
-		}catch (SQLException e) {
-			log.error("SQL Exception in getNetworkLocationDetail() method {"+e.getMessage()+"}");
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+
+				detail = new NetworkLocationDetail(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
+						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+						rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14),
+						rs.getString(15), rs.getString(16), rs.getString(17), rs.getString(18), rs.getString(19), rs.getInt(20),
+						rs.getString(21), rs.getString(22), rs.getString(23),rs.getInt(24),rs.getInt(25),rs.getInt(26),rs.getInt(27),rs.getInt(28),rs.getString(29),rs.getString(30));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in getNetworkLocationDetail() method {" + e.getMessage() + "}");
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getNetworkLocationDetail() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
 		}
-        finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-            catch (SQLException e2) {
-                log.error("SQL Exception in getNetworkLocationDetail() method {" + e2.getMessage() + "}");
-                e2.printStackTrace();
-            }
-        }
 		return detail;
-		
+
 	}
-	
+
 	public List<NetworkVendorDetail> getVendors() {
-        final List<NetworkVendorDetail> vnlist = new ArrayList<NetworkVendorDetail>();
-        final String query = "{call sp_circuit_get_vendors(?,?,?)}";
-        Connection con = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = new DataBaseConnection().getConnection();
-            stmt = con.prepareCall(query);
-            stmt.setString(1, ((PortSession)this.getSession()).getEmployeeid());
-            stmt.setInt(2, ((PortSession)this.getSession()).getSessionid());
-            stmt.setString(3, this.spcircuitid);
-            rs = stmt.executeQuery();
-            log.info((Object)("Executing Stored Procedure { " + stmt.toString() + " }"));
-            while (rs.next()) {
-                vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),rs.getString(9),rs.getInt(10),rs.getString(11),rs.getInt(12),rs.getString(13),rs.getInt(14)));
-            }
-        }
-        catch (SQLException e) {
-           log.error((Object)("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
-            e.printStackTrace();
-            return vnlist;
-        }
-        finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-               if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-            catch (SQLException e2) {
-                log.error("SQL Exception in getVendors() method {" + e2.getMessage() + "}");
-                e2.printStackTrace();
-            }
-        }
-        return vnlist;
-    }
-	
-	public List<NetworkEquipmentDetail> getEquipments()
-	{
+		final List<NetworkVendorDetail> vnlist = new ArrayList<NetworkVendorDetail>();
+		final String query = "{call sp_circuit_get_vendors(?,?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) this.getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) this.getSession()).getSessionid());
+			stmt.setString(3, this.spcircuitid);
+			rs = stmt.executeQuery();
+			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
+			while (rs.next()) {
+				vnlist.add(new NetworkVendorDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+						rs.getInt(10), rs.getString(11), rs.getInt(12), rs.getString(13), rs.getInt(14),
+						rs.getString(15)));
+			}
+		} catch (SQLException e) {
+			log.error((Object) ("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
+			e.printStackTrace();
+			return vnlist;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getVendors() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return vnlist;
+	}
+
+	public List<NetworkEquipmentDetail> getEquipments() {
 		List<NetworkEquipmentDetail> vnlist = new ArrayList<NetworkEquipmentDetail>();
 		String query = "{call sp_circuit_get_equipments(?,?,?)}";
 		Connection con = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = new DataBaseConnection().getConnection();
-            stmt = con.prepareCall(query);
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
-		    rs = stmt.executeQuery();
-		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-		    while(rs.next())
-		    {
-		    	vnlist.add(new NetworkEquipmentDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getInt(6),rs.getString(7),rs.getString(8)));
-		    }
-		}catch (SQLException e) {
-			log.error("SQL Exception in getEquipments() method {"+e.getMessage()+"}");
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+				vnlist.add(new NetworkEquipmentDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9), rs.getString(10)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in getEquipments() method {" + e.getMessage() + "}");
 			e.printStackTrace();
 		} finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-            catch (SQLException e2) {
-                log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
-                e2.printStackTrace();
-            }
-        }
-		return vnlist;	
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return vnlist;
 	}
-	
-	public List<NetworkUPSDetail> getUPS()
-	{
+
+	public List<NetworkUPSDetail> getUPS() {
 		List<NetworkUPSDetail> upslist = new ArrayList<NetworkUPSDetail>();
 		String query = "{call sp_circuit_get_ups(?,?,?)}";
 		Connection con = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = new DataBaseConnection().getConnection();
-            stmt = con.prepareCall(query);
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
-		    rs = stmt.executeQuery();
-		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-		    while(rs.next())
-		    {
-		    	upslist.add(new NetworkUPSDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),rs.getInt(5), rs.getString(6), rs.getString(7),rs.getInt(9)));
-		    }
-		}catch (SQLException e) {
-			log.error("SQL Exception in getUPS() method {"+e.getMessage()+"}");
+			// System.out.println(" spcircuitid "+spcircuitid);
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+				// System.out.println(" getString "+rs.getString(10));
+				upslist.add(new NetworkUPSDetail(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getInt(5), rs.getString(6), rs.getString(7), rs.getInt(9), rs.getString(10), rs.getString(11)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in getUPS() method {" + e.getMessage() + "}");
 			e.printStackTrace();
-		}finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-            catch (SQLException e2) {
-                log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
-                e2.printStackTrace();
-            }
-        }
-		return upslist;	
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return upslist;
 	}
-	
-	public List<NetworkInterfaceDetail> getInterfaces()
-	{
+
+	public List<NetworkInterfaceDetail> getInterfaces() {
 		List<NetworkInterfaceDetail> upinist = new ArrayList<NetworkInterfaceDetail>();
 		String query = "{call sp_circuit_get_interfaces(?,?,?)}";
 		Connection con = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = new DataBaseConnection().getConnection();
-            stmt = con.prepareCall(query);
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
 			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
 			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
 			stmt.setString(3, spcircuitid);
-		    rs = stmt.executeQuery();
-		    log.info("Executing Stored Procedure { "+stmt.toString()+" }");
-		    while(rs.next())
-		    {
-		    	upinist.add(new NetworkInterfaceDetail(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4),rs.getString(5), rs.getString(6), rs.getString(7),rs.getString(8), rs.getString(9),rs.getString(10) ));
-		    }
-		}catch (SQLException e) {
-			log.error("SQL Exception in getInterfaces() method {"+e.getMessage()+"}");
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+				upinist.add(new NetworkInterfaceDetail(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4),
+						rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+						rs.getString(10), rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in getInterfaces() method {" + e.getMessage() + "}");
 			e.printStackTrace();
-		}finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-            catch (SQLException e2) {
-                log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
-                e2.printStackTrace();
-            }
-        }
-		return upinist;	
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return upinist;
+	}
+	
+	public List<NetworkRollingStockDetail> getRollingStock() {
+		List<NetworkRollingStockDetail> rslist = new ArrayList<NetworkRollingStockDetail>();
+		String query = "{call sp_circuit_get_rolling_stock(?,?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			stmt = con.prepareCall(query);
+			stmt.setString(1, ((PortSession) getSession()).getEmployeeid());
+			stmt.setInt(2, ((PortSession) getSession()).getSessionid());
+			stmt.setString(3, spcircuitid);
+			rs = stmt.executeQuery();
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			while (rs.next()) {
+				rslist.add(new NetworkRollingStockDetail(rs.getInt(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in getInterfaces() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (SQLException e2) {
+				log.error("SQL Exception in getEquipments() method {" + e2.getMessage() + "}");
+				e2.printStackTrace();
+			}
+		}
+		return rslist;
 	}
 }

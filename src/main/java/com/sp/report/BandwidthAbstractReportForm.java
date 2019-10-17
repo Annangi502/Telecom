@@ -30,7 +30,7 @@ public class BandwidthAbstractReportForm extends Panel {
 	private static final Logger log = Logger.getLogger(BandwidthAbstractReportForm.class);
 	private HashMap<Integer, Integer> hm;
 	private ProjectType projecttypes;
-	private int projecttypeid ;
+	private int projecttypeid;
 	private ListView<BandwidthDetail> bandwidths;
 	private ListView<Integer> ttllist;
 	private Label lblttl;
@@ -54,7 +54,7 @@ public class BandwidthAbstractReportForm extends Panel {
 				item.add(new Label("vendorname", item.getModelObject().getVendorname()));
 			}
 		};
-		 bandwidths = new ListView<BandwidthDetail>("bandwidths", loadBandwidths()) {
+		bandwidths = new ListView<BandwidthDetail>("bandwidths", loadBandwidths()) {
 
 			@Override
 			protected void populateItem(ListItem<BandwidthDetail> item) {
@@ -85,7 +85,7 @@ public class BandwidthAbstractReportForm extends Panel {
 		for (Integer val : hm.values()) {
 			grandtotal += val;
 		}
-		 lblttl = new Label("grandtotal", grandtotal);
+		lblttl = new Label("grandtotal", grandtotal);
 
 		DropDownChoice<ProjectType> projecttype = new DropDownChoice<ProjectType>("projecttypes", projectlist,
 				new ChoiceRenderer<ProjectType>("projecttypedescription")) {
@@ -100,55 +100,56 @@ public class BandwidthAbstractReportForm extends Panel {
 				// TODO Auto-generated method stub
 				return true;
 			}
+
 			@Override
-					protected void onSelectionChanged(ProjectType newSelection) {
-						// TODO Auto-generated method stub
+			protected void onSelectionChanged(ProjectType newSelection) {
+				// TODO Auto-generated method stub
 				hm = new HashMap<Integer, Integer>();
-				projecttypeid  = newSelection.getProjecttypeid();
-				ListView<BandwidthDetail> tempbandwidths = new ListView<BandwidthDetail>("bandwidths", loadBandwidths()) {
+				projecttypeid = newSelection.getProjecttypeid();
+				ListView<BandwidthDetail> tempbandwidths = new ListView<BandwidthDetail>("bandwidths",
+						loadBandwidths()) {
 
-						@Override
-						protected void populateItem(ListItem<BandwidthDetail> item) {
-							// TODO Auto-generated method stub
-							item.add(new Label("bandwidthdesc", item.getModelObject().getBandwidthdesc()));
-							ListView<VendorBandwidthDetail> projects = new ListView<VendorBandwidthDetail>("vendorbandwidth",
-									item.getModelObject().getVendors()) {
+					@Override
+					protected void populateItem(ListItem<BandwidthDetail> item) {
+						// TODO Auto-generated method stub
+						item.add(new Label("bandwidthdesc", item.getModelObject().getBandwidthdesc()));
+						ListView<VendorBandwidthDetail> projects = new ListView<VendorBandwidthDetail>(
+								"vendorbandwidth", item.getModelObject().getVendors()) {
 
-								@Override
-								protected void populateItem(ListItem<VendorBandwidthDetail> item) {
-									// TODO Auto-generated method stub
-									item.add(new Label("count", item.getModelObject().getCount()));
-								}
-							};
-							item.add(new Label("total", item.getModelObject().getTotal()));
-							item.add(projects);
+							@Override
+							protected void populateItem(ListItem<VendorBandwidthDetail> item) {
+								// TODO Auto-generated method stub
+								item.add(new Label("count", item.getModelObject().getCount()));
+							}
+						};
+						item.add(new Label("total", item.getModelObject().getTotal()));
+						item.add(projects);
 
-						}
-					};
-					bandwidths.replaceWith(tempbandwidths);
-					bandwidths = tempbandwidths;
-					
-					
-					ListView<Integer> tempttllist = new ListView<Integer>("ttllist", new ArrayList<Integer>(hm.values())) {
-						@Override
-						protected void populateItem(ListItem<Integer> item) {
-							// TODO Auto-generated method stub
-							item.add(new Label("projecttotal", item.getModelObject()));
-						}
-					};
-					
-					ttllist.replaceWith(tempttllist);
-					ttllist = tempttllist;
-					
-					int grandtotal = 0;
-					for (Integer val : hm.values()) {
-						grandtotal += val;
 					}
-					Label templblttl = new Label("grandtotal", grandtotal);
-					lblttl.replaceWith(templblttl);
-					lblttl = templblttl;
-						
+				};
+				bandwidths.replaceWith(tempbandwidths);
+				bandwidths = tempbandwidths;
+
+				ListView<Integer> tempttllist = new ListView<Integer>("ttllist", new ArrayList<Integer>(hm.values())) {
+					@Override
+					protected void populateItem(ListItem<Integer> item) {
+						// TODO Auto-generated method stub
+						item.add(new Label("projecttotal", item.getModelObject()));
 					}
+				};
+
+				ttllist.replaceWith(tempttllist);
+				ttllist = tempttllist;
+
+				int grandtotal = 0;
+				for (Integer val : hm.values()) {
+					grandtotal += val;
+				}
+				Label templblttl = new Label("grandtotal", grandtotal);
+				lblttl.replaceWith(templblttl);
+				lblttl = templblttl;
+
+			}
 
 		};
 
@@ -191,7 +192,7 @@ public class BandwidthAbstractReportForm extends Panel {
 					con.close();
 				}
 			} catch (SQLException e2) {
-				log.error("SQL Exception in loadVendors() method {" + e2.getMessage() + "}");
+				log.error("SQL Exception in   () method {" + e2.getMessage() + "}");
 				e2.printStackTrace();
 			}
 			Collections.sort(list, new Comparator<VendorDetail>() {
@@ -220,7 +221,8 @@ public class BandwidthAbstractReportForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				list.add(new BandwidthDetail(rs.getInt(1), rs.getString(2), vendorGetBandwidth(rs.getInt(1),projecttypeid)));
+				list.add(new BandwidthDetail(rs.getInt(1), rs.getString(2),
+						vendorGetBandwidth(rs.getInt(1), projecttypeid)));
 			}
 		} catch (SQLException e) {
 			log.error("SQL Exception in loadBandwidths() method {" + e.getMessage() + "}");
@@ -245,7 +247,7 @@ public class BandwidthAbstractReportForm extends Panel {
 		return list;
 	}
 
-	private List<VendorBandwidthDetail> vendorGetBandwidth(int bandwidthid,int projecttypeid) {
+	private List<VendorBandwidthDetail> vendorGetBandwidth(int bandwidthid, int projecttypeid) {
 		final List<VendorBandwidthDetail> list = new ArrayList<VendorBandwidthDetail>();
 		final String query = "{call sp_circuit_vendor_get_bandwidth(?,?,?,?)}";
 		Connection con = null;

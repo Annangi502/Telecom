@@ -4,13 +4,17 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -26,6 +30,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
@@ -66,8 +71,11 @@ public class AddVendorDetailForm extends Panel {
 	private String phase;
 	private String phasefeedback;
 	private boolean servicetypedivflag;
-	private boolean mediatypedivflag = true ;
+	private boolean mediatypedivflag = true;
 	private String locationname;
+	private Date datecommissioned;
+	private String datefeedback;
+	private static String PATTERN = "yyyy-MM-dd";
 	private List<String> phaselist = Arrays.asList("Phase 1", "Phase 2");
 	IModel<? extends List<MediaType>> medialist = new LoadableDetachableModel<List<MediaType>>() {
 
@@ -285,7 +293,7 @@ public class AddVendorDetailForm extends Panel {
 		TextField<String> circuitid = new TextField<String>("circuitid");
 		circuitid.setRequired(true).setLabel(new Model("Circuit ID"));
 		circuitid.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
-		/*circuitid.add(new NumberValidator());*/
+		/* circuitid.add(new NumberValidator()); */
 		final FeedbackLabel circuitidFeedbackLabel = new FeedbackLabel("circuitidfeedback", circuitid);
 		circuitidFeedbackLabel.setOutputMarkupId(true);
 		form.add(circuitidFeedbackLabel);
@@ -303,6 +311,24 @@ public class AddVendorDetailForm extends Panel {
 		final FeedbackLabel phaseFeedbackLabel = new FeedbackLabel("phasefeedback", phase);
 		phaseFeedbackLabel.setOutputMarkupId(true);
 		form.add(phaseFeedbackLabel);
+
+		CustromDatePicker datePicker = new CustromDatePicker();
+		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(false);
+
+		DateTextField commdate = new DateTextField("datecommissioned",
+				new PropertyModel<Date>(this, "datecommissioned"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		commdate.setRequired(true).setLabel(new Model("Date of Commissioned"));
+		final FeedbackLabel datefeedback = new FeedbackLabel("datefeedback", commdate);
+		commdate.setOutputMarkupId(true);
+		commdate.add(datePicker);
+		form.add(datefeedback);
 
 		Button btncancel = new Button("btncancel") {
 			@Override
@@ -346,18 +372,19 @@ public class AddVendorDetailForm extends Panel {
 		/* form.add(servicetype); */
 		form.add(ntinterface);
 		form.add(circuitid);
-		
+
 		form.add(remark);
 		form.add(btncancel);
 		form.add(btnreset);
 		form.add(btnsubmit);
 		form.add(feedback);
 		form.add(phase);
+		form.add(commdate);
 		add(form);
 	}
 
 	private boolean addNetworkVendorDetail() {
-		final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		final String query = "{call sp_circuit_add_network_vendor_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -379,9 +406,10 @@ public class AddVendorDetailForm extends Panel {
 			stmt.setInt(10, (vendornamedd.getVendorid() == 5) ? servicetype.getServicetypeid() : 0);
 			stmt.setString(11, ntinterface);
 			stmt.setString(12, this.circuitid);
-			stmt.setInt(13, (vendornamedd.getVendorid() != 5) ? mediatype.getMediatypeid() : 0 );
+			stmt.setInt(13, (vendornamedd.getVendorid() != 5) ? mediatype.getMediatypeid() : 0);
 			stmt.setString(14, remark);
 			stmt.setString(15, phase);
+			stmt.setString(16, this.getFormatDate(datecommissioned));
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -408,6 +436,12 @@ public class AddVendorDetailForm extends Panel {
 			}
 		}
 		return true;
+	}
+
+	private String getFormatDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+		return simpleDateFormat.format(date);
+
 	}
 
 	private List<MediaType> loadMediaTypes() {

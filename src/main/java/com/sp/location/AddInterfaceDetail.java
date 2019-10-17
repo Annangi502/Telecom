@@ -7,10 +7,10 @@ import com.sp.master.ApspdclMaster;
 
 public class AddInterfaceDetail extends ApspdclMaster {
 
-	public AddInterfaceDetail(PageParameters parms,final IModel model) {
+	public AddInterfaceDetail(PageParameters parms, final IModel model) {
 		super(parms);
 		// TODO Auto-generated constructor stub
-		replace(new AddInterfaceDetailForm("formarea",model));
+		replace(new AddInterfaceDetailForm("formarea", model));
 	}
 
 }

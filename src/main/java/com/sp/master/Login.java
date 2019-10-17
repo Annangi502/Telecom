@@ -27,15 +27,15 @@ public class Login extends WebPage {
 	private String loginname;
 	private String password;
 	private String errormessage;
+
 	public Login(final PageParameters parameters) {
 		super(parameters);
 		setDefaultModel(new CompoundPropertyModel<Login>(this));
-		StatelessForm loginForm = new StatelessForm("loginform")
-		{
+		StatelessForm loginForm = new StatelessForm("loginform") {
 			@Override
 			protected void onSubmit() {
 				// TODO Auto-generated method stub
-				log.info("Login started @ "+Calendar.getInstance().getTime());
+				log.info("Login started @ " + Calendar.getInstance().getTime());
 				if (doLogin()) {
 					log.info("Login successfull");
 					if (getSession().isTemporary()) {
@@ -43,81 +43,78 @@ public class Login extends WebPage {
 						getSession().bind();
 					}
 					setResponsePage(ApspdclMaster.class);
-				}
-				else {
+				} else {
 					log.error("Login failed");
 				}
 			}
 		};
-		
-		
-		
+
 		Label em = new Label("errormessage");
 		EmailTextField tfldLogin = new EmailTextField("loginname");
-		PasswordTextField ptfldPassword = new PasswordTextField("password");	
+		PasswordTextField ptfldPassword = new PasswordTextField("password");
 		loginForm.add(tfldLogin);
 		loginForm.add(ptfldPassword);
 		loginForm.add(em);
 		add(loginForm);
-		
 
-    }
-	 private boolean doLogin()
-	  {
-	    String query = "{call sp_employee_login(?,?)}";
-	    Connection con = null;
-	    CallableStatement stmt = null;
-	    ResultSet rs = null;
-	    try {
-	      con = new DataBaseConnection().getConnection();
-	      stmt = con.prepareCall(query);
-	      stmt.setString(1, loginname);
-	      stmt.setString(2, AES.encrypt(password));
-	      log.info("Executing Stored Procedure { " + stmt.toString() + " }");
-	      rs = stmt.executeQuery();
-	      while (rs.next())
-	      {
-	        log.info("Loading Application Session details");
-	        ((PortSession)getSession()).setEmployeeid(rs.getString(1));
-	        ((PortSession)getSession()).setSessionid(rs.getInt(2));
-	        ((PortSession)getSession()).setLastlogintime(rs.getString(3));
-	        ((PortSession)getSession()).setEmployeename(rs.getString(4));
-	        ((PortSession)getSession()).setDesignation(rs.getString(6));
-	        ((PortSession)getSession()).setWing(rs.getString(7));
-	        boolean isadmin = rs.getInt(5) != 0;
-	        ((PortSession)getSession()).setAdmin(isadmin);
-	        log.info("Successfully loaded application session details");
-	      }
-	    }
-	    catch (SQLException e) {
-	      errormessage = e.getMessage();
-	      log.error("SQL Exception in doLogin() method {" + e.getMessage() + "}");
-	      e.printStackTrace();
-	      return false;
-	    }
-	    finally {}
-	    try
-	    {
-	      if (rs != null)
-	        rs.close();
-	      if (stmt != null)
-	        stmt.close();
-	      if (con != null) {
-	        con.close();
-	      }
-	    } catch (SQLException e) {
-	      log.error("SQL Exception in addNetworkLocationDetails() method {" + e.getMessage() + "}");
-	      e.printStackTrace();
-	    }
-	    return true;
-	  }
-	 protected void onConfigure()
-	  {
-	    super.onConfigure();
-	    log.info("in onConfigure");
-	    if ((PortSession.exists()) && (!((PortSession)getSession()).isTemporary())) {
-	      log.info("in onConfigure - Session exists and redirecting to Welcome Page");
-	      throw new RestartResponseException(ApspdclMaster.class);
-	    }
-	  }  
+	}
+
+	private boolean doLogin() {
+		String query = "{call sp_employee_login(?,?)}";
+		Connection con = null;
+		CallableStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = new DataBaseConnection().getConnection();
+			//System.out.println(" con "+con);
+			stmt = con.prepareCall(query);
+			stmt.setString(1, loginname);
+			stmt.setString(2, AES.encrypt(password));
+			//log.info("Password of Decryption { " + AES.decrypt("hGuTAcUMJv+uTxb5BeNbAg==")+ " }");
+			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				log.info("Loading Application Session details");
+				((PortSession) getSession()).setEmployeeid(rs.getString(1));
+				((PortSession) getSession()).setSessionid(rs.getInt(2));
+				((PortSession) getSession()).setLastlogintime(rs.getString(3));
+				((PortSession) getSession()).setEmployeename(rs.getString(4));
+				((PortSession) getSession()).setDesignation(rs.getString(6));
+				((PortSession) getSession()).setWing(rs.getString(7));
+				((PortSession) getSession()).setCircleid(rs.getInt(8));
+				boolean isadmin = rs.getInt(5) != 0;
+				((PortSession) getSession()).setAdmin(isadmin);
+				log.info("Successfully loaded application session details");
+				
+			}
+		} catch (SQLException e) {
+			errormessage = e.getMessage();
+			log.error("SQL Exception in doLogin() method {" + e.getMessage() +", Error Code :"+e.getErrorCode()+ "}");
+			e.printStackTrace();
+			return false;
+		} finally {
+		}
+		try {
+			if (rs != null)
+				rs.close();
+			if (stmt != null)
+				stmt.close();
+			if (con != null) {
+				con.close();
+			}
+		} catch (SQLException e) {
+			log.error("SQL Exception in addNetworkLocationDetails() method {" + e.getMessage() + "}");
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	protected void onConfigure() {
+		super.onConfigure();
+		log.info("in onConfigure");
+		if ((PortSession.exists()) && (!((PortSession) getSession()).isTemporary())) {
+			log.info("in onConfigure - Session exists and redirecting to Welcome Page");
+			throw new RestartResponseException(ApspdclMaster.class);
+		}
+	}
 }

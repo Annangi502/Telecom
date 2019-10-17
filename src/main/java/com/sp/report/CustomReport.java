@@ -4,7 +4,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.master.ApspdclMaster;
 
-public class CustomReport extends ApspdclMaster{
+public class CustomReport extends ApspdclMaster {
 
 	public CustomReport(PageParameters parms) {
 		super(parms);

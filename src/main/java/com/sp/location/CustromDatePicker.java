@@ -1,4 +1,4 @@
- package com.sp.location;
+package com.sp.location;
 
 import java.util.Map;
 
@@ -14,12 +14,9 @@ public class CustromDatePicker extends DatePicker {
 		Response response = component.getResponse();
 		response.write("\n<span class=\"yui-skin-sam\"><span style=\"");
 
-		if (renderOnLoad())
-		{
+		if (renderOnLoad()) {
 			response.write("display:block;");
-		}
-		else
-		{
+		} else {
 			response.write("display:none;");
 			response.write("position:absolute;");
 		}
@@ -28,15 +25,14 @@ public class CustromDatePicker extends DatePicker {
 		response.write(getEscapedComponentMarkupId());
 		response.write("Dp\"></span>");
 
-		if (renderOnLoad())
-		{
+		if (renderOnLoad()) {
 			response.write("<br style=\"clear:left;\"/>");
 		}
 		response.write("</span>");
 	}
-	 @Override
-     protected String getAdditionalJavaScript()
-     {
-         return "${calendar}.cfg.setProperty(\"navigator\",true,false); ${calendar}.render();";
-     }
+
+	@Override
+	protected String getAdditionalJavaScript() {
+		return "${calendar}.cfg.setProperty(\"navigator\",true,false); ${calendar}.render();";
+	}
 }

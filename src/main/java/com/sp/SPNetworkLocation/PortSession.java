@@ -6,73 +6,73 @@ import javax.servlet.http.*;
 import org.apache.wicket.request.cycle.*;
 import com.sp.exception.*;
 
-public class PortSession extends WebSession
-{
-    private String employeeid;
-    private int sessionid;
-    private String employeename;
-    private boolean admin;
-    private String lastlogintime;
-    private String designation;
-    private String wing;
-    
-    public PortSession(final Request request) {
-        super(request);
-    }
-    
-    public static PortSession get() {
-        final HttpServletRequest request = (HttpServletRequest)RequestCycle.get().getRequest().getContainerRequest();
-        if (!WebSession.get().isTemporary()) {
-            if (!WebSession.exists()) {
-                throw new SessionExpiredException("Session has expired!");
-            }
-            final boolean expired = request.getRequestedSessionId() != null && !request.isRequestedSessionIdValid();
-            if (expired) {
-                throw new SessionExpiredException("Session has expired!");
-            }
-        }
-        return (PortSession)WebSession.get();
-    }
-    
-    public String getEmployeeid() {
-        return this.employeeid;
-    }
-    
-    public void setEmployeeid(final String employeeid) {
-        this.employeeid = employeeid;
-    }
-    
-    public int getSessionid() {
-        return this.sessionid;
-    }
-    
-    public void setSessionid(final int sessionid) {
-        this.sessionid = sessionid;
-    }
-    
-    public String getEmployeename() {
-        return this.employeename;
-    }
-    
-    public void setEmployeename(final String employeename) {
-        this.employeename = employeename;
-    }
-    
-    public boolean isAdmin() {
-        return this.admin;
-    }
-    
-    public void setAdmin(final boolean admin) {
-        this.admin = admin;
-    }
-    
-    public String getLastlogintime() {
-        return this.lastlogintime;
-    }
-    
-    public void setLastlogintime(final String lastlogintime) {
-        this.lastlogintime = lastlogintime;
-    }
+public class PortSession extends WebSession {
+	private String employeeid;
+	private int sessionid;
+	private String employeename;
+	private boolean admin;
+	private String lastlogintime;
+	private String designation;
+	private String wing;
+	private int circleid ;
+
+	public PortSession(final Request request) {
+		super(request);
+	}
+
+	public static PortSession get() {
+		final HttpServletRequest request = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
+		if (!WebSession.get().isTemporary()) {
+			if (!WebSession.exists()) {
+				throw new SessionExpiredException("Session has expired!");
+			}
+			final boolean expired = request.getRequestedSessionId() != null && !request.isRequestedSessionIdValid();
+			if (expired) {
+				throw new SessionExpiredException("Session has expired!");
+			}
+		}
+		return (PortSession) WebSession.get();
+	}
+
+	public String getEmployeeid() {
+		return this.employeeid;
+	}
+
+	public void setEmployeeid(final String employeeid) {
+		this.employeeid = employeeid;
+	}
+
+	public int getSessionid() {
+		return this.sessionid;
+	}
+
+	public void setSessionid(final int sessionid) {
+		this.sessionid = sessionid;
+	}
+
+	public String getEmployeename() {
+		return this.employeename;
+	}
+
+	public void setEmployeename(final String employeename) {
+		this.employeename = employeename;
+	}
+
+	public boolean isAdmin() {
+		return this.admin;
+	}
+
+	public void setAdmin(final boolean admin) {
+		this.admin = admin;
+	}
+
+	public String getLastlogintime() {
+		return this.lastlogintime;
+	}
+
+	public void setLastlogintime(final String lastlogintime) {
+		this.lastlogintime = lastlogintime;
+	}
 
 	public String getDesignation() {
 		return designation;
@@ -89,4 +89,13 @@ public class PortSession extends WebSession
 	public void setWing(String wing) {
 		this.wing = wing;
 	}
+
+	public int getCircleid() {
+		return circleid;
+	}
+
+	public void setCircleid(int circleid) {
+		this.circleid = circleid;
+	}
+	
 }

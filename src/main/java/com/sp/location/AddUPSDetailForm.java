@@ -4,10 +4,14 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,6 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.SPNetworkLocation.PortSession;
@@ -59,12 +64,18 @@ public class AddUPSDetailForm extends Panel {
 	private String rbatteries;
 	private String rbatteriesfeedback;
 	private String locationname;
-	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty","None");
-	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By");
+	private Date installationdate;
+	private String installfeedback;
+	private Date replacementdate;
+	private String replacedatefeedback;
+	private static String PATTERN = "yyyy-MM-dd";
+	private static final List<String> TYPES = Arrays.asList("AMC", "Warranty", "None");
+	private static final List<String> R_TYPES = Arrays.asList("Replace", "Stand By","Existing");
+
 	public AddUPSDetailForm(String id, final IModel<NetworkLocationDetail> nldmodel) {
 		super(id);
 		// TODO Auto-generated constructor stub
-		replace = "Stand By";
+		replace = "Existing";
 		setDefaultModel(new CompoundPropertyModel<AddUPSDetailForm>(this));
 		StatelessForm<Form> form = new StatelessForm<Form>("addeqpdetailform");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
@@ -75,11 +86,11 @@ public class AddUPSDetailForm extends Panel {
 		spcircuitcode = nldmodel.getObject().getSpciruitcode();
 		projecttypedescription = nldmodel.getObject().getProjecttypedescription();
 		locationname = nldmodel.getObject().getLocationname();
-		
+
 		TextField<String> make = new TextField<String>("make");
 		make.setRequired(true).setLabel(new Model("Make"));
 		make.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		/*make.add(new StringValidator());*/
+		/* make.add(new StringValidator()); */
 		final FeedbackLabel makeFeedbackLabel = new FeedbackLabel("makefeedback", make);
 		makeFeedbackLabel.setOutputMarkupId(true);
 		form.add(makeFeedbackLabel);
@@ -117,7 +128,10 @@ public class AddUPSDetailForm extends Panel {
 
 		TextField<String> remark = new TextField<String>("remark");
 		remark.setLabel(new Model("Remark"));
-		/*remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 1028));*/
+		/*
+		 * remark.add(org.apache.wicket.validation.validator.StringValidator.
+		 * lengthBetween(1, 1028));
+		 */
 		/* remark.add(new StringValidator()); */
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
@@ -154,7 +168,7 @@ public class AddUPSDetailForm extends Panel {
 		TextField<String> rmake = new TextField<String>("rmake");
 		rmake.setRequired(true).setLabel(new Model("Make"));
 		rmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
-		/*rmake.add(new StringValidator());*/
+		/* rmake.add(new StringValidator()); */
 		final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("rmakefeedback", rmake);
 		rmakeFeedbackLabel.setOutputMarkupId(true);
 		repdiv.add(rmakeFeedbackLabel);
@@ -185,8 +199,45 @@ public class AddUPSDetailForm extends Panel {
 		rbatteriesFeedbackLabel.setOutputMarkupId(true);
 		repdiv.add(rbatteriesFeedbackLabel);
 		repdiv.add(rbatteries);
-		
-		
+
+		CustromDatePicker datePicker = new CustromDatePicker();
+		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(false);
+
+		DateTextField instaldate = new DateTextField("installationdate",
+				new PropertyModel<Date>(this, "installationdate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+		final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+		instaldate.setOutputMarkupId(true);
+		instaldate.add(datePicker);
+		form.add(insfeedback);
+		form.add(instaldate);
+
+		CustromDatePicker datePicker1 = new CustromDatePicker();
+		datePicker1.setShowOnFieldClick(true);
+		datePicker1.setAutoHide(false);
+
+		DateTextField instaldate1 = new DateTextField("replacementdate",
+				new PropertyModel<Date>(this, "replacementdate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		instaldate1.setRequired(true).setLabel(new Model("Replacement Date"));
+		final FeedbackLabel insfeedback1 = new FeedbackLabel("replacedatefeedback", instaldate1);
+		instaldate1.setOutputMarkupId(true);
+		instaldate1.add(datePicker1);
+		repdiv.add(insfeedback1);
+		repdiv.add(instaldate1);
+
 		Button btncancel = new Button("btncancel") {
 			@Override
 			public void onSubmit() {
@@ -237,7 +288,7 @@ public class AddUPSDetailForm extends Panel {
 	}
 
 	private boolean addNetworkUPSDetail() {
-		String query = "{call sp_circuit_add_network_ups_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		String query = "{call sp_circuit_add_network_ups_details(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
@@ -253,11 +304,17 @@ public class AddUPSDetailForm extends Panel {
 			stmt.setString(7, amc);
 			stmt.setString(8, remark);
 			stmt.setInt(9, Integer.parseInt(batteries));
-			stmt.setInt(10, replace.equals("Replace")?1:0);
-            stmt.setString(11, rmake);
-            stmt.setString(12,rmodel);
-            stmt.setString(13, rserialno);
-            stmt.setInt(14, replace.equals("Replace")?Integer.parseInt(rbatteries):0);
+			stmt.setInt(10, replace.equals("Replace") ? 1 : 0);
+			stmt.setString(11, rmake);
+			stmt.setString(12, rmodel);
+			stmt.setString(13, rserialno);
+			stmt.setInt(14, replace.equals("Replace") ? Integer.parseInt(rbatteries) : 0);
+			stmt.setString(15, getFormatDate(installationdate));
+			if (replace.equals("Replace"))
+				stmt.setString(16, getFormatDate(replacementdate));
+			else
+				stmt.setString(16, null);
+			    stmt.setString(17, replace);
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -284,6 +341,12 @@ public class AddUPSDetailForm extends Panel {
 			}
 		}
 		return true;
+	}
+
+	private String getFormatDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+		return simpleDateFormat.format(date);
+
 	}
 
 }

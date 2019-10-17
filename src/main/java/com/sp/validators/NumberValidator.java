@@ -6,7 +6,6 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
-
 public class NumberValidator implements IValidator<String> {
 
 	private final String NUMBER_PATTERN = "^\\d+$";
@@ -21,8 +20,8 @@ public class NumberValidator implements IValidator<String> {
 	public void validate(IValidatable<String> validatable) {
 
 		final String value = validatable.getValue();
-		char c=value.charAt(0);
-		
+		char c = value.charAt(0);
+
 		// validate Alphanumaric String
 		if (pattern.matcher(value).matches() == false) {
 

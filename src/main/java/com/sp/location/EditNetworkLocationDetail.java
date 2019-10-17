@@ -7,10 +7,10 @@ import com.sp.master.ApspdclMaster;
 
 public class EditNetworkLocationDetail extends ApspdclMaster {
 
-	public EditNetworkLocationDetail(PageParameters parms,final IModel model) {
+	public EditNetworkLocationDetail(PageParameters parms, final IModel model) {
 		super(parms);
 		// TODO Auto-generated constructor stub
-		replace(new EditNetworkLocationDetailForm("formarea",model));
+		replace(new EditNetworkLocationDetailForm("formarea", model));
 	}
 
 }

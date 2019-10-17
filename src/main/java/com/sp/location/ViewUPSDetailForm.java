@@ -104,12 +104,12 @@ public class ViewUPSDetailForm extends Panel {
 		serialno = nupsd.getSerialnumber();
 		amc = nupsd.getAmc();
 		remark = nupsd.getRemark();
-		replacelbl = nupsd.getIsreplace()==1?"Replace":"Stand By";
+		replacelbl = nupsd.getIstsposition() ;
 		noofbatteries = String.valueOf(nupsd.getNoofbatteries());
 		WebMarkupContainer replacediv = new WebMarkupContainer("replacediv");
-		replacediv.setVisible(nupsd.getIsreplace()==1?true:false);
+		replacediv.setVisible(nupsd.getIsreplace() == 1 ? true : false);
 		form.add(replacediv);
-		
+
 		List<IColumn> columns = new ArrayList<IColumn>();
 		columns.add(new AbstractColumn(new Model("Sr. No.")) {
 			public void populateItem(Item cell, String compId, IModel rowModel) {
@@ -179,7 +179,7 @@ public class ViewUPSDetailForm extends Panel {
 		final FeedbackLabel serialnoFeedbackLabel = new FeedbackLabel("addserialnofeedback", serialno);
 		serialnoFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(serialnoFeedbackLabel);
-		
+
 		TextField<String> batteries = new TextField<String>("addbatteries");
 		batteries.setRequired(true).setLabel(new Model("No.Of Batteries"));
 		batteries.add(new NumberValidator());
@@ -188,36 +188,34 @@ public class ViewUPSDetailForm extends Panel {
 		mymodal.add(batteriesFeedbackLabel);
 
 		CustromDatePicker datePicker = new CustromDatePicker();
-        datePicker.setShowOnFieldClick(true);
-        datePicker.setAutoHide(false);
-		
-        
-        DateTextField instaldate = new DateTextField("installationdate",new PropertyModel<Date>(
-		            this, "installationdate"),new PatternDateConverter("dd MMM, yyyy", true));
-		
-		/*DateTextField instaldate = new DateTextField("installationdate","dd-mm-yyy")
-		{
-			  protected String getInputType()
-	            {
-	                return "date";
-	            }  
-	        };*/
-        instaldate.setRequired(true).setLabel(new Model("Installation Date"));
-        final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
-        instaldate.setOutputMarkupId(true);
-        instaldate.add(datePicker);
-        mymodal.add(insfeedback);
-        mymodal.add(instaldate);
-        
-        TextArea<String> remark = new TextArea<String>("rremark");
+		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(false);
+
+		DateTextField instaldate = new DateTextField("installationdate",
+				new PropertyModel<Date>(this, "installationdate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		instaldate.setRequired(true).setLabel(new Model("Installation Date"));
+		final FeedbackLabel insfeedback = new FeedbackLabel("installfeedback", instaldate);
+		instaldate.setOutputMarkupId(true);
+		instaldate.add(datePicker);
+		mymodal.add(insfeedback);
+		mymodal.add(instaldate);
+
+		TextArea<String> remark = new TextArea<String>("rremark");
 		remark.setLabel(new Model("Remark"));
-		//remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 64));
-		/*remark.add(new StringValidator());*/
+		// remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1,
+		// 64));
+		/* remark.add(new StringValidator()); */
 		final FeedbackLabel remarkFeedbackLabel = new FeedbackLabel("remarkfeedback", remark);
 		remarkFeedbackLabel.setOutputMarkupId(true);
 		mymodal.add(remarkFeedbackLabel);
 		mymodal.add(remark);
-		
+
 		Button btnback = new Button("back") {
 			@Override
 			public void onSubmit() {
@@ -252,7 +250,8 @@ public class ViewUPSDetailForm extends Panel {
 				// TODO Auto-generated method stub
 				mymodalflag = true;
 			}
-		}.setVisible(nupsd.getIsreplace()==1?true:false);;
+		}.setVisible(nupsd.getIsreplace() == 1 ? true : false);
+		;
 		Button pback = new Button("pback") {
 			@Override
 			public void onSubmit() {
@@ -349,7 +348,8 @@ public class ViewUPSDetailForm extends Panel {
 			rs = stmt.executeQuery();
 			log.info((Object) ("Executing Stored Procedure { " + stmt.toString() + " }"));
 			while (rs.next()) {
-				vnlist.add(new UPSReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3),rs.getInt(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+				vnlist.add(new UPSReplaceHistory(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4),
+						rs.getString(5), rs.getString(6), rs.getString(7)));
 			}
 		} catch (SQLException e) {
 			log.error((Object) ("SQL Exception in getVendors() method {" + e.getMessage() + "}"));
@@ -389,7 +389,7 @@ public class ViewUPSDetailForm extends Panel {
 			stmt.setString(5, addmodel);
 			stmt.setString(6, addserialno);
 			stmt.setInt(7, Integer.parseInt(addbatteries));
-			stmt.setString(8,getFormatDate(installationdate));
+			stmt.setString(8, getFormatDate(installationdate));
 			stmt.setString(9, rremark);
 
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
@@ -419,10 +419,10 @@ public class ViewUPSDetailForm extends Panel {
 		}
 		return true;
 	}
-	private String getFormatDate(Date date)
-	{
-	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
-	    return simpleDateFormat.format(date);
-		
+
+	private String getFormatDate(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN);
+		return simpleDateFormat.format(date);
+
 	}
 }

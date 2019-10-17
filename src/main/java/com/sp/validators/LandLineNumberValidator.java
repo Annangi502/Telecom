@@ -6,10 +6,9 @@ import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 
-
 public class LandLineNumberValidator implements IValidator<String> {
 
-	private final String LANDLINE_PATTERN = "^[0-9]{6,11}$" ;
+	private final String LANDLINE_PATTERN = "^[0-9]{6,11}$";
 
 	private final Pattern pattern;
 

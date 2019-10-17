@@ -29,7 +29,7 @@ import com.sp.resource.DataBaseConnection;
 import com.sp.resource.ErrorLevelsFeedbackMessageFilter;
 import com.sp.resource.FeedbackLabel;
 
-public class ProfileForm extends Panel{
+public class ProfileForm extends Panel {
 	private static final Logger log = Logger.getLogger(ProfileForm.class);
 	private String mobile1;
 	private String mobile2;
@@ -40,12 +40,13 @@ public class ProfileForm extends Panel{
 	private String confirmpassword;
 	private String errormessage;
 	private int statusid;
-	
+
 	private String infofeedback;
 	private String oldpasswordfeedback;
 	private String newpasswordfeedback;
 	private String confirmpasswordfeedback;
 	private boolean flag;
+
 	public ProfileForm(String id) {
 		super(id);
 		// TODO Auto-generated constructor stub
@@ -53,29 +54,28 @@ public class ProfileForm extends Panel{
 		StatelessForm<ProfileForm> changepasswordform = new StatelessForm<ProfileForm>("changepassword");
 		FeedbackPanel feedback = new FeedbackPanel("feedback");
 		changepasswordform.add(feedback);
-		
-		int[] filteredErrorLevels = new int[]{FeedbackMessage.ERROR};
+
+		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
 		feedback.setFilter(new ErrorLevelsFeedbackMessageFilter(filteredErrorLevels));
-		
-		
+
 		PasswordTextField oldpw = new PasswordTextField("oldpassword");
 		oldpw.setRequired(true).setLabel(new Model("Old Password"));
 		final FeedbackLabel oldpwFeedbackLabel = new FeedbackLabel("oldpasswordfeedback", oldpw);
 		oldpwFeedbackLabel.setOutputMarkupId(true);
 		changepasswordform.add(oldpwFeedbackLabel);
-		
+
 		PasswordTextField newpw = new PasswordTextField("newpassword");
 		newpw.setRequired(true).setLabel(new Model("New Password"));
 		final FeedbackLabel newpwFeedbackLabel = new FeedbackLabel("newpasswordfeedback", newpw);
 		newpwFeedbackLabel.setOutputMarkupId(true);
 		changepasswordform.add(newpwFeedbackLabel);
-		
+
 		PasswordTextField confirmpw = new PasswordTextField("confirmpassword");
 		confirmpw.setRequired(true).setLabel(new Model("Confirm Password"));
 		final FeedbackLabel confirmpwFeedbackLabel = new FeedbackLabel("confirmpasswordfeedback", confirmpw);
 		confirmpwFeedbackLabel.setOutputMarkupId(true);
 		changepasswordform.add(confirmpwFeedbackLabel);
-		
+
 		Label infofeedback1 = new Label("infofeedback");
 		add(new Label("wname", ((PortSession) getSession()).getEmployeename()));
 		add(new Label("lastlogin", ((PortSession) getSession()).getLastlogintime()));
@@ -86,42 +86,32 @@ public class ProfileForm extends Panel{
 		add(new Label("mobile2"));
 		add(new Label("email1"));
 		add(new Label("email2"));
-		
-		
-		WebMarkupContainer wmc = new WebMarkupContainer("successmodel")
-				{
+
+		WebMarkupContainer wmc = new WebMarkupContainer("successmodel") {
 			@Override
 			public boolean isVisible() {
 				// TODO Auto-generated method stub
 				return flag;
 			}
-				};
-		
-		Button changepw = new Button("btnchangepassword"){
+		};
+
+		Button changepw = new Button("btnchangepassword") {
 			@Override
 			public void onSubmit() {
 				super.onSubmit();
-				if(oldpassword.equals(newpassword))
-					{
-						infofeedback="* Old and New passwords are too similar";
-					}
-				else if(!newpassword.equals(confirmpassword))
-					{
-						infofeedback="* New and Confirm passwords do not match";
-					}						
-				else if(changePassword())
-					{
-					 flag =true;
-					}
-				else
-					{
-						infofeedback="* "+errormessage;
-					}
+				if (oldpassword.equals(newpassword)) {
+					infofeedback = "* Old and New passwords are too similar";
+				} else if (!newpassword.equals(confirmpassword)) {
+					infofeedback = "* New and Confirm passwords do not match";
+				} else if (changePassword()) {
+					flag = true;
+				} else {
+					infofeedback = "* " + errormessage;
 				}
-				
-			
+			}
+
 		};
-		
+
 		changepasswordform.add(oldpw);
 		changepasswordform.add(newpw);
 		changepasswordform.add(confirmpw);
@@ -171,8 +161,8 @@ public class ProfileForm extends Panel{
 		}
 		return true;
 	}
-	private boolean changePassword()
-	{
+
+	private boolean changePassword() {
 		String query = "{call sp_employee_change_password(?,?,?,?)}";
 		Connection con = null;
 		CallableStatement stmt = null;

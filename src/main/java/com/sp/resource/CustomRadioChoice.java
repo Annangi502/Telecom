@@ -17,7 +17,6 @@ package com.sp.resource;
  * limitations under the License.
  */
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -35,9 +34,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 
-
-public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
-{
+public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener {
 	private static final long serialVersionUID = 1L;
 
 	private String prefix = "";
@@ -53,8 +50,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @see org.apache.wicket.Component#Component(String)
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public CustomRadioChoice(final String id)
-	{
+	public CustomRadioChoice(final String id) {
 		super(id);
 	}
 
@@ -66,10 +62,10 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @param choices
 	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      List)
 	 */
-	public CustomRadioChoice(final String id, final List<? extends T> choices)
-	{
+	public CustomRadioChoice(final String id, final List<? extends T> choices) {
 		super(id, choices);
 	}
 
@@ -87,8 +83,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 *      List,IChoiceRenderer)
 	 */
 	public CustomRadioChoice(final String id, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
-	{
+			final IChoiceRenderer<? super T> renderer) {
 		super(id, choices, renderer);
 	}
 
@@ -102,10 +97,10 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @param choices
 	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, List)
 	 */
-	public CustomRadioChoice(final String id, IModel<T> model, final List<? extends T> choices)
-	{
+	public CustomRadioChoice(final String id, IModel<T> model, final List<? extends T> choices) {
 		super(id, model, choices);
 	}
 
@@ -121,12 +116,11 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      List,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, List,IChoiceRenderer)
 	 */
 	public CustomRadioChoice(final String id, IModel<T> model, final List<? extends T> choices,
-		final IChoiceRenderer<? super T> renderer)
-	{
+			final IChoiceRenderer<? super T> renderer) {
 		super(id, model, choices, renderer);
 	}
 
@@ -138,10 +132,10 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @param choices
 	 *            The list of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel)
 	 */
-	public CustomRadioChoice(String id, IModel<? extends List<? extends T>> choices)
-	{
+	public CustomRadioChoice(String id, IModel<? extends List<? extends T>> choices) {
 		super(id, choices);
 	}
 
@@ -151,14 +145,15 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See Component
+	 *            The model that is updated with changes in this component. See
+	 *            Component
 	 * @param choices
 	 *            The list of choices in the radio choice
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IModel)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public CustomRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices)
-	{
+	public CustomRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
 		super(id, model, choices);
 	}
 
@@ -176,11 +171,9 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public CustomRadioChoice(String id, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
-	{
+			IChoiceRenderer<? super T> renderer) {
 		super(id, choices, renderer);
 	}
-
 
 	/**
 	 * Constructor
@@ -188,18 +181,18 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See Component
+	 *            The model that is updated with changes in this component. See
+	 *            Component
 	 * @param choices
 	 *            The list of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
 	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
-	 *      IModel,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, IModel,IChoiceRenderer)
 	 */
 	public CustomRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
-		IChoiceRenderer<? super T> renderer)
-	{
+			IChoiceRenderer<? super T> renderer) {
 		super(id, model, choices, renderer);
 	}
 
@@ -207,8 +200,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected void onComponentTag(ComponentTag tag)
-	{
+	protected void onComponentTag(ComponentTag tag) {
 		super.onComponentTag(tag);
 		// since this component cannot be attached to input tag the name
 		// variable is illegal
@@ -219,39 +211,40 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	@Override
-	public void onSelectionChanged()
-	{
+	public void onSelectionChanged() {
 		convertInput();
 		updateModel();
 		onSelectionChanged(getDefaultModelObject());
 	}
 
 	/**
-	 * Template method that can be overridden by clients that implement IOnChangeListener to be
-	 * notified by onChange events of a select element. This method does nothing by default.
+	 * Template method that can be overridden by clients that implement
+	 * IOnChangeListener to be notified by onChange events of a select element.
+	 * This method does nothing by default.
 	 * <p>
-	 * Called when a option is selected of a dropdown list that wants to be notified of this event.
-	 * This method is to be implemented by clients that want to be notified of selection events.
+	 * Called when a option is selected of a dropdown list that wants to be
+	 * notified of this event. This method is to be implemented by clients that
+	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
 	 */
-	protected void onSelectionChanged(Object newSelection)
-	{
+	protected void onSelectionChanged(Object newSelection) {
 	}
 
 	/**
-	 * Whether this component's onSelectionChanged event handler should called using javascript if
-	 * the selection changes. If true, a roundtrip will be generated with each selection change,
-	 * resulting in the model being updated (of just this component) and onSelectionChanged being
-	 * called. This method returns false by default.
+	 * Whether this component's onSelectionChanged event handler should called
+	 * using javascript if the selection changes. If true, a roundtrip will be
+	 * generated with each selection change, resulting in the model being
+	 * updated (of just this component) and onSelectionChanged being called.
+	 * This method returns false by default.
 	 * 
-	 * @return True if this component's onSelectionChanged event handler should called using
-	 *         javascript if the selection changes
+	 * @return True if this component's onSelectionChanged event handler should
+	 *         called using javascript if the selection changes
 	 */
-	protected boolean wantOnSelectionChangedNotifications()
-	{
+	protected boolean wantOnSelectionChangedNotifications() {
 		return false;
 	}
 
@@ -259,10 +252,8 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */
 	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
+	protected boolean getStatelessHint() {
+		if (wantOnSelectionChangedNotifications()) {
 			return false;
 		}
 		return super.getStatelessHint();
@@ -271,8 +262,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	/**
 	 * @return Prefix to use before choice
 	 */
-	public String getPrefix()
-	{
+	public String getPrefix() {
 		return prefix;
 	}
 
@@ -281,11 +271,11 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 *            index of the choice
 	 * @param choice
 	 *            the choice itself
-	 * @return Prefix to use before choice. The default implementation just returns
-	 *         {@link #getPrefix()}. Override to have a prefix dependent on the choice item.
+	 * @return Prefix to use before choice. The default implementation just
+	 *         returns {@link #getPrefix()}. Override to have a prefix dependent
+	 *         on the choice item.
 	 */
-	protected String getPrefix(int index, T choice)
-	{
+	protected String getPrefix(int index, T choice) {
 		return getPrefix();
 	}
 
@@ -294,11 +284,11 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 *            index of the choice
 	 * @param choice
 	 *            the choice itself
-	 * @return Separator to use between radio options. The default implementation just returns
-	 *         {@link #getSuffix()}. Override to have a prefix dependent on the choice item.
+	 * @return Separator to use between radio options. The default
+	 *         implementation just returns {@link #getSuffix()}. Override to
+	 *         have a prefix dependent on the choice item.
 	 */
-	protected String getSuffix(int index, T choice)
-	{
+	protected String getSuffix(int index, T choice) {
 		return getSuffix();
 	}
 
@@ -307,8 +297,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 *            Prefix to use before choice
 	 * @return this
 	 */
-	public final CustomRadioChoice<T> setPrefix(String prefix)
-	{
+	public final CustomRadioChoice<T> setPrefix(String prefix) {
 		// Tell the page that this component's prefix was changed
 		addStateChange();
 		this.prefix = prefix;
@@ -318,8 +307,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	/**
 	 * @return Separator to use between radio options
 	 */
-	public String getSuffix()
-	{
+	public String getSuffix() {
 		return suffix;
 	}
 
@@ -328,8 +316,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 *            Separator to use between radio options
 	 * @return this
 	 */
-	public final CustomRadioChoice<T> setSuffix(String suffix)
-	{
+	public final CustomRadioChoice<T> setSuffix(String suffix) {
 		// Tell the page that this component's suffix was changed
 		addStateChange();
 		this.suffix = suffix;
@@ -340,22 +327,21 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * Sets the preferred position of the &lt;label&gt; for each choice
 	 *
 	 * @param labelPosition
-	 *              The preferred position for the label
+	 *            The preferred position for the label
 	 * @return {@code this} instance, for chaining
 	 */
-	public CustomRadioChoice<T> setLabelPosition(LabelPosition labelPosition)
-	{
+	public CustomRadioChoice<T> setLabelPosition(LabelPosition labelPosition) {
 		Args.notNull(labelPosition, "labelPosition");
 		this.labelPosition = labelPosition;
 		return this;
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
+	 *      ComponentTag)
 	 */
 	@Override
-	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
+	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
 		// Iterate through choices
 		final List<? extends T> choices = getChoices();
 
@@ -366,8 +352,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 		final String selected = getValue();
 
 		// Loop through choices
-		for (int index = 0; index < choices.size(); index++)
-		{
+		for (int index = 0; index < choices.size(); index++) {
 			// Get next choice
 			final T choice = choices.get(index);
 
@@ -382,7 +367,8 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 * Generates and appends html for a single choice into the provided buffer
 	 * 
 	 * @param buffer
-	 *            Appending string buffer that will have the generated html appended
+	 *            Appending string buffer that will have the generated html
+	 *            appended
 	 * @param choice
 	 *            Choice object
 	 * @param index
@@ -393,22 +379,18 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void appendOptionHtml(final AppendingStringBuffer buffer, final T choice, int index,
-		final String selected)
-	{
+			final String selected) {
 		Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 		Class<?> objectClass = (displayValue == null ? null : displayValue.getClass());
 
 		// Get label for choicei
 		String label = "";
 
-		if (objectClass != null && objectClass != String.class)
-		{
+		if (objectClass != null && objectClass != String.class) {
 			@SuppressWarnings("rawtypes")
 			final IConverter converter = getConverter(objectClass);
 			label = converter.convertToString(displayValue, getLocale());
-		}
-		else if (displayValue != null)
-		{
+		} else if (displayValue != null) {
 			label = displayValue.toString();
 		}
 
@@ -416,8 +398,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 		// choice is automatic in some way. If label is /null/ then we know
 		// that the choice is a manually created radio tag at some random
 		// location in the page markup!
-		if (label != null)
-		{
+		if (label != null) {
 			// Append option suffix
 			buffer.append(getPrefix(index, choice));
 
@@ -428,146 +409,92 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 
 			// Add label for radio button
 			String display = label;
-			if (localizeDisplayValues())
-			{
+			if (localizeDisplayValues()) {
 				display = getLocalizer().getString(label, this, label);
 			}
 
 			CharSequence escaped = display;
-			if (getEscapeModelStrings())
-			{
+			if (getEscapeModelStrings()) {
 				escaped = Strings.escapeMarkup(display);
 			}
 
 			// Allows user to add attributes to the <label..> tag
 			IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
 			StringBuilder extraLabelAttributes = new StringBuilder();
-			if (labelAttrs != null)
-			{
-				for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
-				{
-					extraLabelAttributes.append(' ')
-							.append(attr.getKey())
-							.append("=\"")
-							.append(attr.getValue())
+			if (labelAttrs != null) {
+				for (Map.Entry<String, Object> attr : labelAttrs.entrySet()) {
+					extraLabelAttributes.append(' ').append(attr.getKey()).append("=\"").append(attr.getValue())
 							.append('"');
 				}
 			}
 
-			switch (labelPosition)
-			{
-				case BEFORE:
+			switch (labelPosition) {
+			case BEFORE:
 
-					buffer.append("<label for=\"")
-							.append(idAttr)
-							.append('"')
-							.append(extraLabelAttributes)
-							.append('>')
-							.append(escaped)
-							.append("</label>");
-					break;
-				case WRAP_BEFORE:
-					buffer.append("<label")
-							.append(extraLabelAttributes)
-							.append('>')
-							.append(escaped)
-							.append(' ');
-					break;
-				case WRAP_AFTER:
-					buffer.append("<label")
-							.append(extraLabelAttributes)
-							.append('>');
-					break;
+				buffer.append("<label for=\"").append(idAttr).append('"').append(extraLabelAttributes).append('>')
+						.append(escaped).append("</label>");
+				break;
+			case WRAP_BEFORE:
+				buffer.append("<label").append(extraLabelAttributes).append('>').append(escaped).append(' ');
+				break;
+			case WRAP_AFTER:
+				buffer.append("<label").append(extraLabelAttributes).append('>');
+				break;
 			}
 
 			// Add radio tag
-			buffer.append("<input name=\"")
-				.append(getInputName())
-				.append('"')
-				.append(" type=\"radio\"")
-				.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-				.append((enabled ? "" : " disabled=\"disabled\""))
-				.append(" value=\"")
-				.append(id)
-				.append("\" id=\"")
-				.append(idAttr)
-				.append('"');
+			buffer.append("<input name=\"").append(getInputName()).append('"').append(" type=\"radio\"")
+					.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+					.append((enabled ? "" : " disabled=\"disabled\"")).append(" value=\"").append(id).append("\" id=\"")
+					.append(idAttr).append('"');
 
 			// Should a roundtrip be made (have onSelectionChanged called)
 			// when the option is clicked?
-			if (wantOnSelectionChangedNotifications())
-			{
+			if (wantOnSelectionChangedNotifications()) {
 				CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
 
 				Form<?> form = findParent(Form.class);
-				if (form != null)
-				{
-					buffer.append(" onclick=\"")
-						.append(form.getJsForInterfaceUrl(url))
-						.append(";\"");
-				}
-				else
-				{
+				if (form != null) {
+					buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(";\"");
+				} else {
 					// NOTE: do not encode the url as that would give
 					// invalid JavaScript
-					buffer.append(" onclick=\"window.location.href='")
-						.append(url)
-						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
-						.append('=')
-						.append(id)
-						.append("';\"");
+					buffer.append(" onclick=\"window.location.href='").append(url)
+							.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName()).append('=')
+							.append(id).append("';\"");
 				}
 			}
 
 			// Allows user to add attributes to the <input..> tag
 			{
 				IValueMap attrs = getAdditionalAttributes(index, choice);
-				if (attrs != null)
-				{
-					for (Map.Entry<String, Object> attr : attrs.entrySet())
-					{
-						buffer.append(' ')
-							.append(attr.getKey())
-							.append("=\"")
-							.append(attr.getValue())
-							.append('"');
+				if (attrs != null) {
+					for (Map.Entry<String, Object> attr : attrs.entrySet()) {
+						buffer.append(' ').append(attr.getKey()).append("=\"").append(attr.getValue()).append('"');
 					}
 				}
 			}
 
-			if (getApplication().getDebugSettings().isOutputComponentPath())
-			{
+			if (getApplication().getDebugSettings().isOutputComponentPath()) {
 				CharSequence path = getPageRelativePath();
 				path = Strings.replaceAll(path, "_", "__");
 				path = Strings.replaceAll(path, ":", "_");
-				buffer.append(" wicketpath=\"")
-					.append(path)
-					.append("_input_")
-					.append(index)
-					.append('"');
+				buffer.append(" wicketpath=\"").append(path).append("_input_").append(index).append('"');
 			}
 
 			buffer.append("/>");
 
-			switch (labelPosition)
-			{
-				case AFTER:
-					buffer.append("<label for=\"")
-							.append(idAttr)
-							.append('"')
-							.append(extraLabelAttributes)
-							.append('>')
-							.append(escaped)
-							.append("</label>");
-					break;
-				case WRAP_BEFORE:
-					buffer.append("</label>");
-					break;
-				case WRAP_AFTER:
-					buffer.append(' ')
-							.append(escaped)
-							.append("</label>");
-					break;
+			switch (labelPosition) {
+			case AFTER:
+				buffer.append("<label for=\"").append(idAttr).append('"').append(extraLabelAttributes).append('>')
+						.append(escaped).append("</label>");
+				break;
+			case WRAP_BEFORE:
+				buffer.append("</label>");
+				break;
+			case WRAP_AFTER:
+				buffer.append(' ').append(escaped).append("</label>");
+				break;
 			}
 
 			// Append option suffix
@@ -576,21 +503,22 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	}
 
 	/**
-	 * You may subclass this method to provide additional attributes to the &lt;label ..&gt; tag.
+	 * You may subclass this method to provide additional attributes to the
+	 * &lt;label ..&gt; tag.
 	 *
-	 @param index
-	  *            index of the choice
-	  * @param choice
+	 * @param index
+	 *            index of the choice
+	 * @param choice
 	 *            the choice itself
 	 * @return tag attribute name/value pairs.
 	 */
-	protected IValueMap getAdditionalAttributesForLabel(int index, T choice)
-	{
+	protected IValueMap getAdditionalAttributesForLabel(int index, T choice) {
 		return null;
 	}
 
 	/**
-	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
+	 * You may subclass this method to provide additional attributes to the
+	 * &lt;input ..&gt; tag.
 	 * 
 	 * @param index
 	 *            index of the choice
@@ -598,8 +526,7 @@ public class CustomRadioChoice<T> extends AbstractSingleSelectChoice<T> implemen
 	 *            the choice itself
 	 * @return tag attribute name/value pairs.
 	 */
-	protected IValueMap getAdditionalAttributes(final int index, final T choice)
-	{
+	protected IValueMap getAdditionalAttributes(final int index, final T choice) {
 		return null;
 	}
 }

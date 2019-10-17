@@ -4,7 +4,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.sp.master.ApspdclMaster;
 
-public class LinkAbstractReport extends ApspdclMaster{
+public class LinkAbstractReport extends ApspdclMaster {
 
 	public LinkAbstractReport(PageParameters parms) {
 		super(parms);
