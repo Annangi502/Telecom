@@ -129,14 +129,13 @@ public class VendorLocationsReportForm extends Panel {
 		 * columns.add(new PropertyColumn(new Model("Circuit ID"),
 		 * "spcircuitid"));
 		 */
-		columns.add(new PropertyColumn(new Model("Circuit ID"), "spciruitcode"));
+		columns.add(new PropertyColumn(new Model("Location Name"), "locationname"));
 		columns.add(new PropertyColumn(new Model("Circle"), "circledesc"));
 		columns.add(new PropertyColumn(new Model("Division"), "divisiondesc"));
 		columns.add(new PropertyColumn(new Model("ERO"), "erodesc"));
 		columns.add(new PropertyColumn(new Model("Sub-Division"), "subdivisiondesc"));
 		columns.add(new PropertyColumn(new Model("Section"), "sectiondesc"));
 		columns.add(new PropertyColumn(new Model("Project"), "projecttypedescription"));
-		columns.add(new PropertyColumn(new Model("Location Name"), "locationname"));
 		columns.add(new PropertyColumn(new Model("Vendor Name"), "vendorname"));
 		columns.add(new PropertyColumn(new Model("Bandwidth"), "bandwidth"));
 		final DataTable table = new DataTable("datatable", columns, nlprovider, DEF_NO_OF_ROWS);
