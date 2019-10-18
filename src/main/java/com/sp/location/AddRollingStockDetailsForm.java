@@ -1,4 +1,4 @@
-package com.sp.report;
+package com.sp.location;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -65,14 +65,15 @@ import com.sp.location.SubDivision;
 import com.sp.location.TextFieldColumn;
 import com.sp.location.ViewEquipmentDetail;
 import com.sp.location.ViewNetworkLocationDetail;
+import com.sp.master.ApspdclMaster;
 import com.sp.resource.CustomRadioChoice;
 import com.sp.resource.DataBaseConnection;
 import com.sp.resource.FeedbackLabel;
 import com.sp.resource.GClickablePropertyColumn;
 import com.sp.resource.GTextFieldPropertyColumn;
 
-public class RollingStockDetailsForm extends Panel {
-	private static final Logger log = Logger.getLogger(RollingStockDetailsForm.class);
+public class AddRollingStockDetailsForm extends Panel {
+	private static final Logger log = Logger.getLogger(AddRollingStockDetailsForm.class);
 	private Circle circle;
 	private String circlefeedback;
 	private int circleid;
@@ -133,13 +134,23 @@ public class RollingStockDetailsForm extends Panel {
 
 	
 	
-	public RollingStockDetailsForm(String id) {
+	public AddRollingStockDetailsForm(String id) {
 		super(id);
-		setDefaultModel(new CompoundPropertyModel<RollingStockDetailsForm>(this));
+		setDefaultModel(new CompoundPropertyModel<AddRollingStockDetailsForm>(this));
 		StatelessForm<Form> form = new StatelessForm("form");
 		
 		
+		WebMarkupContainer replacediv = new WebMarkupContainer("replacediv");
+		//replacediv.setVisible(ned.getIsreplace() == 1 ? true : false);
+		form.add(replacediv);
 		
+		WebMarkupContainer mymodal = new WebMarkupContainer("mymodal") {
+			@Override
+			public boolean isVisible() {
+				// TODO Auto-generated method stub
+				return mymodalflag;
+			}
+		};
 		
 	
 		
@@ -213,18 +224,86 @@ public class RollingStockDetailsForm extends Panel {
 		
 		
 		
+		DropDownChoice<EquipmentType> equipmenttype = new DropDownChoice<EquipmentType>("equipmenttype", equipmenttypelist,
+				new ChoiceRenderer<EquipmentType>("equipmenttypedesc"));
+		equipmenttype.setNullValid(false);
+		equipmenttype.setRequired(true).setLabel(new Model("Equipment Type"));
+		final FeedbackLabel equipmenttypeFeedbackLabel = new FeedbackLabel("equipmenttypefeedback", equipmenttype);
+		equipmenttypeFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(equipmenttypeFeedbackLabel);
+		
+		TextField<String> addmake = new TextField<String>("addmake");
+		addmake.setRequired(true).setLabel(new Model("Make"));
+		addmake.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+		/* rmake.add(new StringValidator()); */
+		final FeedbackLabel rmakeFeedbackLabel = new FeedbackLabel("addmakefeedback", addmake);
+		rmakeFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(rmakeFeedbackLabel);
+		
+		TextField<String> addmodel = new TextField<String>("addmodel");
+		addmodel.setRequired(true).setLabel(new Model("Model"));
+		addmodel.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+		/* rmake.add(new StringValidator()); */
+		final FeedbackLabel addmodelFeedbackLabel = new FeedbackLabel("addmodelfeedback", addmodel);
+		addmodelFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(addmodelFeedbackLabel);
+		
+		TextField<String> addserialno = new TextField<String>("addserialno");
+		addserialno.setRequired(true).setLabel(new Model("Serial No"));
+		addserialno.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+		/* rmake.add(new StringValidator()); */
+		final FeedbackLabel addserialnoFeedbackLabel = new FeedbackLabel("addserialnofeedback", addserialno);
+		addserialnoFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(addserialnoFeedbackLabel);
+		
+		final CustomRadioChoice<String> amc = new CustomRadioChoice("amc", TYPES);
+		amc.setRequired(true).setLabel(new Model("AMC/Warranty"));
+		final FeedbackLabel amcFeedbackLabel = new FeedbackLabel("amcfeedback", amc);
+		amcFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(amcFeedbackLabel);
+		
+		final CustomRadioChoice<String> wrkstatus = new CustomRadioChoice("wrkstatus", WRKSTATUSTYPES);
+		wrkstatus.setRequired(true).setLabel(new Model("Working Status"));
+		final FeedbackLabel wrkstatusFeedbackLabel = new FeedbackLabel("wrkstatusfeedback", wrkstatus);
+		wrkstatusFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(wrkstatusFeedbackLabel);
+		
+		TextField<String> addporderno = new TextField<String>("addporderno");
+		addporderno.setRequired(true).setLabel(new Model("Purchase Order No"));
+		addporderno.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
+		/* rmake.add(new StringValidator()); */
+		final FeedbackLabel addpordernoFeedbackLabel = new FeedbackLabel("addpordernofeedback", addporderno);
+		addpordernoFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(addpordernoFeedbackLabel);
+		
+		CustromDatePicker datePicker = new CustromDatePicker();
+		datePicker.setShowOnFieldClick(true);
+		datePicker.setAutoHide(false);
+
+		DateTextField supplydate = new DateTextField("supplydate",
+				new PropertyModel<Date>(this, "supplydate"), new PatternDateConverter("dd MMM, yyyy", true));
+
+		/*
+		 * DateTextField instaldate = new
+		 * DateTextField("installationdate","dd-mm-yyy") { protected String
+		 * getInputType() { return "date"; } };
+		 */
+		supplydate.setRequired(true).setLabel(new Model("Supply Date"));
+		final FeedbackLabel supplydatefeedback = new FeedbackLabel("supplydatefeedback", supplydate);
+		supplydate.setOutputMarkupId(true);
+		supplydate.add(datePicker);
+		mymodal.add(supplydatefeedback);
+		mymodal.add(supplydate);
 		
 		
-		
-	
-	
-		
-		
-	
-		
-	
-		
-		
+		TextArea<String> addremark = new TextArea<String>("addremark");
+		addremark.setLabel(new Model("Remark"));
+		// remark.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1,
+		// 64));
+		/* remark.add(new StringValidator()); */
+		final FeedbackLabel addremarkFeedbackLabel = new FeedbackLabel("addremarkfeedback",addremark);
+		addremarkFeedbackLabel.setOutputMarkupId(true);
+		mymodal.add(addremarkFeedbackLabel);
 		
 		
 		nrsdlist.setList(networkGetRollingStock());
@@ -270,11 +349,21 @@ public class RollingStockDetailsForm extends Panel {
 		columns.add(new PropertyColumn(new Model("Supply Date"), "supply_date"));
 		columns.add(new PropertyColumn(new Model("Remark"), "remarks"));
 		
-		
+		if (((PortSession) getSession()).isAdmin()) {
+			columns.add(new GClickablePropertyColumn(new Model(""), "rolling_stock_id") {
+				public void populateItem(Item item, String componentId, IModel rowModel) {
+					item.add(new ColumnEditPanelRollingStockDetail(componentId, rowModel,
+							new PropertyModel(rowModel, getProperty()),
+							new CompoundPropertyModel<NetworkRollingStockDetail>(nrsd)));
+				}
+			});
+		}
+	
 		final DataTable table = new DataTable("datatable", columns, nlprovider, DEF_NO_OF_ROWS);
 		table.setOutputMarkupId(true);
 		table.addTopToolbar(new HeadersToolbar(table, nlprovider));
-		form.add(table);
+		replacediv.add(table);
+
 		
 		/*
 		 * sectiondd.add(new AjaxFormComponentUpdatingBehavior("onChange") {
@@ -330,9 +419,62 @@ public class RollingStockDetailsForm extends Panel {
 		 * 
 		 * });
 		 */
+		
 
+		Button btnback = new Button("btnback") {
+			public void onSubmit() {
+				setResponsePage(ApspdclMaster.class);
+			};
+		}.setDefaultFormProcessing(false);
+		
+		
+		
+		
+		Button replace = (Button) new Button("replace") {
+			@Override
+			public void onSubmit() {
+				// TODO Auto-generated method stub
+				mymodalflag = true;
+			}
+		};
+		
+		Button btnback1 = new Button("back") {
+			@Override
+			public void onSubmit() {
+				// TODO Auto-generated method stub
+				PageParameters params = new PageParameters();
+				AddRollingStockDetails vad = new AddRollingStockDetails(params);
+				setResponsePage(vad);
+
+			}
+		}.setDefaultFormProcessing(false);
+		Button btn = new Button("submit") {
+			@Override
+			public void onSubmit() {
+				// TODO Auto-generated method stub
+				if (networkAddRollingStock()) {
+					PageParameters params = new PageParameters();
+					AddRollingStockDetails rsd = new AddRollingStockDetails(params);
+					setResponsePage(rsd);
+				}
+			}
+		};
+		mymodal.add(equipmenttype);
+		
+		mymodal.add(addmake);
+		mymodal.add(addmodel);	
+		mymodal.add(addserialno);
+		mymodal.add(amc);
+		mymodal.add(wrkstatus);
+		mymodal.add(addporderno);
+		mymodal.add(addremark);
+		mymodal.add(btn);
+		mymodal.add(btnback1);
 		form.add(equipment);
 		form.add(circle);
+		form.add(btnback);
+		form.add(replace);
+		form.add(mymodal);
 		add(form);
 
 	}
