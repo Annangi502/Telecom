@@ -331,6 +331,12 @@ public class RollingStockDetailsForm extends Panel {
 		 * });
 		 */
 
+		Button btnback = new Button("btnback") {
+			public void onSubmit() {
+				setResponsePage(Report.class);
+			};
+		}.setDefaultFormProcessing(false);
+		form.add(btnback);		
 		form.add(equipment);
 		form.add(circle);
 		add(form);

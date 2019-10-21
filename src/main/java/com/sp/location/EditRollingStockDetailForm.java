@@ -156,6 +156,9 @@ public class EditRollingStockDetailForm extends Panel {
 		wrkstatus = nrsd.getStatus();
 		porderno = nrsd.getPonumber();
 		try {
+			if(nrsd.getSupply_date()==null)
+				supplydate = null ;
+			else
 			supplydate = new SimpleDateFormat("dd MMM, yyyy").parse(nrsd.getSupply_date());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -309,7 +312,7 @@ public class EditRollingStockDetailForm extends Panel {
 		form.add(wrkstatusFeedbackLabel);
 		
 		TextField<String> porderno = new TextField<String>("porderno");
-		porderno.setRequired(true).setLabel(new Model("Purchase Order No."));
+		porderno.setLabel(new Model("Purchase Order No."));
 		porderno.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 32));
 		/* model.add(new StringValidator()); */
 		final FeedbackLabel pordernoFeedbackLabel = new FeedbackLabel("pordernofeedback", porderno);
@@ -328,7 +331,7 @@ public class EditRollingStockDetailForm extends Panel {
 		 * DateTextField("installationdate","dd-mm-yyy") { protected String
 		 * getInputType() { return "date"; } };
 		 */
-		supplydate.setRequired(true).setLabel(new Model("Supply Date"));
+		supplydate.setLabel(new Model("Supply Date"));
 		final FeedbackLabel supplydatefeed = new FeedbackLabel("supplydatefeed", supplydate);
 		supplydatefeed.setOutputMarkupId(true);
 		supplydate.add(datePicker);
@@ -347,7 +350,7 @@ public class EditRollingStockDetailForm extends Panel {
 			@Override
 			public void onSubmit() {
 				// TODO Auto-generated method stub
-				setResponsePage(RollingStockDetails.class);
+				setResponsePage(AddRollingStockDetails.class);
 			}
 		}.setDefaultFormProcessing(false);
 
@@ -357,7 +360,7 @@ public class EditRollingStockDetailForm extends Panel {
 				// TODO Auto-generated method stub
 				if (editRollingStockDetails()) {
 					PageParameters parms = new PageParameters();
-					RollingStockDetails av = new RollingStockDetails(parms);
+					AddRollingStockDetails av = new AddRollingStockDetails(parms);
 					setResponsePage(av);
 				}
 			}
@@ -446,6 +449,9 @@ public class EditRollingStockDetailForm extends Panel {
 			stmt.setString(8,amc);
 			stmt.setString(9,wrkstatus);
 			stmt.setString(10,porderno);
+			if(supplydate==null)
+			stmt.setString(11,null);
+			else
 			stmt.setString(11, getFormatDate(supplydate));
 			stmt.setString(12, checkNull(addremark));	
 			

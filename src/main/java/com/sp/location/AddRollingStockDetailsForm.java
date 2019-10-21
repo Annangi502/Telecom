@@ -269,7 +269,7 @@ public class AddRollingStockDetailsForm extends Panel {
 		mymodal.add(wrkstatusFeedbackLabel);
 		
 		TextField<String> addporderno = new TextField<String>("addporderno");
-		addporderno.setRequired(true).setLabel(new Model("Purchase Order No"));
+		addporderno.setLabel(new Model("Purchase Order No"));
 		addporderno.add(org.apache.wicket.validation.validator.StringValidator.lengthBetween(1, 128));
 		/* rmake.add(new StringValidator()); */
 		final FeedbackLabel addpordernoFeedbackLabel = new FeedbackLabel("addpordernofeedback", addporderno);
@@ -288,7 +288,7 @@ public class AddRollingStockDetailsForm extends Panel {
 		 * DateTextField("installationdate","dd-mm-yyy") { protected String
 		 * getInputType() { return "date"; } };
 		 */
-		supplydate.setRequired(true).setLabel(new Model("Supply Date"));
+		supplydate.setLabel(new Model("Supply Date"));
 		final FeedbackLabel supplydatefeedback = new FeedbackLabel("supplydatefeedback", supplydate);
 		supplydate.setOutputMarkupId(true);
 		supplydate.add(datePicker);
@@ -609,7 +609,11 @@ public class AddRollingStockDetailsForm extends Panel {
 			stmt.setString(7, amc);		
 			stmt.setString(8, wrkstatus);
 			stmt.setString(9, addporderno);
+			if(supplydate==null)
+			stmt.setString(10, null);
+			else
 			stmt.setString(10, getFormatDate(supplydate));
+			
 			stmt.setString(11, checkNull(addremark));
 			stmt.setInt(12,((PortSession) this.getSession()).getCircleid());
 			

@@ -70,7 +70,7 @@ public class Login extends WebPage {
 			stmt = con.prepareCall(query);
 			stmt.setString(1, loginname);
 			stmt.setString(2, AES.encrypt(password));
-			//log.info("Password of Decryption { " + AES.decrypt("hGuTAcUMJv+uTxb5BeNbAg==")+ " }");
+			log.info("Password of Decryption { " + AES.decrypt("hGuTAcUMJv+uTxb5BeNbAg==")+ " }");
 			log.info("Executing Stored Procedure { " + stmt.toString() + " }");
 			rs = stmt.executeQuery();
 			while (rs.next()) {
